@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
+using System;
 
 namespace DocumentManager.Persistence.Models
 {
@@ -19,7 +20,19 @@ namespace DocumentManager.Persistence.Models
 			var builder = new ConfigurationBuilder()
 				.SetBasePath(Directory.GetCurrentDirectory())
 				.AddJsonFile("appsettings.json");
-			var configuration = builder.Build();
+            IConfigurationRoot configuration;
+            try
+            {
+                configuration = builder.Build();
+            }
+            catch (Exception e)
+            {
+                builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory() + "/Persistence")
+                .AddJsonFile("appsettings.json");
+
+                configuration = builder.Build();
+            }
 
 			optionsBuilder.UseSqlServer($"{configuration["ConnectionStrings:DocumentManagerDatabase"]}");
 		}
