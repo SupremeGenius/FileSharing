@@ -9,6 +9,8 @@
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="Daos\" />
+    <Folder Include="Models\Filters\" />
+    <Folder Include="SQLFiles\" />
   </ItemGroup>
 
   <ItemGroup>

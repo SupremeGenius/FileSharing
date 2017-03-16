@@ -25,7 +25,7 @@ namespace DocumentManager.Persistence.Models
             {
                 configuration = builder.Build();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory() + "/Persistence")

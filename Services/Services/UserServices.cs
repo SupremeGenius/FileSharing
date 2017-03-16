@@ -6,7 +6,7 @@ using DocumentManager.Persistence.Models;
 using DocumentManager.Services.Dtos;
 using DocumentManager.Services.Exceptions;
 
-namespace DocumentManager.Services.Services
+namespace DocumentManager.Services
 {
 	public class UserServices : AbstractServices<UserDao>
 	{
@@ -116,7 +116,7 @@ namespace DocumentManager.Services.Services
 
 		#region Private Members
 
-		private string EncryptPassword(string password)
+		string EncryptPassword(string password)
 		{
 			byte[] data = System.Text.Encoding.ASCII.GetBytes(password);
 			using (var hash = SHA256.Create())
@@ -126,7 +126,7 @@ namespace DocumentManager.Services.Services
 			return System.Text.Encoding.ASCII.GetString(data);
 		}
 
-		private void ValidateUser(UserDto user)
+		void ValidateUser(UserDto user)
 		{
 			if (user == null)
 				throw new DocumentManagerException(DocumentManagerException.NULL_VALUE, "User cannot be null");
