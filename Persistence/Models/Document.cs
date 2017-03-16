@@ -1,0 +1,14 @@
+﻿namespace DocumentManager.Persistence.Models
+{
+	public class Document : AbstractModel
+	{
+		public long Id { get; set; }
+		public long IdUser { get; set; }
+		public string Filename { get; set; }
+		public long IsPublic { get; set; }
+		public long? IdGroup { get; set; }
+
+		public virtual Group IdGroupNavigation { get; set; }
+		public virtual User IdUserNavigation { get; set; }
+	}
+}
