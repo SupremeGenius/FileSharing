@@ -1,41 +1,20 @@
-﻿using System.IO;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
-using System;
 
 namespace DocumentManager.Persistence.Models
 {
 	public partial class DocumentManagerContext : DbContext
 	{
-		public virtual DbSet<Audit> Audit { get; set; }
+        public DocumentManagerContext(DbContextOptions<DocumentManagerContext> options)
+            : base(options) { }
+
+        public virtual DbSet<Audit> Audit { get; set; }
 		public virtual DbSet<Document> Document { get; set; }
 		public virtual DbSet<Group> Group { get; set; }
 		public virtual DbSet<Session> Session { get; set; }
 		public virtual DbSet<User> User { get; set; }
 		public virtual DbSet<UserGroup> UserGroup { get; set; }
-
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-		{
-			var builder = new ConfigurationBuilder()
-				.SetBasePath(Directory.GetCurrentDirectory())
-				.AddJsonFile("appsettings.json");
-            IConfigurationRoot configuration;
-            try
-            {
-                configuration = builder.Build();
-            }
-            catch (Exception)
-            {
-                builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory() + "/Persistence")
-                .AddJsonFile("appsettings.json");
-
-                configuration = builder.Build();
-            }
-
-			optionsBuilder.UseSqlServer($"{configuration["ConnectionStrings:DocumentManagerDatabase"]}");
-		}
+        
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

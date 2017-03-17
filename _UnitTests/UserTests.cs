@@ -12,20 +12,19 @@ namespace _UnitTests
 		public UserTests()
 		{
 			_userServices = new UserServices();
-
-			user = new UserDto
-			{
-				Login = "Login",
-				Password = "Password",
-				FirstName = "FirstName",
-				LastName = "LastName",
-			};
 		}
 
         [Fact]
         public void CreateUser()
-		{
-			user.Id = _userServices.Create(user);
+        {
+            user = new UserDto
+            {
+                Login = "Login",
+                Password = "Password",
+                FirstName = "FirstName",
+                LastName = "LastName",
+            };
+            user.Id = _userServices.Create(user);
 
 			Assert.True(user.Id > 0);
 		}

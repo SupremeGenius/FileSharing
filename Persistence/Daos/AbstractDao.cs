@@ -1,6 +1,7 @@
 ﻿using System;
 using DocumentManager.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace DocumentManager.Persistence.Daos
 {
@@ -10,8 +11,15 @@ namespace DocumentManager.Persistence.Daos
 		protected DbSet<T> _dbSet;
 
 		public AbstractDao()
-		{
-			_context = new DocumentManagerContext();
+        {
+            var configurationBuilder = new ConfigurationBuilder()
+                .AddJsonFile("db_settings.json");
+            var configuration = configurationBuilder.Build();
+
+            DbContextOptionsBuilder<DocumentManagerContext> optionsBuilder = new DbContextOptionsBuilder<DocumentManagerContext>();
+            optionsBuilder.UseSqlServer($"{configuration["ConnectionString"]}");
+
+            _context = new DocumentManagerContext(optionsBuilder.Options);
 			_dbSet = _context.Set<T>();
 		}
 
