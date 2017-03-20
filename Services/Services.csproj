@@ -12,6 +12,7 @@
     <Folder Include="Dtos\" />
     <Folder Include="Mapping\" />
     <Folder Include="Exceptions\" />
+    <Folder Include="Dtos\Filters\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.0.0" />

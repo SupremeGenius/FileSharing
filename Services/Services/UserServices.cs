@@ -23,6 +23,7 @@ namespace DocumentManager.Services
 				var userDom = Mapper.Map<User>(user);
 				userDom.Password = EncryptPassword(user.Password);
 				userDom = _dao.Create(userDom);
+				Audit("New user created", userDom.Id);
 				return userDom.Id;
 			}
 			catch (DocumentManagerException)
@@ -70,6 +71,7 @@ namespace DocumentManager.Services
 				Mapper.Map(user, userDom);
 				userDom.Password = password; //Password not allowed to be modified by this method
 
+				Audit("User updated", userDom.Id);
 				_dao.Update(userDom);
 			}
 			catch (DocumentManagerException)
@@ -87,7 +89,11 @@ namespace DocumentManager.Services
 			try
 			{
 				var user = _dao.Read(idUser);
-				_dao.Delete(user);
+				if (user != null)
+				{
+					_dao.Delete(user);
+					Audit("User deleted", idUser);
+				}
 			}
 			catch (Exception e)
 			{
@@ -138,6 +144,28 @@ namespace DocumentManager.Services
 				throw new DocumentManagerException(DocumentManagerException.NULL_VALUE, "FirstName cannot be null");
 			if (String.IsNullOrWhiteSpace(user.LastName))
 				throw new DocumentManagerException(DocumentManagerException.NULL_VALUE, "LastName cannot be null");
+		}
+
+		void Audit(string action, long id)
+		{
+			try
+			{
+				var audit = new AuditDto
+				{
+					Action = action,
+					IdObject = id,
+					IdUser = id,
+					Object = typeof(User).Name
+				};
+				using (var auditService = new AuditServices())
+				{
+					auditService.Create(audit);
+				}
+			}
+			catch (Exception)
+			{
+				//TODO Implement a log.
+			}
 		}
 
 		#endregion
