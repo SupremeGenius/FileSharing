@@ -12,11 +12,10 @@ namespace DocumentManager.Services.Exceptions
 		public const string NULL_VALUE = "NULL_VALUE";
 		public const string UNAUTHORIZED = "UNAUTHORIZED";
 
-		#region User
+		#region Goup
 
-		public const string LOGIN_ALREADY_IN_USE = "LOGIN_ALREADY_IN_USE";
-		public const string USER_NOT_FOUND = "USER_NOT_FOUND";
-		public const string INVALID_CREDENTIALS = "INVALID_CREDENTIALS";
+		public const string GROUP_NAME_ALREADY_IN_USE = "GROUP_NAME_ALREADY_IN_USE";
+		public const string GROUP_NOT_FOUND = "GROUP_NOT_FOUND";
 
 		#endregion
 
@@ -26,10 +25,17 @@ namespace DocumentManager.Services.Exceptions
 
 		#endregion
 
-		#region Goup
+		#region User
 
-		public const string GROUP_NAME_ALREADY_IN_USE = "GROUP_NAME_ALREADY_IN_USE";
-		public const string GROUP_NOT_FOUND = "GROUP_NOT_FOUND";
+		public const string LOGIN_ALREADY_IN_USE = "LOGIN_ALREADY_IN_USE";
+		public const string USER_NOT_FOUND = "USER_NOT_FOUND";
+		public const string INVALID_CREDENTIALS = "INVALID_CREDENTIALS";
+
+		#endregion
+
+		#region UserGroup
+
+		public const string USER_GROUP_ALREADY_EXISTS = "USER_GROUP_ALREADY_EXISTS";
 
 		#endregion
 
