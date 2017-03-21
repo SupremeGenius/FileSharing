@@ -31,6 +31,8 @@ namespace DocumentManager.Services
 					groupDom.IdAdmin = session.IdUser;
 				}
 				groupDom = _dao.Create(groupDom);
+
+				Audit("New group created", groupDom.IdAdmin, groupDom.Id);
 				return groupDom.Id;
 			}
 			catch (DocumentManagerException)
@@ -74,5 +76,89 @@ namespace DocumentManager.Services
 				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
+
+		public void Update(string securityToken, GroupDto groupDto)
+		{
+			try
+			{
+				var groupDom = _dao.Read(groupDto.Id);
+				if (groupDom == null)
+					throw new DocumentManagerException(DocumentManagerException.GROUP_NOT_FOUND,
+						"Group with id " + groupDto.Id + " does not exist");
+				using (var sessionService = new SessionServices())
+				{
+					var session = sessionService.Read(securityToken);
+					if (groupDom.IdAdmin != session.IdUser)
+						throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
+						                                   "You do not have permissions to update this group");
+				}
+				string action = "Group updated:\nOriginal: " + groupDom + "\nUpdated: " + groupDto;
+				Audit(action, groupDom.IdAdmin, groupDom.Id);
+				Mapper.Map(groupDto, groupDom);
+				_dao.Update(groupDom);
+			}
+			catch (DocumentManagerException)
+			{
+				throw;
+			}
+			catch (Exception e)
+			{
+				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+			}
+		}
+
+		public void Delete(string securityToken, long idGroup)
+		{
+			try
+			{
+				var groupDom = _dao.Read(idGroup);
+				if (groupDom == null)
+					throw new DocumentManagerException(DocumentManagerException.GROUP_NOT_FOUND,
+						"Group with id " + idGroup + " does not exist");
+				using (var sessionService = new SessionServices())
+				{
+					var session = sessionService.Read(securityToken);
+					if (groupDom.IdAdmin != session.IdUser)
+						throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
+														   "You do not have permissions to delete this group");
+				}
+				Audit("Group deleted", groupDom.IdAdmin, idGroup);
+				_dao.Delete(groupDom);
+			}
+			catch (DocumentManagerException)
+			{
+				throw;
+			}
+			catch (Exception e)
+			{
+				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+			}
+		}
+
+		#region Private members
+
+		void Audit(string action, long idUser, long idGroup)
+		{
+			try
+			{
+				var audit = new AuditDto
+				{
+					Action = action,
+					IdObject = idGroup,
+					IdUser = idUser,
+					Object = typeof(Group).Name
+				};
+				using (var auditService = new AuditServices())
+				{
+					auditService.Create(audit);
+				}
+			}
+			catch (Exception)
+			{
+				//TODO Implement a log.
+			}
+		}
+
+		#endregion
 	}
 }

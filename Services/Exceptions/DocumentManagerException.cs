@@ -29,6 +29,7 @@ namespace DocumentManager.Services.Exceptions
 		#region Goup
 
 		public const string GROUP_NAME_ALREADY_IN_USE = "GROUP_NAME_ALREADY_IN_USE";
+		public const string GROUP_NOT_FOUND = "GROUP_NOT_FOUND";
 
 		#endregion
 
