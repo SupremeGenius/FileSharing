@@ -93,6 +93,7 @@ namespace DocumentManager.Services
 						                                   "You do not have permissions to update this group");
 				}
 				string action = "Group updated:\nOriginal: " + groupDom + "\nUpdated: " + groupDto;
+				//TODO comprobar que no modifican a un nombre existente
 				Audit(action, groupDom.IdAdmin, groupDom.Id);
 				Mapper.Map(groupDto, groupDom);
 				_dao.Update(groupDom);

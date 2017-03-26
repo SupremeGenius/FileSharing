@@ -12,6 +12,19 @@ namespace DocumentManager.Services.Exceptions
 		public const string NULL_VALUE = "NULL_VALUE";
 		public const string UNAUTHORIZED = "UNAUTHORIZED";
 
+		#region Document
+
+		public const string DOCUMENT_ALREADY_EXISTS = "DOCUMENT_ALREADY_EXISTS";
+
+		#endregion
+
+		#region Folder
+
+		public const string FOLDER_ALREADY_EXISTS = "FOLDER_ALREADY_EXISTS";
+		public const string FOLDER_NOT_FOUND = "FOLDER_NOT_FOUND";
+
+		#endregion
+
 		#region Goup
 
 		public const string GROUP_NAME_ALREADY_IN_USE = "GROUP_NAME_ALREADY_IN_USE";
