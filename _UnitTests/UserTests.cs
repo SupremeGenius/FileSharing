@@ -15,7 +15,7 @@ namespace _UnitTests
 		}
 
         [Fact]
-        public void CreateUser()
+        public void RegisterUser()
         {
             user = new UserDto
             {
@@ -24,7 +24,7 @@ namespace _UnitTests
                 FirstName = "FirstName",
                 LastName = "LastName",
             };
-            user.Id = _userServices.Create(user);
+            user.Id = _userServices.Register(user);
 
 			Assert.True(user.Id > 0);
 		}
@@ -40,8 +40,8 @@ namespace _UnitTests
         [Fact]
 		public void CheckUserPassword()
 		{
-			var valid = _userServices.CheckUserPassword(user.Login, user.Password);
-			Assert.True(valid > 0);
+			var token = _userServices.Login(user.Login, user.Password);
+			Assert.False(string.IsNullOrWhiteSpace(token));
 		}
 
 		[Fact]

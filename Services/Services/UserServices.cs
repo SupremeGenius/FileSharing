@@ -12,7 +12,7 @@ namespace DocumentManager.Services
 	{
 		public UserServices() : base(new UserDao()) { }
 
-		public long Create(UserDto user)
+		public long Register(UserDto user)
 		{
 			try
 			{
@@ -101,14 +101,17 @@ namespace DocumentManager.Services
 			}
 		}
 
-		public long CheckUserPassword(string login, string password)
+		public string Login(string login, string password)
 		{
 			try
 			{
 				var userDom = _dao.ReadByLogin(login);
 				if (userDom == null || userDom.Password != EncryptPassword(password))
 					throw new DocumentManagerException(DocumentManagerException.INVALID_CREDENTIALS, "The login or password is invalid");
-				return userDom.Id;
+				using (var session = new SessionServices())
+				{
+					return session.Create(userDom.Id);
+				}
 			}
 			catch (DocumentManagerException)
 			{
