@@ -10,6 +10,7 @@ namespace DocumentManager.Persistence.Models
 
         public virtual DbSet<Audit> Audit { get; set; }
 		public virtual DbSet<Document> Document { get; set; }
+		public virtual DbSet<Folder> Folder { get; set; }
 		public virtual DbSet<Group> Group { get; set; }
 		public virtual DbSet<Session> Session { get; set; }
 		public virtual DbSet<User> User { get; set; }
@@ -54,6 +55,24 @@ namespace DocumentManager.Persistence.Models
 					.OnDelete(DeleteBehavior.Restrict)
 					.HasConstraintName("FK_Document_User");
 			});
+
+			modelBuilder.Entity<Folder>(entity =>
+			{
+				 entity.Property(e => e.Name)
+					 .IsRequired()
+					 .HasColumnType("varchar(200)");
+
+				 entity.HasOne(d => d.IdFolderRootNavigation)
+					 .WithMany(p => p.InverseIdFolderRootNavigation)
+					 .HasForeignKey(d => d.IdFolderRoot)
+					 .HasConstraintName("FK_Folder_Folder");
+
+				 entity.HasOne(d => d.IdUserNavigation)
+					 .WithMany(p => p.Folder)
+					 .HasForeignKey(d => d.IdUser)
+					 .OnDelete(DeleteBehavior.Restrict)
+					 .HasConstraintName("FK_Folder_User");
+			 });
 
 			modelBuilder.Entity<Group>(entity =>
 			{

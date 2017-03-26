@@ -1,0 +1,10 @@
+﻿using System;
+namespace DocumentManager.Services
+{
+	public class repository
+	{
+		public repository()
+		{
+		}
+	}
+}

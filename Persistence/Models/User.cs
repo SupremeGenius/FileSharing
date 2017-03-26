@@ -7,6 +7,7 @@ namespace DocumentManager.Persistence.Models
 		{
 			Audit = new HashSet<Audit>();
 			Document = new HashSet<Document>();
+			Folder = new HashSet<Folder>();
 			Group = new HashSet<Group>();
 			Session = new HashSet<Session>();
 			UserGroup = new HashSet<UserGroup>();
@@ -20,6 +21,7 @@ namespace DocumentManager.Persistence.Models
 
 		public virtual ICollection<Audit> Audit { get; set; }
 		public virtual ICollection<Document> Document { get; set; }
+		public virtual ICollection<Folder> Folder { get; set; }
 		public virtual ICollection<Group> Group { get; set; }
 		public virtual ICollection<Session> Session { get; set; }
 		public virtual ICollection<UserGroup> UserGroup { get; set; }
