@@ -125,6 +125,18 @@ namespace DocumentManager.Services
 			}
 		}
 
+		public void Logout(string securityToken)
+		{
+			try
+			{
+				_sessionServices.Delete(securityToken);
+			}
+			catch (Exception e)
+			{
+				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+			}
+		}
+
 		public void ChangePassword(string securityToken, string oldPassword, string newPassword)
 		{
 			try

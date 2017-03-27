@@ -8,13 +8,15 @@ namespace _UnitTests
     {
 		readonly UserServices _userServices;
 		static UserDto user;
+		static string securityToken;
+		static string securityToken2;
 
 		public UserTests()
 		{
 			_userServices = new UserServices();
 		}
 
-        /*[Fact]
+        [Fact]
         public void RegisterUser()
         {
             user = new UserDto
@@ -30,18 +32,34 @@ namespace _UnitTests
 		}
 
 		[Fact]
-		public void ReadUser()
+		public void Login()
 		{
-			var userTest = _userServices.Read(user.Id);
-			Assert.NotNull(userTest);
-			Assert.True(user.Login == userTest.Login);
+			securityToken = _userServices.Login(user.Login, user.Password);
+			Assert.False(string.IsNullOrWhiteSpace(securityToken));
 		}
 
-        [Fact]
-		public void CheckUserPassword()
+		[Fact]
+		public void ChangePassword()
 		{
-			var token = _userServices.Login(user.Login, user.Password);
-			Assert.False(string.IsNullOrWhiteSpace(token));
+			string newPassword = "NewPassword";
+			_userServices.ChangePassword(securityToken, user.Password, newPassword);
+			user.Password = newPassword;
+			securityToken2 = _userServices.Login(user.Login, user.Password);
+			Assert.False(string.IsNullOrEmpty(securityToken2));
+		}
+
+		[Fact]
+		public void Logout()
+		{
+			_userServices.Logout(securityToken2);
+		}
+
+		[Fact]
+		public void ReadUser()
+		{
+			var userTest = _userServices.Read(securityToken);
+			Assert.NotNull(userTest);
+			Assert.True(user.Login == userTest.Login);
 		}
 
 		[Fact]
@@ -49,17 +67,17 @@ namespace _UnitTests
 		{
 			UserDto userTest;
 			user.FirstName = "Name Update";
-			_userServices.Update(user);
-			userTest = _userServices.Read(user.Id);
+			_userServices.Update(securityToken, user);
+			userTest = _userServices.Read(securityToken);
 			Assert.True(userTest.FirstName == user.FirstName);
 		}
 
 		[Fact]
 		public void DeleteUser()
 		{
-			_userServices.Delete(user.Id);
-			var userTest = _userServices.Read(user.Id);
+			_userServices.Delete(securityToken);
+			var userTest = _userServices.Read(securityToken);
 			Assert.Null(userTest);
-		}*/
+		}
     }
 }
