@@ -15,6 +15,8 @@ namespace DocumentManager.Services.Exceptions
 		#region Document
 
 		public const string DOCUMENT_ALREADY_EXISTS = "DOCUMENT_ALREADY_EXISTS";
+		public const string DOCUMENT_NOT_FOUND = "DOCUMENT_NOT_FOUND";
+		public const string FILE_NOT_FOUND = "FILE_NOT_FOUND";
 
 		#endregion
 

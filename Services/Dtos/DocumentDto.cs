@@ -1,5 +1,4 @@
-﻿using System;
-namespace DocumentManager.Services.Dtos
+﻿namespace DocumentManager.Services.Dtos
 {
 	public class DocumentDto
 	{
@@ -8,6 +7,7 @@ namespace DocumentManager.Services.Dtos
 		public string Filename { get; set; }
 		public bool IsPublic { get; set; }
 		public long? IdGroup { get; set; }
+		public long? IdFolder { get; set; }
 		public byte[] Content { get; set; }
 	}
 }

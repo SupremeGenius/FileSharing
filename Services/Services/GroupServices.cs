@@ -54,10 +54,8 @@ namespace DocumentManager.Services
 				{
 					List<UserGroup> users = (List<UserGroup>)groupDom.UserGroup;
 					if (users.Find(u => u.IdUser == session.IdUser) == null)
-					{
 						throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
 														   "You do not have permissions to read this group");
-					}
 				}
 				//TODO Audit
 				return Mapper.Map<GroupDto>(groupDom);
@@ -82,14 +80,18 @@ namespace DocumentManager.Services
 					throw new DocumentManagerException(DocumentManagerException.GROUP_NOT_FOUND,
 						"Group with id " + groupDto.Id + " does not exist");
 				
-					if (groupDom.IdAdmin != session.IdUser)
-						throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
-						                                   "You do not have permissions to update this group");
-				string action = "Group updated:\nOriginal: " + groupDom + "\nUpdated: " + groupDto;
-				//TODO comprobar que no modifican a un nombre existente
-				//TODO Audit
+				if (groupDom.IdAdmin != session.IdUser)
+					throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
+					                                   "You do not have permissions to update this group");
+				
+				var similarName = _dao.QueryByName(groupDto.Name);
+				if (similarName.Count > 0 &&
+				    similarName.Find(g => g.Name.Equals(groupDto.Name, StringComparison.CurrentCultureIgnoreCase)) != null)
+					throw new DocumentManagerException(DocumentManagerException.GROUP_NAME_ALREADY_IN_USE,
+													   "Group name already in use");
 				Mapper.Map(groupDto, groupDom);
 				_dao.Update(groupDom);
+				//TODO Audit
 			}
 			catch (DocumentManagerException)
 			{
@@ -114,8 +116,8 @@ namespace DocumentManager.Services
 					if (groupDom.IdAdmin != session.IdUser)
 						throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
 														   "You do not have permissions to delete this group");
-				//TODO Audit
 				_dao.Delete(groupDom);
+				//TODO Audit
 			}
 			catch (DocumentManagerException)
 			{

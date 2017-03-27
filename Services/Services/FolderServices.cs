@@ -8,7 +8,7 @@ using DocumentManager.Services.Dtos;
 using DocumentManager.Services.Exceptions;
 using Microsoft.Extensions.Configuration;
 
-namespace DocumentManager.Services.Services
+namespace DocumentManager.Services
 {
 	public class FolderServices : AbstractServices<FolderDao>
 	{
@@ -143,13 +143,36 @@ namespace DocumentManager.Services.Services
 			}
 		}
 
-		public string GetFullPath(long idFolder)
+		public string GetFullPath(string securityToken, long? idFolder)
 		{
-			var folder = _dao.Read(idFolder);
-			if (folder == null)
-				throw new DocumentManagerException(DocumentManagerException.FOLDER_NOT_FOUND,
-					 "Folder with id " + idFolder + " does not exist");
-			return GetFullPath(_dao.Read(idFolder));
+			try
+			{
+				var session = CheckSession(securityToken);
+				string path;
+
+				if (!idFolder.HasValue)
+				{
+					path = GetUserRootFolder(session.IdUser);
+				}
+				else
+				{
+					var folder = _dao.Read(idFolder.Value);
+					if (folder == null)
+						throw new DocumentManagerException(DocumentManagerException.FOLDER_NOT_FOUND,
+							 "Folder with id " + idFolder.Value + " does not exist");
+					path = GetFullPath(_dao.Read(idFolder.Value));
+				}
+
+				return path + Path.DirectorySeparatorChar.ToString();
+			}
+			catch (DocumentManagerException)
+			{
+				throw;
+			}
+			catch (Exception e)
+			{
+				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+			}
 		}
 
 		#region Private Methods
@@ -160,11 +183,19 @@ namespace DocumentManager.Services.Services
 			string path = "";
 			while (_folder.IdFolderRoot.HasValue)
 			{
-				path = folder.Name + "/" + path;
+				path = Path.DirectorySeparatorChar.ToString() + folder.Name + path;
 				_folder = _folder.IdFolderRootNavigation;
 			}
-			path = _folder.Name + "/" + path;
-			return repoPath + path;
+			path = Path.DirectorySeparatorChar.ToString() + _folder.Name + path;
+			return GetUserRootFolder(folder.IdUser) + path;
+		}
+
+		string GetUserRootFolder(long idUser)
+		{
+			string path = repoPath + Path.DirectorySeparatorChar.ToString() + idUser;
+			if (!Directory.Exists(path))
+				Directory.CreateDirectory(path);
+			return path;
 		}
 
 		#endregion
