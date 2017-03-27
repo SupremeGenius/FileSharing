@@ -5,7 +5,7 @@ namespace DocumentManager.Persistence.Models.Filters
 	{
 		public long? IdUser { get; set; }
 		public string Object { get; set; }
-		public long? IdObject { get; set; }
+		public string IdObject { get; set; }
 		public DateTime? DateFrom { get; set; }
 		public DateTime? DateTo { get; set; }
 	}

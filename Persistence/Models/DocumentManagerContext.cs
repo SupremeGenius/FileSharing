@@ -31,6 +31,10 @@ namespace DocumentManager.Persistence.Models
 					.IsRequired()
 					.HasColumnType("varchar(50)");
 
+				entity.Property(e => e.IdObject)
+					  .IsRequired()
+					  .HasColumnType("varchar(50)");
+
 				entity.HasOne(d => d.IdUserNavigation)
 					.WithMany(p => p.Audit)
 					.HasForeignKey(d => d.IdUser)

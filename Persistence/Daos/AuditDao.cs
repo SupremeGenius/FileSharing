@@ -16,7 +16,7 @@ namespace DocumentManager.Persistence.Daos
 			if (!string.IsNullOrWhiteSpace(filter.Object))
 			{
 				query = query.Where(a => a.Object == filter.Object);
-				if (filter.IdObject != null)
+				if (!string.IsNullOrWhiteSpace(filter.IdObject))
 					query = query.Where(a => a.IdObject == filter.IdObject);
 			}
 			if (filter.DateFrom != null)
