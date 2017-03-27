@@ -23,7 +23,8 @@ namespace DocumentManager.Services
 				var userDom = Mapper.Map<User>(user);
 				userDom.Password = EncryptPassword(user.Password);
 				userDom = _dao.Create(userDom);
-				Audit("New user created", userDom.Id);
+				//TODO Audit
+
 				return userDom.Id;
 			}
 			catch (DocumentManagerException)
@@ -36,11 +37,12 @@ namespace DocumentManager.Services
 			}
 		}
 
-		public UserDto Read(long idUser)
+		public UserDto Read(string securityToken)
 		{
 			try
 			{
-				var user = _dao.Read(idUser);
+				var session = CheckSession(securityToken);
+				var user = _dao.Read(session.IdUser);
 				if (user == null)
 					return null;
 				return Mapper.Map<UserDto>(user);
@@ -51,16 +53,20 @@ namespace DocumentManager.Services
 			}
 		}
 
-		public void Update(UserDto user)
+		public void Update(string securityToken, UserDto user)
 		{
 			try
 			{
+				var session = CheckSession(securityToken);
 				ValidateUser(user);
 				User userDom = _dao.Read(user.Id);
 				if (userDom == null)
 					throw new DocumentManagerException(DocumentManagerException.USER_NOT_FOUND,
 						"User with id " + user.Id + " does not exist");
-
+				if (userDom.Id != session.IdUser)
+					throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
+													   "You do not have permissions to update this user");
+				
 				if (userDom.Login != user.Login)
 				{
 					if (_dao.ReadByLogin(user.Login) != null)
@@ -70,8 +76,8 @@ namespace DocumentManager.Services
 				var password = userDom.Password;
 				Mapper.Map(user, userDom);
 				userDom.Password = password; //Password not allowed to be modified by this method
+				//TODO Audit
 
-				Audit("User updated", userDom.Id);
 				_dao.Update(userDom);
 			}
 			catch (DocumentManagerException)
@@ -84,16 +90,14 @@ namespace DocumentManager.Services
 			}
 		}
 
-		public void Delete(long idUser)
+		public void Delete(string securityToken)
 		{
 			try
 			{
-				var user = _dao.Read(idUser);
-				if (user != null)
-				{
-					_dao.Delete(user);
-					Audit("User deleted", idUser);
-				}
+				var session = CheckSession(securityToken);
+				var user = _dao.Read(session.IdUser);
+				_dao.Delete(user);
+				//TODO Audit
 			}
 			catch (Exception e)
 			{
@@ -107,8 +111,32 @@ namespace DocumentManager.Services
 			{
 				var userDom = _dao.ReadByLogin(login);
 				if (userDom == null || userDom.Password != EncryptPassword(password))
-					throw new DocumentManagerException(DocumentManagerException.INVALID_CREDENTIALS, "The login or password is invalid");
+					throw new DocumentManagerException(DocumentManagerException.INVALID_CREDENTIALS,
+					                                   "The login or password is invalid");
 				return _sessionServices.Create(userDom.Id);
+			}
+			catch (DocumentManagerException)
+			{
+				throw;
+			}
+			catch (Exception e)
+			{
+				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+			}
+		}
+
+		public void ChangePassword(string securityToken, string oldPassword, string newPassword)
+		{
+			try
+			{
+				var session = CheckSession(securityToken);
+				var user = _dao.Read(session.IdUser);
+				if (user.Password != EncryptPassword(oldPassword))
+					throw new DocumentManagerException(DocumentManagerException.INVALID_CREDENTIALS,
+													   "The password is invalid");
+				user.Password = EncryptPassword(newPassword);
+				_dao.Update(user);
+				//TODO Audit
 			}
 			catch (DocumentManagerException)
 			{
@@ -144,28 +172,6 @@ namespace DocumentManager.Services
 				throw new DocumentManagerException(DocumentManagerException.NULL_VALUE, "FirstName cannot be null");
 			if (String.IsNullOrWhiteSpace(user.LastName))
 				throw new DocumentManagerException(DocumentManagerException.NULL_VALUE, "LastName cannot be null");
-		}
-
-		void Audit(string action, long id)
-		{
-			try
-			{
-				var audit = new AuditDto
-				{
-					Action = action,
-					IdObject = id,
-					IdUser = id,
-					Object = typeof(User).Name
-				};
-				using (var auditService = new AuditServices())
-				{
-					auditService.Create(audit);
-				}
-			}
-			catch (Exception)
-			{
-				//TODO Implement a log.
-			}
 		}
 
 		#endregion

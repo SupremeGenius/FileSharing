@@ -14,7 +14,7 @@ namespace _UnitTests
 			_userServices = new UserServices();
 		}
 
-        [Fact]
+        /*[Fact]
         public void RegisterUser()
         {
             user = new UserDto
@@ -60,6 +60,6 @@ namespace _UnitTests
 			_userServices.Delete(user.Id);
 			var userTest = _userServices.Read(user.Id);
 			Assert.Null(userTest);
-		}
+		}*/
     }
 }
