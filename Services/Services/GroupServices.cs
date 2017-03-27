@@ -16,6 +16,7 @@ namespace DocumentManager.Services
 		{
 			try
 			{
+				var session = CheckSession(securityToken);
 				var similarName = _dao.QueryByName(name);
 				if (similarName.Count > 0 &&
 					similarName.Find(g => g.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)) != null)
@@ -23,16 +24,11 @@ namespace DocumentManager.Services
 													   "Group name already in use");
 				var groupDom = new Group
 				{
-					Name = name
+					Name = name,
+					IdAdmin = session.IdUser
 				};
-				using (var sessionService = new SessionServices())
-				{
-					var session = sessionService.Read(securityToken);
-					groupDom.IdAdmin = session.IdUser;
-				}
 				groupDom = _dao.Create(groupDom);
-
-				Audit("New group created", groupDom.IdAdmin, groupDom.Id);
+				//TODO Audit
 				return groupDom.Id;
 			}
 			catch (DocumentManagerException)
@@ -49,22 +45,21 @@ namespace DocumentManager.Services
 		{
 			try
 			{
+				var session = CheckSession(securityToken);
 				var groupDom = _dao.Read(idGroup);
 				if (groupDom == null)
 					return null;
-				using (var sessionService = new SessionServices())
+				
+				if (groupDom.IdAdmin != session.IdUser)
 				{
-					var session = sessionService.Read(securityToken);
-					if (groupDom.IdAdmin != session.IdUser)
+					List<UserGroup> users = (List<UserGroup>)groupDom.UserGroup;
+					if (users.Find(u => u.IdUser == session.IdUser) == null)
 					{
-						List<UserGroup> users = (List<UserGroup>)groupDom.UserGroup;
-						if (users.Find(u => u.IdUser == session.IdUser) == null)
-						{
-							throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
-															   "You do not have permissions to read this group");
-						}
+						throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
+														   "You do not have permissions to read this group");
 					}
 				}
+				//TODO Audit
 				return Mapper.Map<GroupDto>(groupDom);
 			}
 			catch (DocumentManagerException)
@@ -81,20 +76,18 @@ namespace DocumentManager.Services
 		{
 			try
 			{
+				var session = CheckSession(securityToken);
 				var groupDom = _dao.Read(groupDto.Id);
 				if (groupDom == null)
 					throw new DocumentManagerException(DocumentManagerException.GROUP_NOT_FOUND,
 						"Group with id " + groupDto.Id + " does not exist");
-				using (var sessionService = new SessionServices())
-				{
-					var session = sessionService.Read(securityToken);
+				
 					if (groupDom.IdAdmin != session.IdUser)
 						throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
 						                                   "You do not have permissions to update this group");
-				}
 				string action = "Group updated:\nOriginal: " + groupDom + "\nUpdated: " + groupDto;
 				//TODO comprobar que no modifican a un nombre existente
-				Audit(action, groupDom.IdAdmin, groupDom.Id);
+				//TODO Audit
 				Mapper.Map(groupDto, groupDom);
 				_dao.Update(groupDom);
 			}
@@ -112,18 +105,16 @@ namespace DocumentManager.Services
 		{
 			try
 			{
+				var session = CheckSession(securityToken);
 				var groupDom = _dao.Read(idGroup);
 				if (groupDom == null)
 					throw new DocumentManagerException(DocumentManagerException.GROUP_NOT_FOUND,
 						"Group with id " + idGroup + " does not exist");
-				using (var sessionService = new SessionServices())
-				{
-					var session = sessionService.Read(securityToken);
+				
 					if (groupDom.IdAdmin != session.IdUser)
 						throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
 														   "You do not have permissions to delete this group");
-				}
-				Audit("Group deleted", groupDom.IdAdmin, idGroup);
+				//TODO Audit
 				_dao.Delete(groupDom);
 			}
 			catch (DocumentManagerException)
@@ -135,31 +126,5 @@ namespace DocumentManager.Services
 				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
-
-		#region Private members
-
-		void Audit(string action, long idUser, long idGroup)
-		{
-			try
-			{
-				var audit = new AuditDto
-				{
-					Action = action,
-					IdObject = idGroup,
-					IdUser = idUser,
-					Object = typeof(Group).Name
-				};
-				using (var auditService = new AuditServices())
-				{
-					auditService.Create(audit);
-				}
-			}
-			catch (Exception)
-			{
-				//TODO Implement a log.
-			}
-		}
-
-		#endregion
 	}
 }

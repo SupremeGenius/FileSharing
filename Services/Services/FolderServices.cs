@@ -20,12 +20,14 @@ namespace DocumentManager.Services.Services
 				 .AddJsonFile("repo_settings.json");
 			var configuration = configurationBuilder.Build();
 
-			repoPath = $"{configuration["RepositoryPath"]}"; }
+			repoPath = $"{configuration["RepositoryPath"]}";
+		}
 
 		public long Create(string securityToken, FolderDto folder)
 		{
 			try
 			{
+				var session = CheckSession(securityToken);
 				var similarName = _dao.GetByNameAndFolderRoot(folder.Name, folder.IdFolderRoot);
 				if (similarName != null)
 					throw new DocumentManagerException(DocumentManagerException.FOLDER_ALREADY_EXISTS,
@@ -38,14 +40,11 @@ namespace DocumentManager.Services.Services
 														   "Folder with id " + folder.Id + " does not exist");
 				}
 				var folderDom = Mapper.Map<Folder>(folder);
-				using (var sessionService = new SessionServices())
-				{
-					var session = sessionService.Read(securityToken);
-					folderDom.IdUser = session.IdUser;
-				}
-				folderDom = _dao.Create(folderDom);
+				folderDom.IdUser = session.IdUser;
 
 				Directory.CreateDirectory(GetFullPath(folderDom));
+
+				folderDom = _dao.Create(folderDom);
 				//TODO Audit
 				return folderDom.Id;
 			}
@@ -63,28 +62,28 @@ namespace DocumentManager.Services.Services
 		{
 			try
 			{
+				var session = CheckSession(securityToken);
 				var folderDom = _dao.Read(folder.Id);
 				if (folderDom == null)
 					throw new DocumentManagerException(DocumentManagerException.FOLDER_NOT_FOUND,
 						 "Folder with id " + folder.Id + " does not exist");
-				using (var sessionService = new SessionServices())
-				{
-					var session = sessionService.Read(securityToken);
-					if (folderDom.IdUser != session.IdUser)
-						throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
-														   "You do not have permissions to update this folder");
-				}
+				
+				if (folderDom.IdUser != session.IdUser)
+					throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
+													   "You do not have permissions to update this folder");
+				
 				var similarName = _dao.GetByNameAndFolderRoot(folder.Name, folder.IdFolderRoot);
 				if (similarName != null)
 					throw new DocumentManagerException(DocumentManagerException.FOLDER_ALREADY_EXISTS,
 													   "You already have a folder with this name in this directory");
 				string previousPath = GetFullPath(folderDom);
 				Mapper.Map(folder, folderDom);
-				_dao.Update(folderDom);
+
 				Directory.Move(previousPath, GetFullPath(folderDom));
 				Directory.Delete(previousPath);
-				//TODO Audit
 
+				_dao.Update(folderDom);
+				//TODO Audit
 			}
 			catch (DocumentManagerException)
 			{
@@ -100,20 +99,20 @@ namespace DocumentManager.Services.Services
 		{
 			try
 			{
+				var session = CheckSession(securityToken);
 				var folderDom = _dao.Read(idFolder);
 				if (folderDom == null)
 					throw new DocumentManagerException(DocumentManagerException.FOLDER_NOT_FOUND,
 						 "Folder with id " + idFolder + " does not exist");
-				using (var sessionService = new SessionServices())
-				{
-					var session = sessionService.Read(securityToken);
-					if (folderDom.IdUser != session.IdUser)
-						throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
-														   "You do not have permissions to update this folder");
-				}
+				
+				if (folderDom.IdUser != session.IdUser)
+					throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
+													   "You do not have permissions to update this folder");
+				
 				string path = GetFullPath(folderDom);
-				_dao.Delete(folderDom);
 				Directory.Delete(path);
+
+				_dao.Delete(folderDom);
 				//TODO Audit
 			}
 			catch (DocumentManagerException)
@@ -130,12 +129,9 @@ namespace DocumentManager.Services.Services
 		{
 			try
 			{
-				using (var sessionService = new SessionServices())
-				{
-					var session = sessionService.Read(securityToken);
-					var folders = _dao.GetByUser(session.IdUser);
-					return Mapper.Map<List<FolderDto>>(folders);
-				}
+				var session = CheckSession(securityToken);
+				var folders = _dao.GetByUser(session.IdUser);
+				return Mapper.Map<List<FolderDto>>(folders);
 			}
 			catch (DocumentManagerException)
 			{

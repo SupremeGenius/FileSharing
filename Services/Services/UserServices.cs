@@ -108,10 +108,7 @@ namespace DocumentManager.Services
 				var userDom = _dao.ReadByLogin(login);
 				if (userDom == null || userDom.Password != EncryptPassword(password))
 					throw new DocumentManagerException(DocumentManagerException.INVALID_CREDENTIALS, "The login or password is invalid");
-				using (var session = new SessionServices())
-				{
-					return session.Create(userDom.Id);
-				}
+				return _sessionServices.Create(userDom.Id);
 			}
 			catch (DocumentManagerException)
 			{

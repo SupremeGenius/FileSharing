@@ -39,6 +39,7 @@ namespace DocumentManager.Services
 				if (session == null)
 					throw new DocumentManagerException(DocumentManagerException.SESSION_NOT_FOUND,
 													   "Session with token " + securityToken + " does not exist");
+				Update(securityToken);
 				return Mapper.Map<SessionDto>(session);
 			}
 			catch (DocumentManagerException)
