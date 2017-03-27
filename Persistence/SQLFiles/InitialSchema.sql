@@ -1,7 +1,6 @@
 ﻿USE [master]
 GO
 
-/****** Object:  Database [DocumentManager]    Script Date: 11/03/2017 13:41:40 ******/
 CREATE DATABASE [DocumentManager]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -143,7 +142,6 @@ GO
 USE [DocumentManager]
 GO
 
-/****** Object:  Table [dbo].[User]    Script Date: 11/03/2017 14:42:40 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -171,7 +169,6 @@ GO
 USE [DocumentManager]
 GO
 
-/****** Object:  Table [dbo].[Session]    Script Date: 11/03/2017 14:42:58 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -200,7 +197,6 @@ GO
 USE [DocumentManager]
 GO
 
-/****** Object:  Table [dbo].[Group]    Script Date: 11/03/2017 14:43:11 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -233,7 +229,6 @@ GO
 USE [DocumentManager]
 GO
 
-/****** Object:  Table [dbo].[UserGroup]    Script Date: 11/03/2017 14:43:20 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -271,7 +266,45 @@ GO
 USE [DocumentManager]
 GO
 
-/****** Object:  Table [dbo].[Document]    Script Date: 11/03/2017 14:43:29 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Folder](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[IdUser] [bigint] NOT NULL,
+	[Name] [varchar](200) NOT NULL,
+	[IdFolderRoot] [bigint] NULL,
+ CONSTRAINT [PK_Folder] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[Folder]  WITH CHECK ADD  CONSTRAINT [FK_Folder_Folder] FOREIGN KEY([IdFolderRoot])
+REFERENCES [dbo].[Folder] ([Id])
+GO
+
+ALTER TABLE [dbo].[Folder] CHECK CONSTRAINT [FK_Folder_Folder]
+GO
+
+ALTER TABLE [dbo].[Folder]  WITH CHECK ADD  CONSTRAINT [FK_Folder_User] FOREIGN KEY([IdUser])
+REFERENCES [dbo].[User] ([Id])
+GO
+
+ALTER TABLE [dbo].[Folder] CHECK CONSTRAINT [FK_Folder_User]
+GO
+
+
+
+
+USE [DocumentManager]
+GO
+
 SET ANSI_NULLS ON
 GO
 
@@ -282,14 +315,22 @@ CREATE TABLE [dbo].[Document](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[IdUser] [bigint] NOT NULL,
 	[Filename] [varchar](200) NOT NULL,
-	[IsPublic] [bit] NOT NULL,
+	[IsPublic] [bigint] NOT NULL,
 	[IdGroup] [bigint] NULL,
+	[IdFolder] [bigint] NULL,
  CONSTRAINT [PK_Document] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
+GO
+
+ALTER TABLE [dbo].[Document]  WITH CHECK ADD  CONSTRAINT [FK_Document_Folder] FOREIGN KEY([IdFolder])
+REFERENCES [dbo].[Folder] ([Id])
+GO
+
+ALTER TABLE [dbo].[Document] CHECK CONSTRAINT [FK_Document_Folder]
 GO
 
 ALTER TABLE [dbo].[Document]  WITH CHECK ADD  CONSTRAINT [FK_Document_Group] FOREIGN KEY([IdGroup])
@@ -309,7 +350,6 @@ GO
 USE [DocumentManager]
 GO
 
-/****** Object:  Table [dbo].[Audit]    Script Date: 11/03/2017 14:43:39 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -321,7 +361,7 @@ CREATE TABLE [dbo].[Audit](
 	[IdUser] [bigint] NOT NULL,
 	[Date] [datetime] NOT NULL,
 	[Object] [varchar](50) NOT NULL,
-	[IdObject] [bigint] NOT NULL,
+	[IdObject] [varchar](50) NOT NULL,
 	[Action] [varchar](200) NOT NULL 
  CONSTRAINT [PK_Audit] PRIMARY KEY CLUSTERED 
 (

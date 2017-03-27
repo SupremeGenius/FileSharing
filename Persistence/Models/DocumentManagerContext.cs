@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DocumentManager.Persistence.Models
 {
-	public partial class DocumentManagerContext : DbContext
+	public class DocumentManagerContext : DbContext
 	{
         public DocumentManagerContext(DbContextOptions<DocumentManagerContext> options)
             : base(options) { }
