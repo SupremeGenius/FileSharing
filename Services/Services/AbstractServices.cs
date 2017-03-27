@@ -7,15 +7,11 @@ namespace DocumentManager.Services
 	public abstract class AbstractServices<T> : IDisposable
 	{
 		protected T _dao;
-		protected SessionServices _sessionServices;
-		AuditServices _auditServices;
 
 		public AbstractServices(T dao)
 		{
 			AutoMapperConfig.RegisterMappings();
 			_dao = dao;
-			_sessionServices = new SessionServices();
-			_auditServices = new AuditServices();
 		}
 
 		#region IDisposable
@@ -28,7 +24,8 @@ namespace DocumentManager.Services
 
 		public SessionDto CheckSession(string securityToken)
 		{
-			return _sessionServices.Read(securityToken);
+            using (var _sessionServices = new SessionServices())
+			    return _sessionServices.Read(securityToken);
 		}
 
 		public void Audit(string idObj, string obj, string action, long idUser)
@@ -42,10 +39,8 @@ namespace DocumentManager.Services
 					IdUser = idUser,
 					Object = obj
 				};
-				using (var auditService = new AuditServices())
-				{
-					auditService.Create(audit);
-				}
+				using (var _auditService = new AuditServices())
+					_auditService.Create(audit);
 			}
 			catch (Exception)
 			{

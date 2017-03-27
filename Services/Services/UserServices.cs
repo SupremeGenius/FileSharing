@@ -94,6 +94,7 @@ namespace DocumentManager.Services
 		{
 			try
 			{
+                //TODO Es mejor dejar borrar todas sus sesiones y poner cuenta como inactiva?
 				var session = CheckSession(securityToken);
 				var user = _dao.Read(session.IdUser);
 				_dao.Delete(user);
@@ -113,7 +114,8 @@ namespace DocumentManager.Services
 				if (userDom == null || userDom.Password != EncryptPassword(password))
 					throw new DocumentManagerException(DocumentManagerException.INVALID_CREDENTIALS,
 					                                   "The login or password is invalid");
-				return _sessionServices.Create(userDom.Id);
+                using (var _sessionServices = new SessionServices())
+                    return _sessionServices.Create(userDom.Id);
 			}
 			catch (DocumentManagerException)
 			{
@@ -128,8 +130,9 @@ namespace DocumentManager.Services
 		public void Logout(string securityToken)
 		{
 			try
-			{
-				_sessionServices.Delete(securityToken);
+            {
+                using (var _sessionServices = new SessionServices())
+                    _sessionServices.Delete(securityToken);
 			}
 			catch (Exception e)
 			{
