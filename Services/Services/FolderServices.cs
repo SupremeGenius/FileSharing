@@ -148,22 +148,18 @@ namespace DocumentManager.Services
 			try
 			{
 				var session = CheckSession(securityToken);
-				string path;
+				string path = GetUserRootFolder(session.IdUser) + Path.DirectorySeparatorChar.ToString();
 
-				if (!idFolder.HasValue)
-				{
-					path = GetUserRootFolder(session.IdUser);
-				}
-				else
+				if (idFolder.HasValue)
 				{
 					var folder = _dao.Read(idFolder.Value);
 					if (folder == null)
 						throw new DocumentManagerException(DocumentManagerException.FOLDER_NOT_FOUND,
 							 "Folder with id " + idFolder.Value + " does not exist");
-					path = GetFullPath(_dao.Read(idFolder.Value));
+					path += GetFullPath(_dao.Read(idFolder.Value)) + Path.DirectorySeparatorChar.ToString();
 				}
 
-				return path + Path.DirectorySeparatorChar.ToString();
+				return path;
 			}
 			catch (DocumentManagerException)
 			{
@@ -179,15 +175,10 @@ namespace DocumentManager.Services
 
 		string GetFullPath(Folder folder)
 		{
-			var _folder = folder;
-			string path = "";
-			while (_folder.IdFolderRoot.HasValue)
-			{
-				path = Path.DirectorySeparatorChar.ToString() + folder.Name + path;
-				_folder = _folder.IdFolderRootNavigation;
-			}
-			path = Path.DirectorySeparatorChar.ToString() + _folder.Name + path;
-			return GetUserRootFolder(folder.IdUser) + path;
+			if (folder.IdFolderRoot.HasValue)
+				return GetFullPath(folder.IdFolderRootNavigation) + Path.DirectorySeparatorChar.ToString() + folder.Name;
+					
+			return folder.Name;
 		}
 
 		string GetUserRootFolder(long idUser)
