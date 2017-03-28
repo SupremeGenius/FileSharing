@@ -45,6 +45,7 @@ namespace DocumentManager.Services.Exceptions
 		public const string LOGIN_ALREADY_IN_USE = "LOGIN_ALREADY_IN_USE";
 		public const string USER_NOT_FOUND = "USER_NOT_FOUND";
 		public const string INVALID_CREDENTIALS = "INVALID_CREDENTIALS";
+		public const string USER_CANNOT_BE_REMOVED = "USER_CANNOT_BE_REMOVED";
 
 		#endregion
 

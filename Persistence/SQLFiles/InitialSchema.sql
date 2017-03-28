@@ -189,6 +189,7 @@ GO
 
 ALTER TABLE [dbo].[Session]  WITH CHECK ADD  CONSTRAINT [FK_Session_User] FOREIGN KEY([IdUser])
 REFERENCES [dbo].[User] ([Id])
+ON DELETE CASCADE
 GO
 
 ALTER TABLE [dbo].[Session] CHECK CONSTRAINT [FK_Session_User]
@@ -251,6 +252,7 @@ GO
 
 ALTER TABLE [dbo].[UserGroup]  WITH CHECK ADD  CONSTRAINT [FK_UserGroup_Group] FOREIGN KEY([IdGroup])
 REFERENCES [dbo].[Group] ([Id])
+ON DELETE CASCADE
 GO
 
 ALTER TABLE [dbo].[UserGroup] CHECK CONSTRAINT [FK_UserGroup_Group]
@@ -258,6 +260,7 @@ GO
 
 ALTER TABLE [dbo].[UserGroup]  WITH CHECK ADD  CONSTRAINT [FK_UserGroup_User] FOREIGN KEY([IdUser])
 REFERENCES [dbo].[User] ([Id])
+ON DELETE CASCADE
 GO
 
 ALTER TABLE [dbo].[UserGroup] CHECK CONSTRAINT [FK_UserGroup_User]

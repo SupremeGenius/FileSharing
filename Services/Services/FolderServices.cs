@@ -125,12 +125,28 @@ namespace DocumentManager.Services
 			}
 		}
 
-		public List<FolderDto> GetUserFolders(string securityToken)
+		public List<FolderDto> GetFoldersInFolder(string securityToken, long? idFolder)
 		{
 			try
 			{
 				var session = CheckSession(securityToken);
-				var folders = _dao.GetByUser(session.IdUser);
+				Folder folder;
+				if (!idFolder.HasValue)
+				{
+					folder = _dao.GetUserRootFolder(session.IdUser);
+				}
+				else
+				{
+					folder = _dao.Read(idFolder.Value);
+				}
+
+				if (folder == null || folder.InverseIdFolderRootNavigation == null
+				    || folder.InverseIdFolderRootNavigation.Count == 0)
+					return new List<FolderDto>();
+				
+				List<Folder> folders = new List<Folder>();
+				folders.AddRange(folder.InverseIdFolderRootNavigation);
+
 				return Mapper.Map<List<FolderDto>>(folders);
 			}
 			catch (DocumentManagerException)

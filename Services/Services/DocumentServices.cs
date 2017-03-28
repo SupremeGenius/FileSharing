@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using AutoMapper;
 using DocumentManager.Persistence.Daos;
@@ -142,6 +143,24 @@ namespace DocumentManager.Services
 
 				_dao.Delete(documentDom);
 				//TODO Audit
+			}
+			catch (DocumentManagerException)
+			{
+				throw;
+			}
+			catch (Exception e)
+			{
+				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+			}
+		}
+
+		public List<DocumentDto> GetDocumentsInFolder(string securityToken, long? idFolder)
+		{
+			try
+			{
+				var session = CheckSession(securityToken);
+				var result = _dao.GetDocumentsInFolder(session.IdUser, idFolder);
+				return Mapper.Map<List<DocumentDto>>(result);
 			}
 			catch (DocumentManagerException)
 			{

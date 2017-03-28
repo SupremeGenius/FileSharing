@@ -128,5 +128,23 @@ namespace DocumentManager.Services
 				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
+
+		public List<GroupDto> GetAdministrableGroups(string securityToken)
+		{
+			try
+			{
+				var session = CheckSession(securityToken);
+				var result = _dao.GetAdministrableGroups(session.IdUser);
+				return Mapper.Map<List<GroupDto>>(result);
+			}
+			catch (DocumentManagerException)
+			{
+				throw;
+			}
+			catch (Exception e)
+			{
+				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+			}
+		}
 	}
 }

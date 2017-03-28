@@ -105,7 +105,13 @@ namespace DocumentManager.Services
 					throw new DocumentManagerException(DocumentManagerException.INVALID_CREDENTIALS,
 													   "The password is invalid");
 
-                //TODO comprobar si es admin de algún grupo, si es así, pedir que lo transfiera antes
+				using (var groupServices = new GroupServices())
+				{
+					var groups = groupServices.GetAdministrableGroups(securityToken);
+					if (groups != null && groups.Count > 0)
+						throw new DocumentManagerException(DocumentManagerException.USER_CANNOT_BE_REMOVED,
+													   "The user cannot be removed because he is group admin");
+				}
 
 				using (var documentServices = new DocumentServices())
 				{
@@ -209,13 +215,13 @@ namespace DocumentManager.Services
 		{
 			if (user == null)
 				throw new DocumentManagerException(DocumentManagerException.NULL_VALUE, "User cannot be null");
-			if (String.IsNullOrWhiteSpace(user.Login))
+			if (string.IsNullOrWhiteSpace(user.Login))
 				throw new DocumentManagerException(DocumentManagerException.NULL_VALUE, "Login cannot be null");
-			if (String.IsNullOrWhiteSpace(user.Password))
+			if (string.IsNullOrWhiteSpace(user.Password))
 				throw new DocumentManagerException(DocumentManagerException.NULL_VALUE, "Password cannot be null");
-			if (String.IsNullOrWhiteSpace(user.FirstName))
+			if (string.IsNullOrWhiteSpace(user.FirstName))
 				throw new DocumentManagerException(DocumentManagerException.NULL_VALUE, "FirstName cannot be null");
-			if (String.IsNullOrWhiteSpace(user.LastName))
+			if (string.IsNullOrWhiteSpace(user.LastName))
 				throw new DocumentManagerException(DocumentManagerException.NULL_VALUE, "LastName cannot be null");
 		}
 

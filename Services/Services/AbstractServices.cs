@@ -1,5 +1,6 @@
 ﻿using System;
 using DocumentManager.Services.Dtos;
+using DocumentManager.Services.Exceptions;
 using DocumentManager.Services.Mapping;
 
 namespace DocumentManager.Services
@@ -42,9 +43,9 @@ namespace DocumentManager.Services
 				using (var _auditService = new AuditServices())
 					_auditService.Create(audit);
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
-				//TODO Implement a log.
+				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 	}

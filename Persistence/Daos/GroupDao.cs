@@ -10,5 +10,10 @@ namespace DocumentManager.Persistence.Daos
 		{
 			return _dbSet.Where(g => g.Name.Contains(name)).ToList();
 		}
+
+		public List<Group> GetAdministrableGroups(long idUser)
+		{
+			return _dbSet.Where(g => g.IdAdmin == idUser).ToList();
+		}
 	}
 }

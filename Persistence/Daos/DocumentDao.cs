@@ -20,5 +20,10 @@ namespace DocumentManager.Persistence.Daos
 			}
 			return query.ToList();
 		}
+
+		public List<Document> GetDocumentsInFolder(long idUser, long? idFolder)
+		{
+			return _dbSet.Where(d => d.IdUser == idUser && d.IdFolder == idFolder).ToList();
+		}
 	}
 }
