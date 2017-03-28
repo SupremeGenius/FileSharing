@@ -29,17 +29,18 @@ namespace DocumentManager.Services
 			    return _sessionServices.Read(securityToken);
 		}
 
-		public void Audit(string idObj, string obj, string action, long idUser)
+		public void Audit(long idUser, string idObj, string obj, ActionDto action, string description)
 		{
 			try
 			{
 				var audit = new AuditDto
-				{
-					Action = action,
+                {
+                    IdUser = idUser,
 					IdObject = idObj,
-					IdUser = idUser,
-					Object = obj
-				};
+					Object = obj,
+                    Action = action,
+                    Description = description
+                };
 				using (var _auditService = new AuditServices())
 					_auditService.Create(audit);
 			}

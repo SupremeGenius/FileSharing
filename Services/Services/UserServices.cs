@@ -24,7 +24,7 @@ namespace DocumentManager.Services
 				userDom.Password = EncryptPassword(user.Password);
 				userDom = _dao.Create(userDom);
 
-				Audit(userDom.Id.ToString(), typeof(User).Name, "Register user: " + userDom, userDom.Id);
+				Audit(userDom.Id, userDom.Id.ToString(), typeof(User).Name, ActionDto.Create, "User registered: " + userDom);
 
 				return userDom.Id;
 			}
@@ -80,8 +80,8 @@ namespace DocumentManager.Services
 				Mapper.Map(user, userDom);
 				userDom.Password = password; //Password not allowed to be modified by this method
 
-				Audit(userDom.Id.ToString(), typeof(User).Name,
-				      "Update:\n-Old user: " + oldUser + "\n-New user: " + userDom, userDom.Id);
+				Audit(userDom.Id, userDom.Id.ToString(), typeof(User).Name, ActionDto.Update,
+                      "User updated:\r\n" + "-Previous: " + oldUser + "\r\n" + "-Updated: " + userDom);
 
 				_dao.Update(userDom);
 			}
@@ -129,11 +129,9 @@ namespace DocumentManager.Services
 					}
 				}
 
-				//TODO hacer Session y UserGroup que se eliminen en casacada en DB
-
 				_dao.Delete(user);
-				//TODO cambiar audit para que permita borrar el user sin borrar audits
-				Audit(user.Id.ToString(), typeof(User).Name, "Deleted user: " + user, user.Id);
+
+				Audit(user.Id, user.Id.ToString(), typeof(User).Name, ActionDto.Delete, "User deleted: " + user);
 			}
 			catch (Exception e)
 			{
@@ -187,7 +185,7 @@ namespace DocumentManager.Services
 				user.Password = EncryptPassword(newPassword);
 				_dao.Update(user);
 
-				Audit(user.Id.ToString(), typeof(User).Name, "Changed password of user: " + user.Login, user.Id);
+				Audit(user.Id, user.Id.ToString(), typeof(User).Name, ActionDto.Update, "User password changed: " + user.Login);
 			}
 			catch (DocumentManagerException)
 			{

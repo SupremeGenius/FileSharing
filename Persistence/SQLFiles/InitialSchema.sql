@@ -302,9 +302,6 @@ GO
 ALTER TABLE [dbo].[Folder] CHECK CONSTRAINT [FK_Folder_User]
 GO
 
-
-
-
 USE [DocumentManager]
 GO
 
@@ -365,19 +362,12 @@ CREATE TABLE [dbo].[Audit](
 	[Date] [datetime] NOT NULL,
 	[Object] [varchar](50) NOT NULL,
 	[IdObject] [varchar](50) NOT NULL,
-	[Action] [varchar](200) NOT NULL 
+	[Action] [varchar](50) NOT NULL,
+	[Description] [nvarchar](400) NOT NULL,
  CONSTRAINT [PK_Audit] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY],
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
 GO
-
-ALTER TABLE [dbo].[Audit]  WITH CHECK ADD  CONSTRAINT [FK_Audit_User] FOREIGN KEY([IdUser])
-REFERENCES [dbo].[User] ([Id])
-GO
-
-ALTER TABLE [dbo].[Audit] CHECK CONSTRAINT [FK_Audit_User]
-GO
-

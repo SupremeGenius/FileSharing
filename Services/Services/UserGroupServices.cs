@@ -83,7 +83,7 @@ namespace DocumentManager.Services
 				Mapper.Map(userGroup, userGroupDom);
 				_dao.Update(userGroupDom);
 
-				string action = "User Group updated:\nOriginal: " + userGroupDom + "\nUpdated: " + userGroup;
+				string action = "Update:\r\n" + "-Previous: " + userGroupDom + "\r\n" + "-Updated: " + userGroup;
 				//TODO Audit
 			}
 			catch (DocumentManagerException)
