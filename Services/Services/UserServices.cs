@@ -23,7 +23,8 @@ namespace DocumentManager.Services
 				var userDom = Mapper.Map<User>(user);
 				userDom.Password = EncryptPassword(user.Password);
 				userDom = _dao.Create(userDom);
-				//TODO Audit
+
+				Audit(userDom.Id.ToString(), typeof(User).Name, "Register user: " + userDom, userDom.Id);
 
 				return userDom.Id;
 			}
@@ -74,9 +75,13 @@ namespace DocumentManager.Services
 					userDom.Login = user.Login;
 				}
 				var password = userDom.Password;
+				var oldUser = userDom;
+
 				Mapper.Map(user, userDom);
 				userDom.Password = password; //Password not allowed to be modified by this method
-				//TODO Audit
+
+				Audit(userDom.Id.ToString(), typeof(User).Name,
+				      "Update:\n-Old user: " + oldUser + "\n-New user: " + userDom, userDom.Id);
 
 				_dao.Update(userDom);
 			}
@@ -90,15 +95,39 @@ namespace DocumentManager.Services
 			}
 		}
 
-		public void Delete(string securityToken)
+		public void Delete(string securityToken, string password)
 		{
 			try
 			{
-                //TODO Es mejor dejar borrar todas sus sesiones y poner cuenta como inactiva?
 				var session = CheckSession(securityToken);
 				var user = _dao.Read(session.IdUser);
+				if (user.Password != EncryptPassword(password))
+					throw new DocumentManagerException(DocumentManagerException.INVALID_CREDENTIALS,
+													   "The password is invalid");
+
+                //TODO comprobar si es admin de algún grupo, si es así, pedir que lo transfiera antes
+
+				using (var documentServices = new DocumentServices())
+				{
+					foreach (var doc in user.Document)
+					{
+						documentServices.Delete(securityToken, doc.Id);
+					}
+				}
+
+				using (var folderServices = new FolderServices())
+				{
+					foreach (var folder in user.Folder)
+					{
+						folderServices.Delete(securityToken, folder.Id);
+					}
+				}
+
+				//TODO hacer Session y UserGroup que se eliminen en casacada en DB
+
 				_dao.Delete(user);
-				//TODO Audit
+				//TODO cambiar audit para que permita borrar el user sin borrar audits
+				Audit(user.Id.ToString(), typeof(User).Name, "Deleted user: " + user, user.Id);
 			}
 			catch (Exception e)
 			{
@@ -151,7 +180,8 @@ namespace DocumentManager.Services
 													   "The password is invalid");
 				user.Password = EncryptPassword(newPassword);
 				_dao.Update(user);
-				//TODO Audit
+
+				Audit(user.Id.ToString(), typeof(User).Name, "Changed password of user: " + user.Login, user.Id);
 			}
 			catch (DocumentManagerException)
 			{

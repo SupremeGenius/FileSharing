@@ -1,4 +1,3 @@
-using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DocumentManager.Services;
 using DocumentManager.Services.Dtos;
@@ -79,7 +78,7 @@ namespace _UnitTest
         [ExpectedException(typeof(DocumentManagerException))]
         public void DeleteUser()
         {
-            _userServices.Delete(securityToken);
+            _userServices.Delete(securityToken, user.Password);
             var userTest = _userServices.Read(securityToken);
         }
     }
