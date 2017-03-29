@@ -1,4 +1,4 @@
-﻿namespace DocumentManager.Services.Dtos
+﻿namespace FileStorage.Services.Dtos
 {
 	public class DocumentDto
 	{

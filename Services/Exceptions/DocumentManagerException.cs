@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace DocumentManager.Services.Exceptions
+namespace FileStorage.Services.Exceptions
 {
-	public class DocumentManagerException : Exception
+	public class FileStorageException : Exception
 	{
 		public string Code { get; protected set; }
 
@@ -57,13 +57,13 @@ namespace DocumentManager.Services.Exceptions
 
 		#endregion
 
-		public DocumentManagerException(string code, string message)
+		public FileStorageException(string code, string message)
 			: base(message)
 		{
 			Code = code;
 		}
 
-		public DocumentManagerException(string code, string message, Exception inner)
+		public FileStorageException(string code, string message, Exception inner)
 			: base(message, inner)
 		{
 			Code = code;

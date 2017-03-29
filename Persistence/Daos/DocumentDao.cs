@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DocumentManager.Persistence.Models;
-using DocumentManager.Persistence.Models.Filters;
+using FileStorage.Persistence.Models;
+using FileStorage.Persistence.Models.Filters;
 
-namespace DocumentManager.Persistence.Daos
+namespace FileStorage.Persistence.Daos
 {
 	public class DocumentDao : AbstractDao<Document, long>
 	{

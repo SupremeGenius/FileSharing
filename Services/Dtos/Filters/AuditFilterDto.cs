@@ -1,6 +1,6 @@
-﻿using DocumentManager.Services.Dtos;
+﻿using FileStorage.Services.Dtos;
 using System;
-namespace DocumentManager.Services.Filters
+namespace FileStorage.Services.Filters
 {
 	public class AuditFilterDto
 	{

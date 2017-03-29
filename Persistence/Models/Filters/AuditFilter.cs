@@ -1,5 +1,5 @@
 ﻿using System;
-namespace DocumentManager.Persistence.Models.Filters
+namespace FileStorage.Persistence.Models.Filters
 {
 	public class AuditFilter
 	{

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using AutoMapper;
-using DocumentManager.Persistence.Daos;
-using DocumentManager.Persistence.Models;
-using DocumentManager.Persistence.Models.Filters;
-using DocumentManager.Services.Dtos;
-using DocumentManager.Services.Exceptions;
-using DocumentManager.Services.Filters;
+using FileStorage.Persistence.Daos;
+using FileStorage.Persistence.Models;
+using FileStorage.Persistence.Models.Filters;
+using FileStorage.Services.Dtos;
+using FileStorage.Services.Exceptions;
+using FileStorage.Services.Filters;
 
-namespace DocumentManager.Services
+namespace FileStorage.Services
 {
 	public class AuditServices : AbstractServices<AuditDao>
 	{
@@ -24,7 +24,7 @@ namespace DocumentManager.Services
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 		public List<AuditDto> Query(AuditFilterDto filter)
@@ -37,7 +37,7 @@ namespace DocumentManager.Services
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 	}

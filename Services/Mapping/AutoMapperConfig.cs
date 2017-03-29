@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using DocumentManager.Persistence.Models;
-using DocumentManager.Services.Dtos;
-using DocumentManager.Services.Filters;
+using FileStorage.Persistence.Models;
+using FileStorage.Services.Dtos;
+using FileStorage.Services.Filters;
 
-namespace DocumentManager.Services.Mapping
+namespace FileStorage.Services.Mapping
 {
 	public static class AutoMapperConfig
 	{

@@ -3,8 +3,12 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <RootNamespace>DocumentManager.Services</RootNamespace>
-    <AssemblyName>DocumentManager.Services</AssemblyName>
+    <RootNamespace>FileStorage.Services</RootNamespace>
+    <AssemblyName>FileStorage.Services</AssemblyName>
+    <Authors>Victor de la Rosa</Authors>
+    <Company />
+    <Product>FileStorage</Product>
+    <Description>FileStorage services package.</Description>
   </PropertyGroup>
 
   <ItemGroup>

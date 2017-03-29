@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using AutoMapper;
-using DocumentManager.Persistence.Daos;
-using DocumentManager.Persistence.Models;
-using DocumentManager.Services.Dtos;
-using DocumentManager.Services.Exceptions;
+using FileStorage.Persistence.Daos;
+using FileStorage.Persistence.Models;
+using FileStorage.Services.Dtos;
+using FileStorage.Services.Exceptions;
 
-namespace DocumentManager.Services
+namespace FileStorage.Services
 {
 	public class GroupServices : AbstractServices<GroupDao>
 	{
@@ -20,7 +20,7 @@ namespace DocumentManager.Services
 				var similarName = _dao.QueryByName(name);
 				if (similarName.Count > 0 &&
 					similarName.Find(g => g.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)) != null)
-					throw new DocumentManagerException(DocumentManagerException.GROUP_NAME_ALREADY_IN_USE,
+					throw new FileStorageException(FileStorageException.GROUP_NAME_ALREADY_IN_USE,
 													   "Group name already in use");
 				var groupDom = new Group
 				{
@@ -31,13 +31,13 @@ namespace DocumentManager.Services
 				//TODO Audit
 				return groupDom.Id;
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -54,19 +54,19 @@ namespace DocumentManager.Services
 				{
 					List<UserGroup> users = (List<UserGroup>)groupDom.UserGroup;
 					if (users.Find(u => u.IdUser == session.IdUser) == null)
-						throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
+						throw new FileStorageException(FileStorageException.UNAUTHORIZED,
 														   "You do not have permissions to read this group");
 				}
 				//TODO Audit
 				return Mapper.Map<GroupDto>(groupDom);
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -77,29 +77,29 @@ namespace DocumentManager.Services
 				var session = CheckSession(securityToken);
 				var groupDom = _dao.Read(groupDto.Id);
 				if (groupDom == null)
-					throw new DocumentManagerException(DocumentManagerException.GROUP_NOT_FOUND,
+					throw new FileStorageException(FileStorageException.GROUP_NOT_FOUND,
 						"Group with id " + groupDto.Id + " does not exist");
 				
 				if (groupDom.IdAdmin != session.IdUser)
-					throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
+					throw new FileStorageException(FileStorageException.UNAUTHORIZED,
 					                                   "You do not have permissions to update this group");
 				
 				var similarName = _dao.QueryByName(groupDto.Name);
 				if (similarName.Count > 0 &&
 				    similarName.Find(g => g.Name.Equals(groupDto.Name, StringComparison.CurrentCultureIgnoreCase)) != null)
-					throw new DocumentManagerException(DocumentManagerException.GROUP_NAME_ALREADY_IN_USE,
+					throw new FileStorageException(FileStorageException.GROUP_NAME_ALREADY_IN_USE,
 													   "Group name already in use");
 				Mapper.Map(groupDto, groupDom);
 				_dao.Update(groupDom);
 				//TODO Audit
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -110,22 +110,22 @@ namespace DocumentManager.Services
 				var session = CheckSession(securityToken);
 				var groupDom = _dao.Read(idGroup);
 				if (groupDom == null)
-					throw new DocumentManagerException(DocumentManagerException.GROUP_NOT_FOUND,
+					throw new FileStorageException(FileStorageException.GROUP_NOT_FOUND,
 						"Group with id " + idGroup + " does not exist");
 				
 					if (groupDom.IdAdmin != session.IdUser)
-						throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
+						throw new FileStorageException(FileStorageException.UNAUTHORIZED,
 														   "You do not have permissions to delete this group");
 				_dao.Delete(groupDom);
 				//TODO Audit
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -137,13 +137,13 @@ namespace DocumentManager.Services
 				var result = _dao.GetAdministrableGroups(session.IdUser);
 				return Mapper.Map<List<GroupDto>>(result);
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 	}

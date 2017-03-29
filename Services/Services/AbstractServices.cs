@@ -1,9 +1,9 @@
 ﻿using System;
-using DocumentManager.Services.Dtos;
-using DocumentManager.Services.Exceptions;
-using DocumentManager.Services.Mapping;
+using FileStorage.Services.Dtos;
+using FileStorage.Services.Exceptions;
+using FileStorage.Services.Mapping;
 
-namespace DocumentManager.Services
+namespace FileStorage.Services
 {
 	public abstract class AbstractServices<T> : IDisposable
 	{
@@ -46,7 +46,7 @@ namespace DocumentManager.Services
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 	}

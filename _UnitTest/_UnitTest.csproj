@@ -1,7 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>    
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netcoreapp1.1</TargetFramework>    
+    <Authors>Victor de la Rosa</Authors>    
+    <Company />    
+    <Product>FileStorage</Product>    
+    <Description>FileStorage unit test package</Description>
   </PropertyGroup>
 
   <ItemGroup>

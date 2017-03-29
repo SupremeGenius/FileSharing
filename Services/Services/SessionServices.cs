@@ -1,11 +1,11 @@
 ﻿using System;
 using AutoMapper;
-using DocumentManager.Persistence.Daos;
-using DocumentManager.Persistence.Models;
-using DocumentManager.Services.Dtos;
-using DocumentManager.Services.Exceptions;
+using FileStorage.Persistence.Daos;
+using FileStorage.Persistence.Models;
+using FileStorage.Services.Dtos;
+using FileStorage.Services.Exceptions;
 
-namespace DocumentManager.Services
+namespace FileStorage.Services
 {
 	public class SessionServices : AbstractServices<SessionDao>
 	{
@@ -27,7 +27,7 @@ namespace DocumentManager.Services
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -37,18 +37,18 @@ namespace DocumentManager.Services
 			{
 				var session = _dao.Read(securityToken);
 				if (session == null)
-					throw new DocumentManagerException(DocumentManagerException.SESSION_NOT_FOUND,
+					throw new FileStorageException(FileStorageException.SESSION_NOT_FOUND,
 													   "Session with token " + securityToken + " does not exist");
 				Update(securityToken);
 				return Mapper.Map<SessionDto>(session);
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -58,18 +58,18 @@ namespace DocumentManager.Services
 			{
 				var session = _dao.Read(securityToken);
 				if (session == null)
-					throw new DocumentManagerException(DocumentManagerException.SESSION_NOT_FOUND,
+					throw new FileStorageException(FileStorageException.SESSION_NOT_FOUND,
 													   "Session with token " + securityToken + " does not exist");
 				session.DateLastAccess = DateTime.Now;
 				_dao.Update(session);
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -81,13 +81,13 @@ namespace DocumentManager.Services
 				if (session != null)
 					_dao.Delete(session);
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -99,7 +99,7 @@ namespace DocumentManager.Services
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 	}

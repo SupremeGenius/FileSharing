@@ -1,5 +1,5 @@
 ﻿using System;
-namespace DocumentManager.Services.Dtos
+namespace FileStorage.Services.Dtos
 {
 	public class FolderDto
 	{

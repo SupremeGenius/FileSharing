@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace DocumentManager.Persistence.Models
+namespace FileStorage.Persistence.Models
 {
-	public class DocumentManagerContext : DbContext
+	public class FileStorageContext : DbContext
 	{
-        public DocumentManagerContext(DbContextOptions<DocumentManagerContext> options)
+        public FileStorageContext(DbContextOptions<FileStorageContext> options)
             : base(options) { }
 
         public virtual DbSet<Audit> Audit { get; set; }

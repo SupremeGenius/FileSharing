@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using AutoMapper;
-using DocumentManager.Persistence.Daos;
-using DocumentManager.Persistence.Models;
-using DocumentManager.Services.Dtos;
-using DocumentManager.Services.Exceptions;
+using FileStorage.Persistence.Daos;
+using FileStorage.Persistence.Models;
+using FileStorage.Services.Dtos;
+using FileStorage.Services.Exceptions;
 
-namespace DocumentManager.Services
+namespace FileStorage.Services
 {
 	public class DocumentServices : AbstractServices<DocumentDao>
 	{
@@ -25,7 +25,7 @@ namespace DocumentManager.Services
 				string filePath = GetFilePath(securityToken, documentDom);
 
 				if (File.Exists(filePath))
-					throw new DocumentManagerException(DocumentManagerException.DOCUMENT_ALREADY_EXISTS,
+					throw new FileStorageException(FileStorageException.DOCUMENT_ALREADY_EXISTS,
 													   "You already have a document with this filename");
 
 				File.WriteAllBytes(filePath, document.Content);
@@ -35,13 +35,13 @@ namespace DocumentManager.Services
 
 				return documentDom.Id;
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -64,14 +64,14 @@ namespace DocumentManager.Services
 						}
 					}
 					if (userGroup == null)
-						throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
+						throw new FileStorageException(FileStorageException.UNAUTHORIZED,
 														   "You do not have permissions to read this document");
 				}
 
 				string filePath = GetFilePath(securityToken, documentDom);
 
 				if (!File.Exists(filePath))
-					throw new DocumentManagerException(DocumentManagerException.FILE_NOT_FOUND,
+					throw new FileStorageException(FileStorageException.FILE_NOT_FOUND,
 													   "The file does not exist in the repository");
 
 				var document = Mapper.Map<DocumentDto>(documentDom);
@@ -79,13 +79,13 @@ namespace DocumentManager.Services
 
 				return document;
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -96,10 +96,10 @@ namespace DocumentManager.Services
 				var session = CheckSession(securityToken);
 				var documentDom = _dao.Read(document.Id);
 				if (documentDom == null)
-					throw new DocumentManagerException(DocumentManagerException.DOCUMENT_NOT_FOUND,
+					throw new FileStorageException(FileStorageException.DOCUMENT_NOT_FOUND,
 													   "Document with id " + document.Id + " does not exist");
 				if (documentDom.IdUser != session.IdUser)
-					throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
+					throw new FileStorageException(FileStorageException.UNAUTHORIZED,
 													   "You do not have permissions to update this document");
 
 				string filePath = GetFilePath(securityToken, documentDom);
@@ -113,13 +113,13 @@ namespace DocumentManager.Services
 				_dao.Update(documentDom);
 				//TODO Audit
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -130,10 +130,10 @@ namespace DocumentManager.Services
 				var session = CheckSession(securityToken);
 				var documentDom = _dao.Read(idDocument);
 				if (documentDom == null)
-					throw new DocumentManagerException(DocumentManagerException.DOCUMENT_NOT_FOUND,
+					throw new FileStorageException(FileStorageException.DOCUMENT_NOT_FOUND,
 													   "Document with id " + documentDom.Id + " does not exist");
 				if (documentDom.IdUser != session.IdUser)
-					throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
+					throw new FileStorageException(FileStorageException.UNAUTHORIZED,
 													   "You do not have permissions to update this document");
 				
 				string filePath = GetFilePath(securityToken, documentDom);
@@ -144,13 +144,13 @@ namespace DocumentManager.Services
 				_dao.Delete(documentDom);
 				//TODO Audit
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -162,13 +162,13 @@ namespace DocumentManager.Services
 				var result = _dao.GetDocumentsInFolder(session.IdUser, idFolder);
 				return Mapper.Map<List<DocumentDto>>(result);
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 

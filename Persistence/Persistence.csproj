@@ -2,8 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <RootNamespace>DocumentManager.Persistence</RootNamespace>
-    <AssemblyName>DocumentManager.Persistence</AssemblyName>
+    <RootNamespace>FileStorage.Persistence</RootNamespace>
+    <AssemblyName>FileStorage.Persistence</AssemblyName>
+    <Authors>Victor de la Rosa</Authors>
+    <Company />
+    <Product>FileStorage</Product>
+    <Description>FileStorage persistence package.</Description>
   </PropertyGroup>
 
   <ItemGroup>

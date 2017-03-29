@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using DocumentManager.Persistence.Models;
+using FileStorage.Persistence.Models;
 
-namespace DocumentManager.Persistence.Daos
+namespace FileStorage.Persistence.Daos
 {
 	public class SessionDao : AbstractDao<Session, string>
 	{

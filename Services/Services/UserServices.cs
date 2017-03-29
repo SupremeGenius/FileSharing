@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Security.Cryptography;
 using AutoMapper;
-using DocumentManager.Persistence.Daos;
-using DocumentManager.Persistence.Models;
-using DocumentManager.Services.Dtos;
-using DocumentManager.Services.Exceptions;
+using FileStorage.Persistence.Daos;
+using FileStorage.Persistence.Models;
+using FileStorage.Services.Dtos;
+using FileStorage.Services.Exceptions;
 
-namespace DocumentManager.Services
+namespace FileStorage.Services
 {
 	public class UserServices : AbstractServices<UserDao>
 	{
@@ -18,7 +18,7 @@ namespace DocumentManager.Services
 			{
 				ValidateUser(user);
 				if (_dao.ReadByLogin(user.Login) != null)
-					throw new DocumentManagerException(DocumentManagerException.LOGIN_ALREADY_IN_USE, "Login already in use");
+					throw new FileStorageException(FileStorageException.LOGIN_ALREADY_IN_USE, "Login already in use");
 
 				var userDom = Mapper.Map<User>(user);
 				userDom.Password = EncryptPassword(user.Password);
@@ -28,13 +28,13 @@ namespace DocumentManager.Services
 
 				return userDom.Id;
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -50,7 +50,7 @@ namespace DocumentManager.Services
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -62,20 +62,20 @@ namespace DocumentManager.Services
 				ValidateUser(user);
 				User userDom = _dao.Read(user.Id);
 				if (userDom == null)
-					throw new DocumentManagerException(DocumentManagerException.USER_NOT_FOUND,
+					throw new FileStorageException(FileStorageException.USER_NOT_FOUND,
 						"User with id " + user.Id + " does not exist");
 				if (userDom.Id != session.IdUser)
-					throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
+					throw new FileStorageException(FileStorageException.UNAUTHORIZED,
 													   "You do not have permissions to update this user");
 				
 				if (userDom.Login != user.Login)
 				{
 					if (_dao.ReadByLogin(user.Login) != null)
-						throw new DocumentManagerException(DocumentManagerException.LOGIN_ALREADY_IN_USE, "Login already in use");
+						throw new FileStorageException(FileStorageException.LOGIN_ALREADY_IN_USE, "Login already in use");
 					userDom.Login = user.Login;
 				}
 				var password = userDom.Password;
-				var oldUser = userDom;
+				var oldUser = userDom.ToString();
 
 				Mapper.Map(user, userDom);
 				userDom.Password = password; //Password not allowed to be modified by this method
@@ -85,13 +85,13 @@ namespace DocumentManager.Services
 
 				_dao.Update(userDom);
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -102,14 +102,14 @@ namespace DocumentManager.Services
 				var session = CheckSession(securityToken);
 				var user = _dao.Read(session.IdUser);
 				if (user.Password != EncryptPassword(password))
-					throw new DocumentManagerException(DocumentManagerException.INVALID_CREDENTIALS,
+					throw new FileStorageException(FileStorageException.INVALID_CREDENTIALS,
 													   "The password is invalid");
 
 				using (var groupServices = new GroupServices())
 				{
 					var groups = groupServices.GetAdministrableGroups(securityToken);
 					if (groups != null && groups.Count > 0)
-						throw new DocumentManagerException(DocumentManagerException.USER_CANNOT_BE_REMOVED,
+						throw new FileStorageException(FileStorageException.USER_CANNOT_BE_REMOVED,
 													   "The user cannot be removed because he is group admin");
 				}
 
@@ -135,7 +135,7 @@ namespace DocumentManager.Services
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -145,18 +145,18 @@ namespace DocumentManager.Services
 			{
 				var userDom = _dao.ReadByLogin(login);
 				if (userDom == null || userDom.Password != EncryptPassword(password))
-					throw new DocumentManagerException(DocumentManagerException.INVALID_CREDENTIALS,
+					throw new FileStorageException(FileStorageException.INVALID_CREDENTIALS,
 					                                   "The login or password is invalid");
                 using (var _sessionServices = new SessionServices())
                     return _sessionServices.Create(userDom.Id);
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -169,7 +169,7 @@ namespace DocumentManager.Services
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -180,20 +180,20 @@ namespace DocumentManager.Services
 				var session = CheckSession(securityToken);
 				var user = _dao.Read(session.IdUser);
 				if (user.Password != EncryptPassword(oldPassword))
-					throw new DocumentManagerException(DocumentManagerException.INVALID_CREDENTIALS,
+					throw new FileStorageException(FileStorageException.INVALID_CREDENTIALS,
 													   "The password is invalid");
 				user.Password = EncryptPassword(newPassword);
 				_dao.Update(user);
 
 				Audit(user.Id, user.Id.ToString(), typeof(User).Name, ActionDto.Update, "User password changed: " + user.Login);
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -212,15 +212,15 @@ namespace DocumentManager.Services
 		void ValidateUser(UserDto user)
 		{
 			if (user == null)
-				throw new DocumentManagerException(DocumentManagerException.NULL_VALUE, "User cannot be null");
+				throw new FileStorageException(FileStorageException.NULL_VALUE, "User cannot be null");
 			if (string.IsNullOrWhiteSpace(user.Login))
-				throw new DocumentManagerException(DocumentManagerException.NULL_VALUE, "Login cannot be null");
+				throw new FileStorageException(FileStorageException.NULL_VALUE, "Login cannot be null");
 			if (string.IsNullOrWhiteSpace(user.Password))
-				throw new DocumentManagerException(DocumentManagerException.NULL_VALUE, "Password cannot be null");
+				throw new FileStorageException(FileStorageException.NULL_VALUE, "Password cannot be null");
 			if (string.IsNullOrWhiteSpace(user.FirstName))
-				throw new DocumentManagerException(DocumentManagerException.NULL_VALUE, "FirstName cannot be null");
+				throw new FileStorageException(FileStorageException.NULL_VALUE, "FirstName cannot be null");
 			if (string.IsNullOrWhiteSpace(user.LastName))
-				throw new DocumentManagerException(DocumentManagerException.NULL_VALUE, "LastName cannot be null");
+				throw new FileStorageException(FileStorageException.NULL_VALUE, "LastName cannot be null");
 		}
 
 		#endregion

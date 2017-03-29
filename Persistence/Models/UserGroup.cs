@@ -1,5 +1,5 @@
 ﻿using System;
-namespace DocumentManager.Persistence.Models
+namespace FileStorage.Persistence.Models
 {
 	public class UserGroup : AbstractModel
 	{

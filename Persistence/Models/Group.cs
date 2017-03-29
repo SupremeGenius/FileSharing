@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-namespace DocumentManager.Persistence.Models
+namespace FileStorage.Persistence.Models
 {
 	public class Group : AbstractModel
 	{

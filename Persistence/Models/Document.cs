@@ -1,4 +1,4 @@
-﻿namespace DocumentManager.Persistence.Models
+﻿namespace FileStorage.Persistence.Models
 {
 	public class Document : AbstractModel
 	{

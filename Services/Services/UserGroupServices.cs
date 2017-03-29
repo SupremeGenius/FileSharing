@@ -1,11 +1,11 @@
 ﻿using System;
 using AutoMapper;
-using DocumentManager.Persistence.Daos;
-using DocumentManager.Persistence.Models;
-using DocumentManager.Services.Dtos;
-using DocumentManager.Services.Exceptions;
+using FileStorage.Persistence.Daos;
+using FileStorage.Persistence.Models;
+using FileStorage.Services.Dtos;
+using FileStorage.Services.Exceptions;
 
-namespace DocumentManager.Services
+namespace FileStorage.Services
 {
 	public class UserGroupServices : AbstractServices<UserGroupDao>
 	{
@@ -17,7 +17,7 @@ namespace DocumentManager.Services
 			{
 				var session = CheckSession(securityToken);
 				if (_dao.Read(session.IdUser, idGroup) != null)
-					throw new DocumentManagerException(DocumentManagerException.USER_GROUP_ALREADY_EXISTS,
+					throw new FileStorageException(FileStorageException.USER_GROUP_ALREADY_EXISTS,
 												   "User group already exists");
 
 				var userGroup = new UserGroup
@@ -30,13 +30,13 @@ namespace DocumentManager.Services
 				userGroup = _dao.Create(userGroup);
 				//TODO Audit
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -51,19 +51,19 @@ namespace DocumentManager.Services
 				{
 					if (userGroup.IdGroupNavigation.IdAdmin != session.IdUser)
 					{
-						throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
+						throw new FileStorageException(FileStorageException.UNAUTHORIZED,
 														   "You do not have permissions to read this user group");
 					}
 				}
 				return Mapper.Map<UserGroupDto>(userGroup);
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -74,11 +74,11 @@ namespace DocumentManager.Services
 				var session = CheckSession(securityToken);
 				var userGroupDom = _dao.Read(userGroup.IdUser, userGroup.IdGroup);
 				if (userGroupDom == null)
-					throw new DocumentManagerException(DocumentManagerException.GROUP_NOT_FOUND,
+					throw new FileStorageException(FileStorageException.GROUP_NOT_FOUND,
 							"User Group of user " + userGroup.IdUser + " and group " + userGroup.IdGroup + " does not exist");
 			
 				if (userGroupDom.IdGroupNavigation.IdAdmin != session.IdUser)
-					throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
+					throw new FileStorageException(FileStorageException.UNAUTHORIZED,
 													   "You do not have permissions to update this user group");
 				Mapper.Map(userGroup, userGroupDom);
 				_dao.Update(userGroupDom);
@@ -86,13 +86,13 @@ namespace DocumentManager.Services
 				string action = "Update:\r\n" + "-Previous: " + userGroupDom + "\r\n" + "-Updated: " + userGroup;
 				//TODO Audit
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -108,7 +108,7 @@ namespace DocumentManager.Services
 					{
 						if (userGroup.IdGroupNavigation.IdAdmin != session.IdUser)
 						{
-							throw new DocumentManagerException(DocumentManagerException.UNAUTHORIZED,
+							throw new FileStorageException(FileStorageException.UNAUTHORIZED,
 															   "You do not have permissions to delete this user group");
 						}
 					}
@@ -117,13 +117,13 @@ namespace DocumentManager.Services
 					//TODO Audit
 				}
 			}
-			catch (DocumentManagerException)
+			catch (FileStorageException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new DocumentManagerException(DocumentManagerException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 	}

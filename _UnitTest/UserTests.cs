@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DocumentManager.Services;
-using DocumentManager.Services.Dtos;
-using DocumentManager.Services.Exceptions;
+using FileStorage.Services;
+using FileStorage.Services.Dtos;
+using FileStorage.Services.Exceptions;
 
 namespace _UnitTest
 {
@@ -75,7 +75,7 @@ namespace _UnitTest
         }
 
         [TestMethod, Priority(5)]
-        [ExpectedException(typeof(DocumentManagerException))]
+        [ExpectedException(typeof(FileStorageException))]
         public void DeleteUser()
         {
             _userServices.Delete(securityToken, user.Password);
