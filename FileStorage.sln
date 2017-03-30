@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Servic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_UnitTest", "_UnitTest\_UnitTest.csproj", "{B300C45B-A5EA-431B-8BF0-0360E025DC43}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileStorageWeb", "FileStorageWeb\FileStorageWeb.csproj", "{D0DA0E24-B1B2-4ECE-9189-FC198A911283}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{B300C45B-A5EA-431B-8BF0-0360E025DC43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B300C45B-A5EA-431B-8BF0-0360E025DC43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B300C45B-A5EA-431B-8BF0-0360E025DC43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0DA0E24-B1B2-4ECE-9189-FC198A911283}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0DA0E24-B1B2-4ECE-9189-FC198A911283}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0DA0E24-B1B2-4ECE-9189-FC198A911283}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0DA0E24-B1B2-4ECE-9189-FC198A911283}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
