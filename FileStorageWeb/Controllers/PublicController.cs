@@ -1,23 +1,19 @@
-﻿using FileStorage.Services;
-using FileStorage.Services.Dtos;
+﻿using FileStorage.Services.Dtos;
 using FileStorage.Services.Exceptions;
 using FileStorageWeb.ViewModels.Public;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 
 namespace FileStorageWeb.Controllers
 {
-	public class PublicController : Controller
-	{
+    public class PublicController : BaseController
+    {
 		readonly ILogger _logger;
-		UserServices userServices;
 
 		public PublicController(ILoggerFactory loggerFactory)
 		{
 			_logger = loggerFactory.CreateLogger<PublicController>();
-			userServices = new UserServices();
-		}
+        }
 		
 		[HttpGet]
 		public IActionResult Index()
@@ -28,8 +24,6 @@ namespace FileStorageWeb.Controllers
 		[HttpGet]
 		public IActionResult Login()
 		{
-			ViewData["Message"] = "Your application description page.";
-
 			return View();
 		}
 
@@ -40,7 +34,7 @@ namespace FileStorageWeb.Controllers
 			{
 				try
 				{
-					var securityToken = userServices.Login(model.UserName, model.Password);
+					var securityToken = Services.User.Login(model.UserName, model.Password);
 					if (!string.IsNullOrWhiteSpace(securityToken))
 					{
 						Response.Cookies.Append("SecurityToken", securityToken);
@@ -59,8 +53,6 @@ namespace FileStorageWeb.Controllers
 		[HttpGet]
 		public IActionResult Register()
 		{
-			ViewData["Message"] = "Your contact page.";
-
 			return View();
 		}
 
@@ -80,7 +72,7 @@ namespace FileStorageWeb.Controllers
 
 				try
 				{
-					long result = userServices.Register(user);
+					long result = Services.User.Register(user);
 					if (result > 0)
 					{
 						return Redirect("Login");
