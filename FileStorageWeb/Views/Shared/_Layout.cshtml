@@ -17,7 +17,7 @@
     </environment>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-default navbar-fixed-top fs-navbar">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -26,10 +26,10 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Public" asp-action="Index" class="navbar-brand">FileStorageWeb</a>
+                <a asp-area="" asp-controller="Public" asp-action="Index" class="navbar-brand">FileStorage</a>
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav navbar-right">
                     <li><a asp-area="" asp-controller="Public" asp-action="Login">Login</a></li>
                     <li><a asp-area="" asp-controller="Public" asp-action="Register">Register</a></li>
                 </ul>
@@ -40,7 +40,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2017 - FileStorageWeb</p>
+            <p>&copy; 2017 - FileStorage</p>
         </footer>
     </div>
 

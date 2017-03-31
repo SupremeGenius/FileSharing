@@ -1,6 +1,7 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    color: #4c9642;
 }
 
 /* Wrapping element */
@@ -34,4 +35,16 @@ textarea {
     .carousel-caption {
         display: none;
     }
+}
+
+.fs-navbar .navbar-nav > li > a {
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #4c9642;
+}
+
+.fs-navbar .navbar-nav > li > a:hover {
+    color: #4c9642;
+    border-bottom: 3px solid #4c9642;
+    padding-bottom: 3px;
 }
