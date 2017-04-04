@@ -28,7 +28,26 @@ namespace FileStorageWeb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
 		{
-            services.AddMvc();
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+            services.AddMvc()
+              .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+              .AddDataAnnotationsLocalization();
+
+            services.Configure<RequestLocalizationOptions>(
+                opts =>
+                {
+                    var supportedCultures = new List<CultureInfo>
+                    {
+                        new CultureInfo("es"),
+                    };
+
+                    opts.DefaultRequestCulture = new RequestCulture("es");
+                    // Formatting numbers, dates, etc.
+                    opts.SupportedCultures = supportedCultures;
+                    // UI strings that we have localized.
+                    opts.SupportedUICultures = supportedCultures;
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,8 +65,11 @@ namespace FileStorageWeb
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
+            
             app.UseStaticFiles();
+
+            var options = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(options.Value);
 
             app.UseMvc(routes =>
             {

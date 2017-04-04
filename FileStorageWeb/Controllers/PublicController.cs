@@ -34,7 +34,7 @@ namespace FileStorageWeb.Controllers
 			{
 				try
 				{
-					var securityToken = Services.User.Login(model.UserName, model.Password);
+					var securityToken = Services.User.Login(model.Username, model.Password);
 					if (!string.IsNullOrWhiteSpace(securityToken))
 					{
 						Response.Cookies.Append("SecurityToken", securityToken);
@@ -64,7 +64,7 @@ namespace FileStorageWeb.Controllers
 			{
 				var user = new UserDto
 				{
-					Login = model.UserName,
+					Login = model.Username,
 					FirstName = model.FirstName,
 					LastName = model.LastName,
 					Password = model.Password
