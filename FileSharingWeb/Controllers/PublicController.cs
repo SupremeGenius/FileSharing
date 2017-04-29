@@ -28,7 +28,7 @@ namespace FileSharingWeb.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Login(LoginViewModel model)
+		public IActionResult Login(LoginRegisterViewModel model)
 		{
 			if (ModelState.IsValid)
 			{
@@ -58,7 +58,7 @@ namespace FileSharingWeb.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Register(RegisterViewModel model)
+		public IActionResult Register(LoginRegisterViewModel model)
 		{
 			if (ModelState.IsValid)
 			{

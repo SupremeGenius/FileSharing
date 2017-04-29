@@ -2,7 +2,7 @@
 
 namespace FileSharingWeb.ViewModels.Public
 {
-	public class RegisterViewModel
+	public class LoginRegisterViewModel
 	{
 		[Required]
 		[StringLength(50, ErrorMessage = "FIELD_MAX_LENGTH")]
