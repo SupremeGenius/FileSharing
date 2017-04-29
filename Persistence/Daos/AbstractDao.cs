@@ -1,13 +1,13 @@
 ﻿using System;
-using FileStorage.Persistence.Models;
+using FileSharing.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace FileStorage.Persistence.Daos
+namespace FileSharing.Persistence.Daos
 {
 	public abstract class AbstractDao<T, PK> : IDisposable where T : AbstractModel
 	{
-		protected FileStorageContext _context;
+		protected FileSharingContext _context;
 		protected DbSet<T> _dbSet;
 
 		public AbstractDao()
@@ -16,10 +16,10 @@ namespace FileStorage.Persistence.Daos
                 .AddJsonFile("db_settings.json");
             var configuration = configurationBuilder.Build();
 
-            DbContextOptionsBuilder<FileStorageContext> optionsBuilder = new DbContextOptionsBuilder<FileStorageContext>();
+            DbContextOptionsBuilder<FileSharingContext> optionsBuilder = new DbContextOptionsBuilder<FileSharingContext>();
             optionsBuilder.UseSqlServer($"{configuration["ConnectionString"]}");
 
-            _context = new FileStorageContext(optionsBuilder.Options);
+            _context = new FileSharingContext(optionsBuilder.Options);
 			_dbSet = _context.Set<T>();
 		}
 

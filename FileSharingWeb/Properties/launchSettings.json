@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "FileStorageWeb": {
+    "FileSharingWeb": {
       "commandName": "Project"
     }
   }

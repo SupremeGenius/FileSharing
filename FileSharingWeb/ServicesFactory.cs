@@ -1,6 +1,6 @@
-﻿using FileStorage.Services;
+﻿using FileSharing.Services;
 
-namespace FileStorageWeb
+namespace FileSharingWeb
 {
 	public class ServicesFactory
 	{

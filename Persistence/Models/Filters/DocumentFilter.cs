@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FileStorage.Persistence.Models.Filters
+namespace FileSharing.Persistence.Models.Filters
 {
 	public class DocumentFilter
 	{

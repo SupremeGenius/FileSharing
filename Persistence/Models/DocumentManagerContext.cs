@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace FileStorage.Persistence.Models
+namespace FileSharing.Persistence.Models
 {
-	public class FileStorageContext : DbContext
+	public class FileSharingContext : DbContext
 	{
-        public FileStorageContext(DbContextOptions<FileStorageContext> options)
+        public FileSharingContext(DbContextOptions<FileSharingContext> options)
             : base(options) { }
 
         public virtual DbSet<Audit> Audit { get; set; }

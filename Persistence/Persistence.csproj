@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <RootNamespace>FileStorage.Persistence</RootNamespace>
-    <AssemblyName>FileStorage.Persistence</AssemblyName>
+    <RootNamespace>FileSharing.Persistence</RootNamespace>
+    <AssemblyName>FileSharing.Persistence</AssemblyName>
     <Authors>Victor de la Rosa</Authors>
     <Company />
-    <Product>FileStorage</Product>
-    <Description>FileStorage persistence package.</Description>
+    <Product>FileSharing</Product>
+    <Description>FileSharing persistence package.</Description>
   </PropertyGroup>
 
   <ItemGroup>

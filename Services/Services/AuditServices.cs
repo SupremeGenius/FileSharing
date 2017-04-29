@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using AutoMapper;
-using FileStorage.Persistence.Daos;
-using FileStorage.Persistence.Models;
-using FileStorage.Persistence.Models.Filters;
-using FileStorage.Services.Dtos;
-using FileStorage.Services.Exceptions;
-using FileStorage.Services.Filters;
+using FileSharing.Persistence.Daos;
+using FileSharing.Persistence.Models;
+using FileSharing.Persistence.Models.Filters;
+using FileSharing.Services.Dtos;
+using FileSharing.Services.Exceptions;
+using FileSharing.Services.Filters;
 
-namespace FileStorage.Services
+namespace FileSharing.Services
 {
 	public class AuditServices : AbstractServices<AuditDao>
 	{
@@ -24,7 +24,7 @@ namespace FileStorage.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 		public List<AuditDto> Query(AuditFilterDto filter)
@@ -37,7 +37,7 @@ namespace FileStorage.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 	}

@@ -1,9 +1,9 @@
-﻿using FileStorage.Services.Exceptions;
+﻿using FileSharing.Services.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 
-namespace FileStorageWeb.Controllers
+namespace FileSharingWeb.Controllers
 {
     public class BaseController : Controller
 	{
@@ -24,7 +24,7 @@ namespace FileStorageWeb.Controllers
                     Services.Session.Read(SecurityToken);
                     tokenValid = true;
                 }
-                catch (FileStorageException) { }
+                catch (FileSharingException) { }
 
             }
 

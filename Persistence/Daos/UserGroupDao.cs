@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using FileStorage.Persistence.Models;
+using FileSharing.Persistence.Models;
 
-namespace FileStorage.Persistence.Daos
+namespace FileSharing.Persistence.Daos
 {
 	public class UserGroupDao : AbstractDao<UserGroup, long[]>
 	{

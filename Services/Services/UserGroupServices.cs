@@ -1,11 +1,11 @@
 ﻿using System;
 using AutoMapper;
-using FileStorage.Persistence.Daos;
-using FileStorage.Persistence.Models;
-using FileStorage.Services.Dtos;
-using FileStorage.Services.Exceptions;
+using FileSharing.Persistence.Daos;
+using FileSharing.Persistence.Models;
+using FileSharing.Services.Dtos;
+using FileSharing.Services.Exceptions;
 
-namespace FileStorage.Services
+namespace FileSharing.Services
 {
 	public class UserGroupServices : AbstractServices<UserGroupDao>
 	{
@@ -17,7 +17,7 @@ namespace FileStorage.Services
 			{
 				var session = CheckSession(securityToken);
 				if (_dao.Read(session.IdUser, idGroup) != null)
-					throw new FileStorageException(FileStorageException.USER_GROUP_ALREADY_EXISTS,
+					throw new FileSharingException(FileSharingException.USER_GROUP_ALREADY_EXISTS,
 												   "User group already exists");
 
 				var userGroup = new UserGroup
@@ -30,13 +30,13 @@ namespace FileStorage.Services
 				userGroup = _dao.Create(userGroup);
 				//TODO Audit
 			}
-			catch (FileStorageException)
+			catch (FileSharingException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -51,19 +51,19 @@ namespace FileStorage.Services
 				{
 					if (userGroup.IdGroupNavigation.IdAdmin != session.IdUser)
 					{
-						throw new FileStorageException(FileStorageException.UNAUTHORIZED,
+						throw new FileSharingException(FileSharingException.UNAUTHORIZED,
 														   "You do not have permissions to read this user group");
 					}
 				}
 				return Mapper.Map<UserGroupDto>(userGroup);
 			}
-			catch (FileStorageException)
+			catch (FileSharingException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -74,11 +74,11 @@ namespace FileStorage.Services
 				var session = CheckSession(securityToken);
 				var userGroupDom = _dao.Read(userGroup.IdUser, userGroup.IdGroup);
 				if (userGroupDom == null)
-					throw new FileStorageException(FileStorageException.GROUP_NOT_FOUND,
+					throw new FileSharingException(FileSharingException.GROUP_NOT_FOUND,
 							"User Group of user " + userGroup.IdUser + " and group " + userGroup.IdGroup + " does not exist");
 			
 				if (userGroupDom.IdGroupNavigation.IdAdmin != session.IdUser)
-					throw new FileStorageException(FileStorageException.UNAUTHORIZED,
+					throw new FileSharingException(FileSharingException.UNAUTHORIZED,
 													   "You do not have permissions to update this user group");
 				Mapper.Map(userGroup, userGroupDom);
 				_dao.Update(userGroupDom);
@@ -86,13 +86,13 @@ namespace FileStorage.Services
 				string action = "Update:\r\n" + "-Previous: " + userGroupDom + "\r\n" + "-Updated: " + userGroup;
 				//TODO Audit
 			}
-			catch (FileStorageException)
+			catch (FileSharingException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -108,7 +108,7 @@ namespace FileStorage.Services
 					{
 						if (userGroup.IdGroupNavigation.IdAdmin != session.IdUser)
 						{
-							throw new FileStorageException(FileStorageException.UNAUTHORIZED,
+							throw new FileSharingException(FileSharingException.UNAUTHORIZED,
 															   "You do not have permissions to delete this user group");
 						}
 					}
@@ -117,13 +117,13 @@ namespace FileStorage.Services
 					//TODO Audit
 				}
 			}
-			catch (FileStorageException)
+			catch (FileSharingException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 	}

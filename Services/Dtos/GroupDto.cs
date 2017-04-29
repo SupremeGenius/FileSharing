@@ -1,4 +1,4 @@
-﻿namespace FileStorage.Services.Dtos
+﻿namespace FileSharing.Services.Dtos
 {
 	public class GroupDto
 	{

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace FileStorage.Persistence.Models
+namespace FileSharing.Persistence.Models
 {
 	public class Folder : AbstractModel
 	{

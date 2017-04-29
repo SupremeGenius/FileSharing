@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace FileStorage.Services.Exceptions
+namespace FileSharing.Services.Exceptions
 {
-	public class FileStorageException : Exception
+	public class FileSharingException : Exception
 	{
 		public string Code { get; protected set; }
 
@@ -57,13 +57,13 @@ namespace FileStorage.Services.Exceptions
 
 		#endregion
 
-		public FileStorageException(string code, string message)
+		public FileSharingException(string code, string message)
 			: base(message)
 		{
 			Code = code;
 		}
 
-		public FileStorageException(string code, string message, Exception inner)
+		public FileSharingException(string code, string message, Exception inner)
 			: base(message, inner)
 		{
 			Code = code;

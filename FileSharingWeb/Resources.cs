@@ -1,4 +1,4 @@
-﻿namespace FileStorageWeb
+﻿namespace FileSharingWeb
 {
     public class Resources
     {

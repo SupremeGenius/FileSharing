@@ -1,11 +1,11 @@
 ﻿using System;
 using AutoMapper;
-using FileStorage.Persistence.Daos;
-using FileStorage.Persistence.Models;
-using FileStorage.Services.Dtos;
-using FileStorage.Services.Exceptions;
+using FileSharing.Persistence.Daos;
+using FileSharing.Persistence.Models;
+using FileSharing.Services.Dtos;
+using FileSharing.Services.Exceptions;
 
-namespace FileStorage.Services
+namespace FileSharing.Services
 {
 	public class SessionServices : AbstractServices<SessionDao>
 	{
@@ -27,7 +27,7 @@ namespace FileStorage.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -37,18 +37,18 @@ namespace FileStorage.Services
 			{
 				var session = _dao.Read(securityToken);
 				if (session == null)
-					throw new FileStorageException(FileStorageException.SESSION_NOT_FOUND,
+					throw new FileSharingException(FileSharingException.SESSION_NOT_FOUND,
 													   "Session with token " + securityToken + " does not exist");
 				Update(securityToken);
 				return Mapper.Map<SessionDto>(session);
 			}
-			catch (FileStorageException)
+			catch (FileSharingException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -58,18 +58,18 @@ namespace FileStorage.Services
 			{
 				var session = _dao.Read(securityToken);
 				if (session == null)
-					throw new FileStorageException(FileStorageException.SESSION_NOT_FOUND,
+					throw new FileSharingException(FileSharingException.SESSION_NOT_FOUND,
 													   "Session with token " + securityToken + " does not exist");
 				session.DateLastAccess = DateTime.Now;
 				_dao.Update(session);
 			}
-			catch (FileStorageException)
+			catch (FileSharingException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -81,13 +81,13 @@ namespace FileStorage.Services
 				if (session != null)
 					_dao.Delete(session);
 			}
-			catch (FileStorageException)
+			catch (FileSharingException)
 			{
 				throw;
 			}
 			catch (Exception e)
 			{
-				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 
@@ -99,7 +99,7 @@ namespace FileStorage.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 	}

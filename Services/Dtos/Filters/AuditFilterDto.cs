@@ -1,6 +1,6 @@
-﻿using FileStorage.Services.Dtos;
+﻿using FileSharing.Services.Dtos;
 using System;
-namespace FileStorage.Services.Filters
+namespace FileSharing.Services.Filters
 {
 	public class AuditFilterDto
 	{

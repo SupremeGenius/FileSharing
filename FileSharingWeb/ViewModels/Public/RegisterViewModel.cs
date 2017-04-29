@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FileStorageWeb.ViewModels.Public
+namespace FileSharingWeb.ViewModels.Public
 {
 	public class RegisterViewModel
 	{

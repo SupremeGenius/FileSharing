@@ -1,5 +1,5 @@
 ﻿using System;
-namespace FileStorage.Services.Dtos
+namespace FileSharing.Services.Dtos
 {
 	public class UserGroupDto
 	{

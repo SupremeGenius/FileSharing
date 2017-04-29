@@ -3,12 +3,12 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <RootNamespace>FileStorage.Services</RootNamespace>
-    <AssemblyName>FileStorage.Services</AssemblyName>
+    <RootNamespace>FileSharing.Services</RootNamespace>
+    <AssemblyName>FileSharing.Services</AssemblyName>
     <Authors>Victor de la Rosa</Authors>
     <Company />
-    <Product>FileStorage</Product>
-    <Description>FileStorage services package.</Description>
+    <Product>FileSharing</Product>
+    <Description>FileSharing services package.</Description>
   </PropertyGroup>
 
   <ItemGroup>

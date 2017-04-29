@@ -1,9 +1,9 @@
 ﻿using System;
-using FileStorage.Services.Dtos;
-using FileStorage.Services.Exceptions;
-using FileStorage.Services.Mapping;
+using FileSharing.Services.Dtos;
+using FileSharing.Services.Exceptions;
+using FileSharing.Services.Mapping;
 
-namespace FileStorage.Services
+namespace FileSharing.Services
 {
 	public abstract class AbstractServices<T> : IDisposable
 	{
@@ -46,7 +46,7 @@ namespace FileStorage.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileStorageException(FileStorageException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FileStorage.Services;
-using FileStorage.Services.Dtos;
-using FileStorage.Services.Exceptions;
+using FileSharing.Services;
+using FileSharing.Services.Dtos;
+using FileSharing.Services.Exceptions;
 
 namespace _UnitTest
 {
@@ -75,7 +75,7 @@ namespace _UnitTest
         }
 
         [TestMethod, Priority(5)]
-        [ExpectedException(typeof(FileStorageException))]
+        [ExpectedException(typeof(FileSharingException))]
         public void DeleteUser()
         {
             _userServices.Delete(securityToken, user.Password);

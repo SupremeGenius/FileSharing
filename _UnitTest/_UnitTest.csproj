@@ -4,8 +4,8 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>    
     <Authors>Victor de la Rosa</Authors>    
     <Company />    
-    <Product>FileStorage</Product>    
-    <Description>FileStorage unit test package</Description>
+    <Product>FileSharing</Product>    
+    <Description>FileSharing unit test package</Description>
   </PropertyGroup>
 
   <ItemGroup>

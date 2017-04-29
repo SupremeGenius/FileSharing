@@ -1,10 +1,10 @@
-﻿using FileStorage.Services.Dtos;
-using FileStorage.Services.Exceptions;
-using FileStorageWeb.ViewModels.Public;
+﻿using FileSharing.Services.Dtos;
+using FileSharing.Services.Exceptions;
+using FileSharingWeb.ViewModels.Public;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace FileStorageWeb.Controllers
+namespace FileSharingWeb.Controllers
 {
     public class PublicController : BaseController
     {
@@ -41,7 +41,7 @@ namespace FileStorageWeb.Controllers
 					}
 					return Redirect("Index"); //TODO Cambiar a home
 				}
-				catch (FileStorageException e)
+				catch (FileSharingException e)
 				{
 					AddErrors(e.Message);
 					_logger.LogError(2, e.Message);
@@ -78,7 +78,7 @@ namespace FileStorageWeb.Controllers
 						return Redirect("Login");
 					}
 				}
-				catch (FileStorageException e)
+				catch (FileSharingException e)
 				{
 					AddErrors(e.Message);
 					_logger.LogError(1, e.Message);

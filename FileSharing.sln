@@ -2,13 +2,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence", "Persistence\Persistence.csproj", "{CC827788-3A85-4CB6-827A-90C8A37DBF0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "Persistence\Persistence.csproj", "{CC827788-3A85-4CB6-827A-90C8A37DBF0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{CF7E394B-9B76-4FC3-AEFA-4D4DECAB719A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{CF7E394B-9B76-4FC3-AEFA-4D4DECAB719A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_UnitTest", "_UnitTest\_UnitTest.csproj", "{B300C45B-A5EA-431B-8BF0-0360E025DC43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_UnitTest", "_UnitTest\_UnitTest.csproj", "{B300C45B-A5EA-431B-8BF0-0360E025DC43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileStorageWeb", "FileStorageWeb\FileStorageWeb.csproj", "{D0DA0E24-B1B2-4ECE-9189-FC198A911283}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileSharingWeb", "FileSharingWeb\FileSharingWeb.csproj", "{D0DA0E24-B1B2-4ECE-9189-FC198A911283}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

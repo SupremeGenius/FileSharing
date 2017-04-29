@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using FileStorage.Persistence.Models;
-using FileStorage.Persistence.Models.Filters;
+using FileSharing.Persistence.Models;
+using FileSharing.Persistence.Models.Filters;
 
-namespace FileStorage.Persistence.Daos
+namespace FileSharing.Persistence.Daos
 {
 	public class AuditDao : AbstractDao<Audit, long>
 	{

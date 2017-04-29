@@ -1,5 +1,5 @@
 ﻿using System;
-namespace FileStorage.Persistence.Models
+namespace FileSharing.Persistence.Models
 {
 	public class UserGroup : AbstractModel
 	{

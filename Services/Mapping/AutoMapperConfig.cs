@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using FileStorage.Persistence.Models;
-using FileStorage.Services.Dtos;
-using FileStorage.Services.Filters;
+using FileSharing.Persistence.Models;
+using FileSharing.Services.Dtos;
+using FileSharing.Services.Filters;
 
-namespace FileStorage.Services.Mapping
+namespace FileSharing.Services.Mapping
 {
 	public static class AutoMapperConfig
 	{
