@@ -24,7 +24,10 @@ namespace FileSharingWeb.Controllers
                     Services.Session.Read(SecurityToken);
                     tokenValid = true;
                 }
-                catch (FileSharingException) { }
+                catch (FileSharingException)
+                {
+                    context.HttpContext.Response.Cookies.Delete("SecurityToken");
+                }
 
             }
 

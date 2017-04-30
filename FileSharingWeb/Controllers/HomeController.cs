@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FileSharing.Services.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace FileSharingWeb.Controllers
@@ -16,6 +17,26 @@ namespace FileSharingWeb.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            try
+            {
+                string securityToken = "";
+                Request.Cookies.TryGetValue("SecurityToken", out securityToken);
+                if (!string.IsNullOrWhiteSpace(securityToken))
+                {
+                    Services.User.Logout(securityToken);
+                    Response.Cookies.Delete("SecurityToken");
+                }
+            }
+            catch (FileSharingException e)
+            {
+                _logger.LogError(2, e.Message);
+            }
+            return RedirectToAction("Index", "Public");
         }
     }
 }

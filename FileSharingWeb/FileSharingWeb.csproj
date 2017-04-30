@@ -25,6 +25,10 @@
     <Compile Remove="Models\User.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="wwwroot\css\public.css" />
+    <Content Include="wwwroot\css\site.css" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Update="Resources\Resources.en.resx">
       <Generator>ResXFileCodeGenerator</Generator>
     </EmbeddedResource>
