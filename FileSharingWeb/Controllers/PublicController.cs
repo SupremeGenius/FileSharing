@@ -39,7 +39,7 @@ namespace FileSharingWeb.Controllers
 					{
 						Response.Cookies.Append("SecurityToken", securityToken);
 					}
-					return View("Home/Index");
+                    return RedirectToAction("Index", "Home");
 				}
 				catch (FileSharingException e)
 				{
