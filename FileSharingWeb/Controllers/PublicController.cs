@@ -28,19 +28,18 @@ namespace FileSharingWeb.Controllers
         }
 
 		[HttpPost]
-		public IActionResult Login(LoginRegisterViewModel model)
+		public IActionResult Login(LoginViewModel model)
 		{
-            var login = model.Login;
-            if (!string.IsNullOrWhiteSpace(login.Username) && !string.IsNullOrWhiteSpace(login.Password))
+            if (ModelState.IsValid)
 			{
 				try
 				{
-					var securityToken = Services.User.Login(login.Username, login.Password);
+					var securityToken = Services.User.Login(model.Username, model.Password);
 					if (!string.IsNullOrWhiteSpace(securityToken))
 					{
 						Response.Cookies.Append("SecurityToken", securityToken);
 					}
-					return Redirect("Login");
+					return View("Home/Index");
 				}
 				catch (FileSharingException e)
 				{
@@ -51,19 +50,24 @@ namespace FileSharingWeb.Controllers
 			return View(model);
 		}
 
-		[HttpPost]
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Register(LoginRegisterViewModel model)
+		public IActionResult Register(RegisterViewModel model)
 		{
 			if (ModelState.IsValid)
             {
-                var register = model.Register;
                 var user = new UserDto
 				{
-					Login = register.Username,
-					FirstName = register.FirstName,
-					LastName = register.LastName,
-					Password = register.Password
+					Login = model.Username,
+					FirstName = model.FirstName,
+					LastName = model.LastName,
+					Password = model.Password
                 };
 
 				try
@@ -80,7 +84,7 @@ namespace FileSharingWeb.Controllers
 					_logger.LogError(1, e.Message);
 				}
 			}
-			return View("Login", model);
+			return View(model);
 		}
 
 		[HttpGet]

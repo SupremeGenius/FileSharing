@@ -1,0 +1,78 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<Resources> Localizer
+@model FileSharingWeb.ViewModels.Public.RegisterViewModel
+@{
+    ViewData["Title"] = Localizer["Register"];
+}
+<div id="wrapper">
+    <!-- Header -->
+    <header id="header" class="alt">
+        <span class="logo"><img src="~/images/logo.svg" alt="" /></span>
+        <h1>FileSharing</h1>
+    </header>
+    <!-- Nav -->
+    <nav id="nav">
+        <ul>
+            <li><a asp-area="" asp-controller="Public" asp-action="Login">@Localizer["Login"]</a></li>
+            <li><a class="active">@Localizer["Register"]</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main -->
+    <div id="main">
+
+        <!-- Register -->
+        <div id="register" class="tabcontent">
+            <div class="spotlight">
+                <div class="content">
+                    <div class="col-xs-12 col-xs-offset-2">
+                        <form asp-controller="Public" asp-action="Register" method="post" class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-xs-3 control-label">@Localizer["Username"]</label>
+                                <div class="col-xs-4">
+                                    <input asp-for="Username" class="form-control" required />
+                                    <span asp-validation-for="Username" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-3 control-label">@Localizer["FirstName"]</label>
+                                <div class="col-xs-4">
+                                    <input asp-for="FirstName" class="form-control" required />
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-3 control-label">@Localizer["LastName"]</label>
+                                <div class="col-xs-4">
+                                    <input asp-for="LastName" class="form-control" required />
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-3 control-label">@Localizer["Password"]</label>
+                                <div class="col-xs-4">
+                                    <input asp-for="Password" class="form-control" required />
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-3 control-label">@Localizer["ConfirmPassword"]</label>
+                                <div class="col-xs-4">
+                                    <input asp-for="ConfirmPassword" class="form-control" required />
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-offset-3 col-xs-4">
+                                    <ul class="actions">
+                                        <li><button type="submit" class="btn btn-default">@Localizer["Continue"]</button></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
