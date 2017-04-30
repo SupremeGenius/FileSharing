@@ -16,8 +16,6 @@
 
 
   <ItemGroup>
-    <Folder Include="ViewModels\" />
-    <Folder Include="ViewModels\Public\" />
     <Folder Include="wwwroot\css\images\" />
   </ItemGroup>
   <ItemGroup>
@@ -33,8 +31,9 @@
     <EmbeddedResource Update="Resources\Resources.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\ViewModels\Public\RegisterViewModel.es.resx">
+    <EmbeddedResource Update="Resources\ViewModels\Public\Register.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Register.es.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ProjectExtensions>

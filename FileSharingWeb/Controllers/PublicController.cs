@@ -18,28 +18,29 @@ namespace FileSharingWeb.Controllers
 		[HttpGet]
 		public IActionResult Index()
 		{
-			return View();
+			return View("Login");
 		}
 
-		[HttpGet]
-		public IActionResult Login()
-		{
-			return View();
-		}
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
 
 		[HttpPost]
 		public IActionResult Login(LoginRegisterViewModel model)
 		{
-			if (ModelState.IsValid)
+            var login = model.Login;
+            if (!string.IsNullOrWhiteSpace(login.Username) && !string.IsNullOrWhiteSpace(login.Password))
 			{
 				try
 				{
-					var securityToken = Services.User.Login(model.Username, model.Password);
+					var securityToken = Services.User.Login(login.Username, login.Password);
 					if (!string.IsNullOrWhiteSpace(securityToken))
 					{
 						Response.Cookies.Append("SecurityToken", securityToken);
 					}
-					return Redirect("Index"); //TODO Cambiar a home
+					return Redirect("Login");
 				}
 				catch (FileSharingException e)
 				{
@@ -47,13 +48,7 @@ namespace FileSharingWeb.Controllers
 					_logger.LogError(2, e.Message);
 				}
 			}
-			return View();
-		}
-
-		[HttpGet]
-		public IActionResult Register()
-		{
-			return View();
+			return View(model);
 		}
 
 		[HttpPost]
@@ -61,14 +56,15 @@ namespace FileSharingWeb.Controllers
 		public IActionResult Register(LoginRegisterViewModel model)
 		{
 			if (ModelState.IsValid)
-			{
-				var user = new UserDto
+            {
+                var register = model.Register;
+                var user = new UserDto
 				{
-					Login = model.Username,
-					FirstName = model.FirstName,
-					LastName = model.LastName,
-					Password = model.Password
-				};
+					Login = register.Username,
+					FirstName = register.FirstName,
+					LastName = register.LastName,
+					Password = register.Password
+                };
 
 				try
 				{
@@ -84,7 +80,7 @@ namespace FileSharingWeb.Controllers
 					_logger.LogError(1, e.Message);
 				}
 			}
-			return View(model);
+			return View("Login", model);
 		}
 
 		[HttpGet]

@@ -7,7 +7,7 @@
 <div id="wrapper">
 <!-- Header -->
     <header id="header" class="alt">
-		<span class="logo"><img src="images/logo.svg" alt="" /></span>
+		<span class="logo"><img src="~/images/logo.svg" alt="" /></span>
 		<h1>FileSharing</h1>
 	</header>
 <!-- Nav -->
@@ -30,17 +30,18 @@
 						    <div class="form-group">
 						        <label class="col-xs-2 control-label">@Localizer["Username"]</label>
 						        <div class="col-xs-4">
-						            <input asp-for="Username" class="form-control" />
-						            <span asp-validation-for="Username" class="text-danger"></span>
+						            <input asp-for="Login.Username" class="form-control" required/>
+						            <span asp-validation-for="Login.Username" class="text-danger"></span>
 						        </div>
 						    </div>
 						    <div class="form-group">
 						        <label class="col-xs-2 control-label">@Localizer["Password"]</label>
 						        <div class="col-xs-4">
-						            <input asp-for="Password" class="form-control" />
-						            <span asp-validation-for="Password" class="text-danger"></span>
+						            <input asp-for="Login.Password"class="form-control" required/>
+						            <span asp-validation-for="Login.Password" class="text-danger"></span>
 						        </div>
 						    </div>
+                            <div asp-validation-summary="All" class="text-danger"></div>
 						    <div class="form-group">
 						        <div class="col-xs-offset-2 col-xs-4">
 					                <ul class="actions">
@@ -63,36 +64,36 @@
 						    <div class="form-group">
 						        <label class="col-xs-2 control-label">@Localizer["Username"]</label>
 						        <div class="col-xs-4">
-						            <input asp-for="Username" class="form-control" />
-						            <span asp-validation-for="Username" class="text-danger"></span>
+						            <input asp-for="Register.Username" class="form-control" required/>
+						            <span asp-validation-for="Register.Username" class="text-danger"></span>
 						        </div>
 						    </div>
 						    <div class="form-group">
 						        <label class="col-xs-2 control-label">@Localizer["FirstName"]</label>
 						        <div class="col-xs-4">
-						            <input asp-for="FirstName" class="form-control" />
-						            <span asp-validation-for="FirstName" class="text-danger"></span>
+						            <input asp-for="Register.FirstName" class="form-control" required/>
+						            <span asp-validation-for="Register.FirstName" class="text-danger"></span>
 						        </div>
 						    </div>
 						    <div class="form-group">
 						        <label class="col-xs-2 control-label">@Localizer["LastName"]</label>
 						        <div class="col-xs-4">
-						            <input asp-for="LastName" class="form-control" />
-						            <span asp-validation-for="LastName" class="text-danger"></span>
+						            <input asp-for="Register.LastName" class="form-control" required/>
+						            <span asp-validation-for="Register.LastName" class="text-danger"></span>
 						        </div>
 						    </div>
 						    <div class="form-group">
 						        <label class="col-xs-2 control-label">@Localizer["Password"]</label>
 						        <div class="col-xs-4">
-						            <input asp-for="Password" class="form-control" />
-						            <span asp-validation-for="Password" class="text-danger"></span>
+						            <input asp-for="Register.Password" class="form-control" required/>
+						            <span asp-validation-for="Register.Password" class="text-danger"></span>
 						        </div>
 						    </div>
 						    <div class="form-group">
 						        <label class="col-xs-2 control-label">@Localizer["ConfirmPassword"]</label>
 						        <div class="col-xs-4">
-						            <input asp-for="ConfirmPassword" class="form-control" />
-						            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+						            <input asp-for="Register.ConfirmPassword" class="form-control" required/>
+						            <span asp-validation-for="Register.ConfirmPassword" class="text-danger"></span>
 						        </div>
 						    </div>
 						    <div class="form-group">
