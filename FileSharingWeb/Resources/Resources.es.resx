@@ -162,4 +162,7 @@
   <data name="INVALID_LOGIN_OR_PASSWORD" xml:space="preserve">
     <value>El usuario o la contraseña no son correctos</value>
   </data>
+  <data name="HELLO" xml:space="preserve">
+    <value>Hola</value>
+  </data>
 </root>

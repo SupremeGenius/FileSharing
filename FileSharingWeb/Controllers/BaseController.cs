@@ -13,7 +13,7 @@ namespace FileSharingWeb.Controllers
 		public override void OnActionExecuting(ActionExecutingContext context)
 		{
 			base.OnActionExecuting(context);
-			SecurityToken = context.HttpContext.Request.Cookies["SecurityToken"];
+			SecurityToken = Request.Cookies["SecurityToken"];
 
             bool tokenValid = false;
 
@@ -23,10 +23,12 @@ namespace FileSharingWeb.Controllers
                 {
                     Services.Session.Read(SecurityToken);
                     tokenValid = true;
+                    ViewBag.Username = Request.Cookies["Username"];
                 }
                 catch (FileSharingException)
                 {
-                    context.HttpContext.Response.Cookies.Delete("SecurityToken");
+                    Response.Cookies.Delete("SecurityToken");
+                    Response.Cookies.Delete("Username");
                 }
 
             }

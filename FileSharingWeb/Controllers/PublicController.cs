@@ -43,11 +43,12 @@ namespace FileSharingWeb.Controllers
 			{
 				try
 				{
-					var securityToken = Services.User.Login(model.Username, model.Password);
+                    var securityToken = Services.User.Login(model.Username, model.Password);
 					if (!string.IsNullOrWhiteSpace(securityToken))
 					{
 						Response.Cookies.Append("SecurityToken", securityToken);
-					}
+                        Response.Cookies.Append("Username", model.Username);
+                    }
                     return RedirectToAction("Index", "Home");
 				}
 				catch (FileSharingException e)
