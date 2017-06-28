@@ -1,6 +1,8 @@
 ﻿using FileSharing.Services.Exceptions;
+using FileSharingWeb.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 
 namespace FileSharingWeb.Controllers
 {
@@ -16,7 +18,39 @@ namespace FileSharingWeb.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            List<File> files = new List<File>();
+            try
+            {
+                var folders = Services.Folder.GetFoldersInFolder(SecurityToken, null);
+                if (folders != null && folders.Count > 0)
+                {
+                    foreach(var folder in folders)
+                    {
+                        files.Add(new File
+                        {
+                            Name = folder.Name,
+                            Action = "~/folder/" + folder.Id
+                        });
+                    }
+                }
+                var documents = Services.Document.GetDocumentsInFolder(SecurityToken, null);
+                if (documents != null && documents.Count > 0)
+                {
+                    foreach(var document in documents)
+                    {
+                        files.Add(new File
+                        {
+                            Name = document.Filename,
+                            Action = string.Format("OpenDocumentModal({0})", document.Id)
+                        });
+                    }
+                }
+            }
+            catch (FileSharingException e)
+            {
+                _logger.LogError(2, e.Message);
+            }
+            return View(files);
         }
 
         [HttpGet]
@@ -24,11 +58,9 @@ namespace FileSharingWeb.Controllers
         {
             try
             {
-                string securityToken = "";
-                Request.Cookies.TryGetValue("SecurityToken", out securityToken);
-                if (!string.IsNullOrWhiteSpace(securityToken))
+                if (!string.IsNullOrWhiteSpace(SecurityToken))
                 {
-                    Services.User.Logout(securityToken);
+                    Services.User.Logout(SecurityToken);
                     Response.Cookies.Delete("SecurityToken");
                 }
             }

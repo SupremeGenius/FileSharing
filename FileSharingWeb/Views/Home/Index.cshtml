@@ -1,5 +1,7 @@
-﻿@using Microsoft.AspNetCore.Mvc.Localization
+﻿@model List<FileSharingWeb.ViewModels.File>
+@using Microsoft.AspNetCore.Mvc.Localization
 @inject IHtmlLocalizer<Resources> Localizer
 @{
     ViewData["Title"] = Localizer["Home"];
+    ViewData["Options"] = new[] { "CreateFolder", "UploadFile" };
 }

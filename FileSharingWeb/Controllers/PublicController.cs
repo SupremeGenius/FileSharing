@@ -1,7 +1,7 @@
 ﻿using FileSharing.Services.Dtos;
 using FileSharing.Services.Exceptions;
 using FileSharingWeb.Attributes;
-using FileSharingWeb.ViewModels.Public;
+using FileSharingWeb.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -33,7 +33,7 @@ namespace FileSharingWeb.Controllers
 		[HttpPost]
         [ViewLayout("_LayoutPublic")]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(LoginViewModel model)
+        public IActionResult Login(Login model)
 		{
             if (ModelState.IsValid)
 			{
@@ -65,7 +65,7 @@ namespace FileSharingWeb.Controllers
         [HttpPost]
         [ViewLayout("_LayoutPublic")]
         [ValidateAntiForgeryToken]
-		public IActionResult Register(RegisterViewModel model)
+		public IActionResult Register(Register model)
 		{
 			if (ModelState.IsValid)
             {

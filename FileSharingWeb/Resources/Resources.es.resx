@@ -141,4 +141,22 @@
   <data name="Continue" xml:space="preserve">
     <value>Continuar</value>
   </data>
+  <data name="Account" xml:space="preserve">
+    <value>Mi cuenta</value>
+  </data>
+  <data name="CreateFolder" xml:space="preserve">
+    <value>Crear carpeta</value>
+  </data>
+  <data name="Groups" xml:space="preserve">
+    <value>Grupos</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Inicio</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Cerrar sesión</value>
+  </data>
+  <data name="UploadFile" xml:space="preserve">
+    <value>Subir archivo</value>
+  </data>
 </root>

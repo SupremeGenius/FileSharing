@@ -1,10 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Mvc.Localization
 @inject IHtmlLocalizer<Resources> Localizer
-@model FileSharingWeb.ViewModels.Public.LoginViewModel
+@model FileSharingWeb.ViewModels.Login
 @{
     ViewData["Title"] = Localizer["Login"];
 }
-<div id="wrapper">
+<div class="col-xs-10 col-xs-offset-1">
 <!-- Header -->
     <header id="header" class="alt">
 		<span class="logo"><img src="~/images/logo.svg" alt="" /></span>

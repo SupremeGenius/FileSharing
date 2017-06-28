@@ -1,5 +1,4 @@
-﻿using System;
-namespace FileSharing.Services.Dtos
+﻿namespace FileSharing.Services.Dtos
 {
 	public class FolderDto
 	{
