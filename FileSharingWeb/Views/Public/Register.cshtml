@@ -2,7 +2,7 @@
 @inject IHtmlLocalizer<Resources> Localizer
 @model FileSharingWeb.ViewModels.Register
 @{
-    ViewData["Title"] = Localizer["Register"];
+    ViewData["Title"] = Localizer["REGISTER"];
 }
 <div class="col-xs-10 col-xs-offset-1">
     <!-- Header -->
@@ -13,8 +13,8 @@
     <!-- Nav -->
     <nav id="nav">
         <ul>
-            <li><a asp-area="" asp-controller="Public" asp-action="Login">@Localizer["Login"]</a></li>
-            <li><a class="active">@Localizer["Register"]</a></li>
+            <li><a asp-area="" asp-controller="Public" asp-action="Login">@Localizer["LOGIN"]</a></li>
+            <li><a class="active">@Localizer["REGISTER"]</a></li>
         </ul>
     </nav>
 
@@ -28,35 +28,35 @@
                     <div class="col-xs-12 col-xs-offset-2">
                         <form asp-controller="Public" asp-action="Register" method="post" class="form-horizontal">
                             <div class="form-group">
-                                <label class="col-xs-3 control-label">@Localizer["Username"]</label>
+                                <label class="col-xs-3 control-label">@Localizer["USERNAME"]</label>
                                 <div class="col-xs-4">
                                     <input asp-for="Username" class="form-control" required />
                                     <span asp-validation-for="Username" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-xs-3 control-label">@Localizer["FirstName"]</label>
+                                <label class="col-xs-3 control-label">@Localizer["FIRST_NAME"]</label>
                                 <div class="col-xs-4">
                                     <input asp-for="FirstName" class="form-control" required />
                                     <span asp-validation-for="FirstName" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-xs-3 control-label">@Localizer["LastName"]</label>
+                                <label class="col-xs-3 control-label">@Localizer["LAST_NAME"]</label>
                                 <div class="col-xs-4">
                                     <input asp-for="LastName" class="form-control" required />
                                     <span asp-validation-for="LastName" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-xs-3 control-label">@Localizer["Password"]</label>
+                                <label class="col-xs-3 control-label">@Localizer["PASSWORD"]</label>
                                 <div class="col-xs-4">
                                     <input asp-for="Password" class="form-control" required />
                                     <span asp-validation-for="Password" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-xs-3 control-label">@Localizer["ConfirmPassword"]</label>
+                                <label class="col-xs-3 control-label">@Localizer["CONFIRM_PASSWORD"]</label>
                                 <div class="col-xs-4">
                                     <input asp-for="ConfirmPassword" class="form-control" required />
                                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
@@ -65,7 +65,7 @@
                             <div class="form-group">
                                 <div class="col-xs-offset-3 col-xs-4">
                                     <ul class="actions">
-                                        <li><button type="submit" class="btn btn-default">@Localizer["Continue"]</button></li>
+                                        <li><button type="submit" class="btn btn-default">@Localizer["CONTINUE"]</button></li>
                                     </ul>
                                 </div>
                             </div>

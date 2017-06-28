@@ -70,5 +70,17 @@ namespace FileSharingWeb.Controllers
             }
             return RedirectToAction("Index", "Public");
         }
+
+        [HttpGet]
+        public IActionResult CreateFolder()
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public IActionResult UploadFile()
+        {
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

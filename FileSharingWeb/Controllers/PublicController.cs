@@ -3,6 +3,7 @@ using FileSharing.Services.Exceptions;
 using FileSharingWeb.Attributes;
 using FileSharingWeb.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 
 namespace FileSharingWeb.Controllers
@@ -10,10 +11,13 @@ namespace FileSharingWeb.Controllers
     public class PublicController : BaseController
     {
 		readonly ILogger _logger;
+        readonly IStringLocalizer _localizer;
 
-		public PublicController(ILoggerFactory loggerFactory)
+        public PublicController(ILoggerFactory loggerFactory, IStringLocalizerFactory factory)
 		{
 			_logger = loggerFactory.CreateLogger<PublicController>();
+            var type = typeof(Resources);
+            _localizer = factory.Create(type);
         }
 		
 		[HttpGet]
@@ -104,7 +108,7 @@ namespace FileSharingWeb.Controllers
 
 		void AddErrors(string error)
 		{
-			ModelState.AddModelError(string.Empty, error);
+			ModelState.AddModelError(string.Empty, _localizer[error]);
 		}
 
 		#endregion

@@ -27,10 +27,10 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-home" aria-hidden="true"></i> @Localizer["Home"]</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Account"><i class="fa fa-user" aria-hidden="true"></i> @Localizer["Account"]</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Groups"><i class="fa fa-users" aria-hidden="true"></i> @Localizer["Groups"]</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Logout"><i class="fa fa-sign-out" aria-hidden="true"></i> @Localizer["Logout"]</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-home" aria-hidden="true"></i> @Localizer["HOME"]</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Account"><i class="fa fa-user" aria-hidden="true"></i> @Localizer["ACCOUNT"]</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Groups"><i class="fa fa-users" aria-hidden="true"></i> @Localizer["GROUPS"]</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Logout"><i class="fa fa-sign-out" aria-hidden="true"></i> @Localizer["LOGOUT"]</a></li>
                 </ul>
             </div>
         </div>
@@ -41,8 +41,9 @@
             <ul id="menu-content" class="menu-content">
                 @foreach (var option in (string[])@ViewData["Options"])
                 {
+                    var parts = option.Split(',');
                     <li>
-                        <a asp-action="@option">@Localizer[option]</a>
+                        <a asp-controller="@parts[0]" asp-action="@parts[1]">@Localizer[parts[2]]</a>
                     </li>
 
                 }

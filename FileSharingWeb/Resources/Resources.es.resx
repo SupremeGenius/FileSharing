@@ -117,46 +117,49 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ConfirmPassword" xml:space="preserve">
+  <data name="CONFIRM_PASSWORD" xml:space="preserve">
     <value>Repetir contraseña</value>
   </data>
-  <data name="FirstName" xml:space="preserve">
+  <data name="FIRST_NAME" xml:space="preserve">
     <value>Nombre</value>
   </data>
-  <data name="LastName" xml:space="preserve">
+  <data name="LAST_NAME" xml:space="preserve">
     <value>Apellidos</value>
   </data>
-  <data name="Login" xml:space="preserve">
+  <data name="LOGIN" xml:space="preserve">
     <value>Iniciar sesión</value>
   </data>
-  <data name="Password" xml:space="preserve">
+  <data name="PASSWORD" xml:space="preserve">
     <value>Contraseña</value>
   </data>
-  <data name="Register" xml:space="preserve">
+  <data name="REGISTER" xml:space="preserve">
     <value>Registrar</value>
   </data>
-  <data name="Username" xml:space="preserve">
+  <data name="USERNAME" xml:space="preserve">
     <value>Nombre de usuario</value>
   </data>
-  <data name="Continue" xml:space="preserve">
+  <data name="CONTINUE" xml:space="preserve">
     <value>Continuar</value>
   </data>
-  <data name="Account" xml:space="preserve">
+  <data name="ACCOUNT" xml:space="preserve">
     <value>Mi cuenta</value>
   </data>
-  <data name="CreateFolder" xml:space="preserve">
+  <data name="CREATE_FOLDER" xml:space="preserve">
     <value>Crear carpeta</value>
   </data>
-  <data name="Groups" xml:space="preserve">
+  <data name="GROUPS" xml:space="preserve">
     <value>Grupos</value>
   </data>
-  <data name="Home" xml:space="preserve">
+  <data name="HOME" xml:space="preserve">
     <value>Inicio</value>
   </data>
-  <data name="Logout" xml:space="preserve">
+  <data name="LOGOUT" xml:space="preserve">
     <value>Cerrar sesión</value>
   </data>
-  <data name="UploadFile" xml:space="preserve">
+  <data name="UPLOAD_FILE" xml:space="preserve">
     <value>Subir archivo</value>
+  </data>
+  <data name="INVALID_LOGIN_OR_PASSWORD" xml:space="preserve">
+    <value>El usuario o la contraseña no son correctos</value>
   </data>
 </root>
