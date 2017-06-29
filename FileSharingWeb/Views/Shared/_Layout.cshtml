@@ -7,8 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - FileSharing</title>
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/lib/tether/dist/css/tether.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="~/lib/jquery-modal/jquery.modal.min.css" />
     <link rel="stylesheet" href="~/css/site.min.css" />
 </head>
 <body>
@@ -42,9 +44,19 @@
                 @foreach (var option in (string[])@ViewData["Options"])
                 {
                     var parts = option.Split(',');
-                    <li>
-                        <a asp-controller="@parts[0]" asp-action="@parts[1]">@Localizer[parts[2]]</a>
-                    </li>
+                    if (parts.Length == 2)
+                    {
+                        <li>
+                            <a onclick="@parts[0]">@Localizer[parts[1]]</a>
+                        </li>
+
+                    }
+                    else if (parts.Length == 3)
+                    {
+                        <li>
+                            <a asp-controller="@parts[0]" asp-action="@parts[1]">@Localizer[parts[2]]</a>
+                        </li>
+                    }
 
                 }
             </ul>
@@ -53,9 +65,11 @@
     <div class="container body-content">
         @RenderBody()
     </div>
-
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/tether/dist/js/tether.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/lib/jquery-modal/jquery.modal.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @RenderSection("Scripts", required: false)

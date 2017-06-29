@@ -21,8 +21,7 @@ body {
     background-image: url("images/overlay.png"), -webkit-linear-gradient(45deg, #e37682 15%, #5f4d93 85%);
     background-image: url("images/overlay.png"), -ms-linear-gradient(45deg, #e37682 15%, #5f4d93 85%);
     background-image: url("images/overlay.png"), linear-gradient(45deg, #e37682 15%, #5f4d93 85%);
-    margin: 0px;
-    padding: 0px;
+    min-height: 100vh;
 }
 
     body.is-loading *, body.is-loading *:before, body.is-loading *:after {
@@ -2206,4 +2205,40 @@ body.is-loading #header.alt .logo {
     .nav-side-menu .menu-list .menu-content {
         display: block;
     }
+}
+
+.create-folder-modal.modal {
+    border-radius: 0;
+    line-height: 18px;
+    padding: 0;
+    font-family: 'Raleway', sans-serif;
+}
+
+.create-folder-modal h3 {
+    margin: 0;
+    padding: 10px;
+    color: #777;
+    font-size: 14px;
+    background: #222;
+    text-align: center;
+}
+
+.create-folder-modal.modal p {
+    padding: 20px 30px;
+    border-bottom: 1px solid #222;
+    margin: 0;
+    color: #222;
+    background: #777;
+    overflow: hidden;
+    text-align: center;
+}
+
+.create-folder-modal.modal p:last-child {
+    border: none;
+}
+
+.create-folder-modal.modal p input {
+    padding: 3px;
+    border: 1px solid #222;
+    width: 75%;
 }

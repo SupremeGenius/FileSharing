@@ -3,6 +3,19 @@
 @inject IHtmlLocalizer<Resources> Localizer
 @{
     ViewData["Title"] = Localizer["HOME"];
-    ViewData["Options"] = new[] { "Home,CreateFolder,CREATE_FOLDER", "Home,UploadFile,UPLOAD_FILE" };
+    ViewData["Options"] = new[] { "CreateFolder(),CREATE_FOLDER", "Home,UploadFile,UPLOAD_FILE" };
 }
+<script>
+    function CreateFolder() {
+        $("#CreateFolderBtn").click();
+    }
+</script>
+
+<a id="CreateFolderBtn" href="#CreateFolder" rel="modal:open"></a>
+<form action="" class="create-folder-modal modal" id="CreateFolder" style="display:none;">
+    <h3>Introduce el nombre de la nueva carpeta</h3>
+    <p><input type="text" /></p>
+    <p><input type="submit" value="Continuar" /></p>
+</form>
+
 @ViewBag.LinkFolder

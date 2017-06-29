@@ -25,8 +25,8 @@
     <Compile Remove="Models\User.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="wwwroot\css\modals.css" />
     <Content Include="wwwroot\css\site.css" />
-    <Content Include="wwwroot\css\site.min.css" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Resources\Resources.en.resx">
