@@ -58,6 +58,31 @@ namespace FileSharing.Services
 			}
 		}
 
+        public FolderDto Read(string securityToken, long idFolder)
+        {
+            try
+            {
+                var session = CheckSession(securityToken);
+                var folder = _dao.Read(idFolder);
+                if (folder == null)
+                    throw new FileSharingException(FileSharingException.FOLDER_NOT_FOUND,
+                         "Folder with id " + idFolder + " does not exist");
+
+                if (folder.IdUser != session.IdUser)
+                    throw new FileSharingException(FileSharingException.UNAUTHORIZED,
+                                                       "You do not have permissions to update this folder");
+                return Mapper.Map<FolderDto>(folder);
+            }
+            catch (FileSharingException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+            }
+        }
+
 		public void Update(string securityToken, FolderDto folder)
 		{
 			try

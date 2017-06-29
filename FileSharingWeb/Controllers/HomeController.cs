@@ -16,12 +16,26 @@ namespace FileSharingWeb.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(int? id)
         {
             List<File> files = new List<File>();
             try
             {
-                var folders = Services.Folder.GetFoldersInFolder(SecurityToken, null);
+                if (id.HasValue)
+                {
+                    var folder = Services.Folder.Read(SecurityToken, id.Value);
+                    if (folder.IdFolderRoot.HasValue)
+                    {
+                        var folderRoot = Services.Folder.Read(SecurityToken, folder.IdFolderRoot.Value);
+                        ViewBag.LinkFolder = "<a asp-area=\"\" asp-controller=\"Home\" asp-action=\"Index\" asp-route-id=\"" + folderRoot.Id +
+                            "\">" + folder.Name + "</a>";
+                    }
+                    else
+                    {
+                        ViewBag.LinkFolder = "";
+                    }
+                }
+                var folders = Services.Folder.GetFoldersInFolder(SecurityToken, id);
                 if (folders != null && folders.Count > 0)
                 {
                     foreach(var folder in folders)
@@ -29,7 +43,8 @@ namespace FileSharingWeb.Controllers
                         files.Add(new File
                         {
                             Name = folder.Name,
-                            Action = "~/folder/" + folder.Id
+                            Action = "/Index/" + folder.Id,
+                            IdFolderRoot = folder.IdFolderRoot
                         });
                     }
                 }
@@ -41,13 +56,15 @@ namespace FileSharingWeb.Controllers
                         files.Add(new File
                         {
                             Name = document.Filename,
-                            Action = string.Format("OpenDocumentModal({0})", document.Id)
+                            Action = string.Format("OpenDocumentModal({0})", document.Id),
+                            IdFolderRoot = document.IdFolder
                         });
                     }
                 }
             }
             catch (FileSharingException e)
             {
+                //TODO Mostrar error
                 _logger.LogError(2, e.Message);
             }
             return View(files);

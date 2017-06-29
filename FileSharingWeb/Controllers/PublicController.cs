@@ -53,7 +53,7 @@ namespace FileSharingWeb.Controllers
 				}
 				catch (FileSharingException e)
 				{
-					AddErrors(e.Message);
+					AddErrors(e.Code);
 					_logger.LogError(2, e.Message);
 				}
 			}

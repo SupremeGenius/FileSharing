@@ -146,7 +146,7 @@ namespace FileSharing.Services
 				var userDom = _dao.ReadByLogin(login);
 				if (userDom == null || userDom.Password != EncryptPassword(password))
 					throw new FileSharingException(FileSharingException.INVALID_CREDENTIALS,
-					                                   "INVALID_LOGIN_OR_PASSWORD");
+					                                   "The username or the password is not valid");
                 using (var _sessionServices = new SessionServices())
                     return _sessionServices.Create(userDom.Id);
 			}
