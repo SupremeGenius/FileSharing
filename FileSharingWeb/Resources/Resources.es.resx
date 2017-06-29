@@ -165,4 +165,10 @@
   <data name="HELLO" xml:space="preserve">
     <value>Hola</value>
   </data>
+  <data name="NEW_FOLDER_NAME" xml:space="preserve">
+    <value>Introduce el nombre de la nueva carpeta</value>
+  </data>
+  <data name="ROOT" xml:space="preserve">
+    <value>Raíz</value>
+  </data>
 </root>

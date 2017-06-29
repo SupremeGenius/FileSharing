@@ -1,21 +1,45 @@
-﻿@model List<FileSharingWeb.ViewModels.File>
+﻿@model List<File>
+@using FileSharingWeb.ViewModels;
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IHtmlLocalizer<Resources> Localizer
 @{
     ViewData["Title"] = Localizer["HOME"];
     ViewData["Options"] = new[] { "CreateFolder(),CREATE_FOLDER", "Home,UploadFile,UPLOAD_FILE" };
 }
+<a id="CreateFolderBtn" href="#CreateFolder" rel="modal:open"></a>
+<form id="CreateFolder" class="create-folder-modal modal" style="display:none;" asp-controller="Home" asp-action="CreateFolder" method="post">
+    <h3>@Localizer["NEW_FOLDER_NAME"]</h3>
+    <p><input type="text" name="folderName" required/></p>
+    <p style="display:none"><input type="text" name="folderRoot" value="@ViewBag.FolderRootId"/></p>
+    <p><button type="submit">@Localizer["CONTINUE"]</button></p>
+</form>
+
+<div class="site-content">
+    <div class="link-to-previous-folder">
+        @if (ViewBag.LinkFolder != null)
+        {
+            var link = ((string)ViewBag.LinkFolder).Split(',');
+            if (link.Length == 2)
+            {
+                <a asp-controller="Home" asp-action="Index" asp-route-id="@link[0]">../@link[1]</a>
+            }
+            else
+            {
+                <a asp-controller="Home" asp-action="Index" asp-route-id="">../@link[0]</a>
+            }
+        }
+    </div>
+    <div class="folders">
+        @foreach (var folder in Model.Where(x => x.Type == FileType.Folder))
+        {
+            <a asp-controller="Home" asp-action="Index" asp-route-id="@folder.Id">@folder.Name</a>
+        }
+    </div>
+</div>
+
+
 <script>
     function CreateFolder() {
         $("#CreateFolderBtn").click();
     }
 </script>
-
-<a id="CreateFolderBtn" href="#CreateFolder" rel="modal:open"></a>
-<form action="" class="create-folder-modal modal" id="CreateFolder" style="display:none;">
-    <h3>Introduce el nombre de la nueva carpeta</h3>
-    <p><input type="text" /></p>
-    <p><input type="submit" value="Continuar" /></p>
-</form>
-
-@ViewBag.LinkFolder

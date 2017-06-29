@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using FileSharing.Persistence.Models;
+using System.Collections.Generic;
 
 namespace FileSharing.Persistence.Daos
 {
@@ -10,9 +11,9 @@ namespace FileSharing.Persistence.Daos
 			return _dbSet.Where(f => f.Name == name && f.IdFolderRoot == idFolderRoot).FirstOrDefault();
 		}
 
-		public Folder GetUserRootFolder(long idUser)
+		public List<Folder> GetFoldersInFolder(long idUser, long? idFolder)
 		{
-			return _dbSet.Where(f => f.IdUser == idUser && !f.IdFolderRoot.HasValue).FirstOrDefault();
+			return _dbSet.Where(f => f.IdUser == idUser && f.IdFolderRoot == idFolder).ToList();
 		}
 	}
 }

@@ -2207,11 +2207,24 @@ body.is-loading #header.alt .logo {
     }
 }
 
+.site-content {
+    margin-top: 100px;
+}
+
+.link-to-previous-folder {
+    color: green;
+}
+
+.folders{
+    color: blue;
+}
+
 .create-folder-modal.modal {
     border-radius: 0;
     line-height: 18px;
     padding: 0;
     font-family: 'Raleway', sans-serif;
+    width: 350px;
 }
 
 .create-folder-modal h3 {
@@ -2228,7 +2241,7 @@ body.is-loading #header.alt .logo {
     border-bottom: 1px solid #222;
     margin: 0;
     color: #222;
-    background: #777;
+    background: #935d8c;
     overflow: hidden;
     text-align: center;
 }
@@ -2240,5 +2253,16 @@ body.is-loading #header.alt .logo {
 .create-folder-modal.modal p input {
     padding: 3px;
     border: 1px solid #222;
-    width: 75%;
+    background: #E6E6E6;
+}
+
+.create-folder-modal.modal p button {
+    border: 1px solid #222;
+    color: #777 !important;
+    background-color: #222;
+}
+.create-folder-modal a.close-modal {
+    top: -2.5px;
+    right: -2.5px;
+    color: #222;
 }

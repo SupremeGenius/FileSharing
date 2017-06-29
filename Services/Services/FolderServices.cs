@@ -155,24 +155,8 @@ namespace FileSharing.Services
 			try
 			{
 				var session = CheckSession(securityToken);
-				Folder folder;
-				if (!idFolder.HasValue)
-				{
-					folder = _dao.GetUserRootFolder(session.IdUser);
-				}
-				else
-				{
-					folder = _dao.Read(idFolder.Value);
-				}
-
-				if (folder == null || folder.InverseIdFolderRootNavigation == null
-				    || folder.InverseIdFolderRootNavigation.Count == 0)
-					return new List<FolderDto>();
-				
-				List<Folder> folders = new List<Folder>();
-				folders.AddRange(folder.InverseIdFolderRootNavigation);
-
-				return Mapper.Map<List<FolderDto>>(folders);
+                var result = _dao.GetFoldersInFolder(session.IdUser, idFolder);
+                return Mapper.Map<List<FolderDto>>(result);
 			}
 			catch (FileSharingException)
 			{
@@ -188,8 +172,7 @@ namespace FileSharing.Services
 		{
 			try
 			{
-				var session = CheckSession(securityToken);
-				string path = GetUserRootFolder(session.IdUser) + Path.DirectorySeparatorChar.ToString();
+				var session = CheckSession(securityToken);;
 
 				if (idFolder.HasValue)
 				{
@@ -197,10 +180,12 @@ namespace FileSharing.Services
 					if (folder == null)
 						throw new FileSharingException(FileSharingException.FOLDER_NOT_FOUND,
 							 "Folder with id " + idFolder.Value + " does not exist");
-					path += GetFullPath(_dao.Read(idFolder.Value)) + Path.DirectorySeparatorChar.ToString();
+					return GetFullPath(_dao.Read(idFolder.Value)) + Path.DirectorySeparatorChar.ToString();
 				}
-
-				return path;
+                else
+                {
+                    return GetUserRootFolder(session.IdUser) + Path.DirectorySeparatorChar.ToString();
+                }
 			}
 			catch (FileSharingException)
 			{
@@ -217,9 +202,9 @@ namespace FileSharing.Services
 		string GetFullPath(Folder folder)
 		{
 			if (folder.IdFolderRoot.HasValue)
-				return GetFullPath(folder.IdFolderRootNavigation) + Path.DirectorySeparatorChar.ToString() + folder.Name;
+				return GetFullPath(_dao.Read(folder.IdFolderRoot.Value)) + Path.DirectorySeparatorChar.ToString() + folder.Name;
 					
-			return folder.Name;
+			return GetUserRootFolder(folder.IdUser) + Path.DirectorySeparatorChar.ToString() + folder.Name;
 		}
 
 		string GetUserRootFolder(long idUser)
