@@ -30,15 +30,16 @@ namespace FileSharingWeb.Controllers
                 if (id.HasValue)
                 {
                     var folder = Services.Folder.Read(SecurityToken, id.Value);
-                    if (folder.IdFolderRoot.HasValue)
+                    var idRoot = folder.IdFolderRoot;
+                    string path = "";
+                    while (folder != null)
                     {
-                        var folderRoot = Services.Folder.Read(SecurityToken, folder.IdFolderRoot.Value);
-                        ViewBag.LinkFolder = folderRoot.Id + "," + folder.Name;
+                        path = folder.Name + "/" + path;
+                        folder = folder.IdFolderRoot.HasValue
+                            ? Services.Folder.Read(SecurityToken, folder.IdFolderRoot.Value)
+                            : null;
                     }
-                    else
-                    {
-                        ViewBag.LinkFolder = _localizer["ROOT"];
-                    }
+                    ViewBag.LinkFolder = idRoot.HasValue ? idRoot + "," + path : path;
                 }
                 var folders = Services.Folder.GetFoldersInFolder(SecurityToken, id);
                 if (folders != null && folders.Count > 0)

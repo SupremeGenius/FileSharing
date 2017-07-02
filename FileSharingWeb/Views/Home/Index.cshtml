@@ -14,27 +14,31 @@
     <p><button type="submit">@Localizer["CONTINUE"]</button></p>
 </form>
 
-<div class="site-content">
-    <div class="link-to-previous-folder">
-        @if (ViewBag.LinkFolder != null)
+<div class="link-to-previous-folder">
+    @if (ViewBag.LinkFolder != null)
+    {
+        var link = ((string)ViewBag.LinkFolder).Split(',');
+        if (link.Length == 2)
         {
-            var link = ((string)ViewBag.LinkFolder).Split(',');
-            if (link.Length == 2)
-            {
-                <a asp-controller="Home" asp-action="Index" asp-route-id="@link[0]">../@link[1]</a>
-            }
-            else
-            {
-                <a asp-controller="Home" asp-action="Index" asp-route-id="">../@link[0]</a>
-            }
+            <a asp-controller="Home" asp-action="Index" asp-route-id="@link[0]">@link[1]</a>
         }
-    </div>
-    <div class="folders">
-        @foreach (var folder in Model.Where(x => x.Type == FileType.Folder))
+        else
         {
-            <a asp-controller="Home" asp-action="Index" asp-route-id="@folder.Id">@folder.Name</a>
+            <a asp-controller="Home" asp-action="Index" asp-route-id="">@link[0]</a>
         }
-    </div>
+    }
+</div>
+<div class="files">
+    @foreach (var folder in Model.Where(x => x.Type == FileType.Folder))
+    {
+        <div class="folder">
+            <a asp-controller="Home" asp-action="Index" asp-route-id="@folder.Id">
+                <img src="~/images/folder.png" />
+                <br />
+                @folder.Name
+            </a>
+        </div>
+    }
 </div>
 
 

@@ -2199,6 +2199,14 @@ body.is-loading #header.alt .logo {
         width: 100%;
         margin-bottom: 10px;
     }
+
+    .site-content {
+        margin-left: 50px !important;
+    }
+
+    .link-to-previous-folder {
+        top: 150px;
+    }
 }
 
 @media (min-width: 767px) {
@@ -2209,14 +2217,25 @@ body.is-loading #header.alt .logo {
 
 .site-content {
     margin-top: 100px;
+    margin-left:350px;
 }
 
 .link-to-previous-folder {
-    color: green;
+    position:absolute;
+    top: 70px;
 }
 
-.folders{
-    color: blue;
+.files {
+    margin-top: 15px;
+}
+
+.folder {
+    display: inline-block;
+    text-align: center;
+    margin-right: 20px;
+}
+.folder a{
+    border-bottom: 0;
 }
 
 .create-folder-modal.modal {

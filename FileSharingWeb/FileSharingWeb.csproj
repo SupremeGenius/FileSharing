@@ -2,6 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
+    <Authors>Víctor de la Rosa</Authors>
+    <Company>Víctor de la Rosa</Company>
+    <Product>FileSharing</Product>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
 
 
@@ -25,8 +32,8 @@
     <Compile Remove="Models\User.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="wwwroot\css\modals.css" />
     <Content Include="wwwroot\css\site.css" />
+    <Content Include="wwwroot\images\folder.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Resources\Resources.en.resx">

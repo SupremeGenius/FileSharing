@@ -5,7 +5,7 @@
 [Oo]bj/
 [Bb]in/
 packages/
-/lib
+lib/
 TestResults/
 
 # globs
