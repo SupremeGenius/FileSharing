@@ -44,8 +44,6 @@ namespace FileSharing.Services
 			{
 				var session = CheckSession(securityToken);
 				var user = _dao.Read(session.IdUser);
-				if (user == null)
-					return null;
 				return Mapper.Map<UserDto>(user);
 			}
 			catch (Exception e)

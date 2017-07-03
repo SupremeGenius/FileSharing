@@ -4,6 +4,7 @@ using FileSharing.Persistence.Daos;
 using FileSharing.Persistence.Models;
 using FileSharing.Services.Dtos;
 using FileSharing.Services.Exceptions;
+using System.Collections.Generic;
 
 namespace FileSharing.Services
 {
@@ -22,14 +23,14 @@ namespace FileSharing.Services
 
 				var userGroup = new UserGroup
 				{
-					DateInclusionRequest = DateTime.Now,
+                    IdUser = session.IdUser,
+                    DateInclusionRequest = DateTime.Now,
 					IdGroup = idGroup
 				};
-				userGroup.IdUser = session.IdUser;
 
 				userGroup = _dao.Create(userGroup);
-				//TODO Audit
-			}
+                Audit(session.IdUser, userGroup.IdGroup.ToString(), typeof(UserGroup).Name, ActionDto.Create, "User add to group: " + userGroup);
+            }
 			catch (FileSharingException)
 			{
 				throw;
@@ -126,5 +127,41 @@ namespace FileSharing.Services
 				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
+
+
+        public List<UserGroupDto> FindByUser(string securityToken)
+        {
+            try
+            {
+                var session = CheckSession(securityToken);
+                return Mapper.Map<List<UserGroupDto>>(_dao.FindByUser(session.IdUser));
+            }
+            catch (FileSharingException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+            }
+        }
+
+        public long NumOfMembersOfAGroup(string securityToken, long idGroup)
+        {
+            try
+            {
+                var session = CheckSession(securityToken);
+                var userGroups = _dao.FindByGroup(idGroup);
+                return userGroups != null ? userGroups.Count : 0;
+            }
+            catch (FileSharingException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+            }
+        }
 	}
 }

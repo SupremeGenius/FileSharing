@@ -5,6 +5,7 @@ using FileSharing.Persistence.Daos;
 using FileSharing.Persistence.Models;
 using FileSharing.Services.Dtos;
 using FileSharing.Services.Exceptions;
+using System.Linq;
 
 namespace FileSharing.Services
 {
@@ -28,8 +29,13 @@ namespace FileSharing.Services
 					IdAdmin = session.IdUser
 				};
 				groupDom = _dao.Create(groupDom);
-				//TODO Audit
-				return groupDom.Id;
+                Audit(session.IdUser, groupDom.Id.ToString(), typeof(Group).Name, ActionDto.Create, "Group created: " + groupDom);
+
+                using (var userGroupService = new UserGroupServices())
+                {
+                    userGroupService.Create(securityToken, groupDom.Id);
+                }
+                return groupDom.Id;
 			}
 			catch (FileSharingException)
 			{
@@ -47,17 +53,6 @@ namespace FileSharing.Services
 			{
 				var session = CheckSession(securityToken);
 				var groupDom = _dao.Read(idGroup);
-				if (groupDom == null)
-					return null;
-				
-				if (groupDom.IdAdmin != session.IdUser)
-				{
-					List<UserGroup> users = (List<UserGroup>)groupDom.UserGroup;
-					if (users.Find(u => u.IdUser == session.IdUser) == null)
-						throw new FileSharingException(FileSharingException.UNAUTHORIZED,
-														   "You do not have permissions to read this group");
-				}
-				//TODO Audit
 				return Mapper.Map<GroupDto>(groupDom);
 			}
 			catch (FileSharingException)
@@ -146,5 +141,31 @@ namespace FileSharing.Services
 				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
+
+        public List<GroupDto> GetGroupsOfUser(string securityToken)
+        {
+            try
+            {
+                var session = CheckSession(securityToken);
+                List<GroupDto> result = new List<GroupDto>();
+                using (var userGroupService = new UserGroupServices())
+                {
+                    var userGroups = userGroupService.FindByUser(securityToken);
+                    foreach(var group in userGroups.Select(x => Read(securityToken, x.IdGroup)))
+                    {
+                        result.Add(group);
+                    }
+                }
+                return result;
+            }
+            catch (FileSharingException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+            }
+        }
 	}
 }

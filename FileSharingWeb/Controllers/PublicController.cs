@@ -46,8 +46,9 @@ namespace FileSharingWeb.Controllers
                     var securityToken = Services.User.Login(model.Username, model.Password);
 					if (!string.IsNullOrWhiteSpace(securityToken))
 					{
+                        var user = Services.User.Read(securityToken);
 						Response.Cookies.Append("SecurityToken", securityToken);
-                        Response.Cookies.Append("Username", model.Username);
+                        Response.Cookies.Append("FirstName", user.FirstName);
                     }
                     return RedirectToAction("Index", "Home");
 				}

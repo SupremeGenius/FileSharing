@@ -1,6 +1,7 @@
-﻿@using Microsoft.AspNetCore.Mvc.Localization
+﻿@model Login
+@using FileSharingWeb.ViewModels;
+@using Microsoft.AspNetCore.Mvc.Localization
 @inject IHtmlLocalizer<Resources> Localizer
-@model FileSharingWeb.ViewModels.Login
 @{
     ViewData["Title"] = Localizer["LOGIN"];
 }

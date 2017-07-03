@@ -7,7 +7,7 @@
     ViewData["Options"] = new[] { "CreateFolder(),CREATE_FOLDER", "Home,UploadFile,UPLOAD_FILE" };
 }
 <a id="CreateFolderBtn" href="#CreateFolder" rel="modal:open"></a>
-<form id="CreateFolder" class="create-folder-modal modal" style="display:none;" asp-controller="Home" asp-action="CreateFolder" method="post">
+<form id="CreateFolder" class="create-modal modal" style="display:none;" asp-controller="Home" asp-action="CreateFolder" method="post">
     <h3>@Localizer["NEW_FOLDER_NAME"]</h3>
     <p><input type="text" name="folderName" required/></p>
     <p style="display:none"><input type="text" name="folderRoot" value="@ViewBag.FolderRootId"/></p>

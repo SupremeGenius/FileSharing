@@ -18,5 +18,15 @@ namespace FileSharing.Persistence.Models
 		public virtual Folder IdFolderRootNavigation { get; set; }
 		public virtual ICollection<Folder> InverseIdFolderRootNavigation { get; set; }
 		public virtual User IdUserNavigation { get; set; }
-	}
+        
+        public override string ToString()
+        {
+            string result = "";
+
+            result += "Name: " + Name + "\r\n";
+            result += "IdFolderRoot: " + (IdFolderRoot.HasValue ? IdFolderRoot.ToString() : "null");
+
+            return result;
+        }
+    }
 }

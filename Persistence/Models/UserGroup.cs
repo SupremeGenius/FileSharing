@@ -10,5 +10,15 @@ namespace FileSharing.Persistence.Models
 
 		public virtual Group IdGroupNavigation { get; set; }
 		public virtual User IdUserNavigation { get; set; }
-	}
+
+        public override string ToString()
+        {
+            string result = "";
+
+            result += "IdUser: " + IdUser + "\r\n";
+            result += "IdGroup: " + IdGroup;
+
+            return result;
+        }
+    }
 }

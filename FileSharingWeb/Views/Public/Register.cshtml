@@ -1,6 +1,7 @@
-﻿@using Microsoft.AspNetCore.Mvc.Localization
+﻿@model Register
+@using FileSharingWeb.ViewModels;
+@using Microsoft.AspNetCore.Mvc.Localization
 @inject IHtmlLocalizer<Resources> Localizer
-@model FileSharingWeb.ViewModels.Register
 @{
     ViewData["Title"] = Localizer["REGISTER"];
 }

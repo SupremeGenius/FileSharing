@@ -71,7 +71,6 @@ a {
     -ms-transition: color 0.2s ease, border-bottom 0.2s ease;
     transition: color 0.2s ease, border-bottom 0.2s ease;
     text-decoration: none;
-    border-bottom: dotted 1px;
     color: inherit;
 }
 
@@ -1166,11 +1165,7 @@ table {
         table.alt tbody tr:first-child td {
             border-top-width: 1px;
         }
-
-        table.alt thead {
-            border-bottom: 0;
-        }
-
+        
         table.alt tfoot {
             border-top: 0;
         }
@@ -2180,7 +2175,6 @@ body.is-loading #header.alt .logo {
 .nav-side-menu li a {
     text-decoration: none;
     color: #9d9d9d;
-    border-bottom: 0;
 }
 
 .nav-side-menu li:hover {
@@ -2234,11 +2228,8 @@ body.is-loading #header.alt .logo {
     text-align: center;
     margin-right: 20px;
 }
-.folder a{
-    border-bottom: 0;
-}
 
-.create-folder-modal.modal {
+.create-modal.modal {
     border-radius: 0;
     line-height: 18px;
     padding: 0;
@@ -2246,7 +2237,7 @@ body.is-loading #header.alt .logo {
     width: 350px;
 }
 
-.create-folder-modal h3 {
+.create-modal h3 {
     margin: 0;
     padding: 10px;
     color: #777;
@@ -2255,7 +2246,7 @@ body.is-loading #header.alt .logo {
     text-align: center;
 }
 
-.create-folder-modal.modal p {
+.create-modal.modal p {
     padding: 20px 30px;
     border-bottom: 1px solid #222;
     margin: 0;
@@ -2265,23 +2256,28 @@ body.is-loading #header.alt .logo {
     text-align: center;
 }
 
-.create-folder-modal.modal p:last-child {
+.create-modal.modal p:last-child {
     border: none;
 }
 
-.create-folder-modal.modal p input {
+.create-modal.modal p input {
     padding: 3px;
     border: 1px solid #222;
     background: #E6E6E6;
 }
 
-.create-folder-modal.modal p button {
+.create-modal.modal p button {
     border: 1px solid #222;
     color: #777 !important;
     background-color: #222;
 }
-.create-folder-modal a.close-modal {
+
+.create-modal a.close-modal {
     top: -2.5px;
     right: -2.5px;
     color: #222;
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+    background-color: #ababab;
 }

@@ -23,12 +23,12 @@ namespace FileSharingWeb.Controllers
                 {
                     Services.Session.Read(SecurityToken);
                     tokenValid = true;
-                    ViewBag.Username = Request.Cookies["Username"];
+                    ViewBag.FirstName = Request.Cookies["FirstName"];
                 }
                 catch (FileSharingException)
                 {
                     Response.Cookies.Delete("SecurityToken");
-                    Response.Cookies.Delete("Username");
+                    Response.Cookies.Delete("FirstName");
                 }
 
             }

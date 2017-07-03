@@ -1,0 +1,56 @@
+﻿@model List<Group>
+@using FileSharingWeb.ViewModels
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<Resources> Localizer
+@{
+    ViewData["Title"] = Localizer["GROUPS"];
+    ViewData["Options"] = new[] { "CreateGroup(),CREATE_GROUP", "Groups,Search,SEARCH_GROUPS" };
+}
+<a id="CreateGroupBtn" href="#CreateGroup" rel="modal:open"></a>
+<form id="CreateGroup" class="create-modal modal" style="display:none;" asp-controller="Groups" asp-action="CreateGroup" method="post">
+    <h3>@Localizer["NEW_GROUP_NAME"]</h3>
+    <p><input type="text" name="groupName" required/></p>
+    <p><button type="submit">@Localizer["CONTINUE"]</button></p>
+</form>
+
+@if (Model != null && Model.Count > 0)
+{
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>@Localizer["NAME"].Value.ToUpper()</th>
+                    <th>@Localizer["NUM_MEMBERS"].Value.ToUpper()</th>
+                    <th>@Localizer["ADMINISTRABLE"].Value.ToUpper()</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var group in Model)
+                {
+                    <tr onclick="OpenGroupDetails('@group.Id')">
+                        <td>@group.Name</td>
+                        <td>@group.NumOfMembers</td>
+                        @if (@group.IsAdministrable)
+                        {
+                            <td>@Localizer["YES"]</td>
+                        }
+                        else
+                        {
+                            <td>@Localizer["NO"]</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<script>
+    function CreateGroup() {
+        $("#CreateGroupBtn").click();
+    }
+
+    function OpenGroupDetails(id) {
+        window.location.href = '@Url.Action("Details", "Groups")/' + id;
+    }
+</script>

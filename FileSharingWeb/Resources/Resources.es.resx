@@ -171,4 +171,46 @@
   <data name="ROOT" xml:space="preserve">
     <value>Raíz</value>
   </data>
+  <data name="CREATE_GROUP" xml:space="preserve">
+    <value>Crear grupo</value>
+  </data>
+  <data name="NEW_GROUP_NAME" xml:space="preserve">
+    <value>Introduce el nombre del nuevo grupo</value>
+  </data>
+  <data name="SEARCH_GROUPS" xml:space="preserve">
+    <value>Buscar grupos</value>
+  </data>
+  <data name="ADMINISTRABLE" xml:space="preserve">
+    <value>Administrable</value>
+  </data>
+  <data name="NAME" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="NO" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="NUM_MEMBERS" xml:space="preserve">
+    <value>Número de miembros</value>
+  </data>
+  <data name="YES" xml:space="preserve">
+    <value>Sí</value>
+  </data>
+  <data name="DELETE_GROUP" xml:space="preserve">
+    <value>Eliminar grupo</value>
+  </data>
+  <data name="EXPEL_USER" xml:space="preserve">
+    <value>Expulsar a un usuario</value>
+  </data>
+  <data name="INVITE_USER" xml:space="preserve">
+    <value>Invitar a un usuario</value>
+  </data>
+  <data name="LEAVE_GROUP" xml:space="preserve">
+    <value>Dejar grupo</value>
+  </data>
+  <data name="SEARCH_FILES" xml:space="preserve">
+    <value>Buscar archivos</value>
+  </data>
+  <data name="TRANSFER_GROUP" xml:space="preserve">
+    <value>Transferir grupo</value>
+  </data>
 </root>

@@ -1,0 +1,15 @@
+﻿@model Group
+@using FileSharingWeb.ViewModels
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<Resources> Localizer
+@{
+    ViewData["Title"] = Model.Name;
+    if (Model.IsAdministrable)
+    {
+        ViewData["Options"] = new[] { "SearchFiles(),SEARCH_FILES", "InviteUser(),INVITE_USER", "ExpelUser(),EXPEL_USER", "TransferGroup(),TRANSFER_GROUP", "Groups,DeleteGroup,DELETE_GROUP" };
+    }
+    else
+    {
+        ViewData["Options"] = new[] { "SearchFiles(),SEARCH_FILES", "Groups,LeaveGroup,LEAVE_GROUP" };
+    }
+}

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using FileSharing.Persistence.Models;
+using System.Collections.Generic;
 
 namespace FileSharing.Persistence.Daos
 {
@@ -9,5 +10,15 @@ namespace FileSharing.Persistence.Daos
 		{
 			return _dbSet.Where(ug => ug.IdUser == idUser && ug.IdGroup == idGroup).FirstOrDefault();
 		}
-	}
+
+        public List<UserGroup> FindByUser(long idUser)
+        {
+            return _dbSet.Where(ug => ug.IdUser == idUser).ToList();
+        }
+
+        public List<UserGroup> FindByGroup(long idGroup)
+        {
+            return _dbSet.Where(ug => ug.IdGroup == idGroup).ToList();
+        }
+    }
 }

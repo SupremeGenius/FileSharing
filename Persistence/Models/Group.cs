@@ -16,5 +16,15 @@ namespace FileSharing.Persistence.Models
 		public virtual ICollection<Document> Document { get; set; }
 		public virtual ICollection<UserGroup> UserGroup { get; set; }
 		public virtual User IdAdminNavigation { get; set; }
-	}
+
+        public override string ToString()
+        {
+            string result = "";
+
+            result += "Name: " + Name + "\r\n";
+            result += "IdAdmin: " + IdAdmin;
+
+            return result;
+        }
+    }
 }

@@ -45,8 +45,8 @@ namespace FileSharing.Services
 				Directory.CreateDirectory(GetFullPath(folderDom));
 
 				folderDom = _dao.Create(folderDom);
-				//TODO Audit
-				return folderDom.Id;
+                Audit(session.IdUser, folderDom.Id.ToString(), typeof(Folder).Name, ActionDto.Create, "Folder created: " + folderDom);
+                return folderDom.Id;
 			}
 			catch (FileSharingException)
 			{
