@@ -27,7 +27,7 @@ namespace FileSharingWeb.Controllers
             List<Group> result = new List<Group>();
             try
             {
-                var groups = Services.Group.GetGroupsOfUser(SecurityToken);
+                var groups = Services.UserGroup.GetGroupsOfUser(SecurityToken);
                 var user = Services.User.Read(SecurityToken);
                 foreach(var group in groups)
                 {
@@ -65,17 +65,51 @@ namespace FileSharingWeb.Controllers
         [HttpGet]
         public IActionResult Details(long? id)
         {
-            Group result;
+            GroupDetails result;
             if (!id.HasValue) return View();
             try
             {
                 var group = Services.Group.Read(SecurityToken, id.Value);
                 var user = Services.User.Read(SecurityToken);
-                result = new Group {
+                result = new GroupDetails
+                {
                     Id = id.Value,
                     Name = group.Name,
-                    IsAdministrable = group.IdAdmin == user.Id
+                    IsAdministrable = group.IdAdmin == user.Id,
+                    Files = new List<File>(),
+                    Members = new List<User>
+                    {
+                         new User
+                        {
+                            Id = user.Id,
+                            FullName = user.FullName,
+                            Username = user.Login + " (" + _localizer["YOU"] + ")"
+                        }
+                    }
                 };
+
+                var files = Services.Document.GetDocumentsByGroup(SecurityToken, id.Value);
+                foreach (var file in files)
+                {
+                    result.Files.Add(new File
+                    {
+                        Id = file.Id,
+                        Name = file.Filename,
+                        Type = FileType.Document
+                    });
+                }
+
+                var members = Services.UserGroup.GetUsersOfGroup(SecurityToken, id.Value);
+                foreach (var member in members)
+                {
+                    if (member.Id == user.Id) continue;
+                    result.Members.Add(new User
+                    {
+                        Id = member.Id,
+                        FullName = member.FullName,
+                        Username = member.Login
+                    });
+                }
             }
             catch (FileSharingException e)
             {

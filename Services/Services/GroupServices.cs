@@ -141,31 +141,5 @@ namespace FileSharing.Services
 				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
 		}
-
-        public List<GroupDto> GetGroupsOfUser(string securityToken)
-        {
-            try
-            {
-                var session = CheckSession(securityToken);
-                List<GroupDto> result = new List<GroupDto>();
-                using (var userGroupService = new UserGroupServices())
-                {
-                    var userGroups = userGroupService.FindByUser(securityToken);
-                    foreach(var group in userGroups.Select(x => Read(securityToken, x.IdGroup)))
-                    {
-                        result.Add(group);
-                    }
-                }
-                return result;
-            }
-            catch (FileSharingException)
-            {
-                throw;
-            }
-            catch (Exception e)
-            {
-                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
-            }
-        }
 	}
 }

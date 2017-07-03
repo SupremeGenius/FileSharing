@@ -5,6 +5,7 @@ using FileSharing.Persistence.Models;
 using FileSharing.Services.Dtos;
 using FileSharing.Services.Exceptions;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FileSharing.Services
 {
@@ -126,15 +127,49 @@ namespace FileSharing.Services
 			{
 				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
-		}
+        }
 
-
-        public List<UserGroupDto> FindByUser(string securityToken)
+        public List<GroupDto> GetGroupsOfUser(string securityToken)
         {
             try
             {
                 var session = CheckSession(securityToken);
-                return Mapper.Map<List<UserGroupDto>>(_dao.FindByUser(session.IdUser));
+                List<GroupDto> result = new List<GroupDto>();
+                using (var groupService = new GroupServices())
+                {
+                    var userGroups = _dao.FindByUser(session.IdUser);
+                    foreach (var group in userGroups.Select(x => groupService.Read(securityToken, x.IdGroup)))
+                    {
+                        result.Add(group);
+                    }
+                }
+                return result;
+            }
+            catch (FileSharingException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+            }
+        }
+
+        public List<UserDto> GetUsersOfGroup(string securityToken, long idGroup)
+        {
+            try
+            {
+                var session = CheckSession(securityToken);
+                List<UserDto> result = new List<UserDto>();
+                using (var userService = new UserServices())
+                {
+                    var userGroups = _dao.FindByGroup(idGroup);
+                    foreach (var user in userGroups.Select(x => userService.Read(securityToken, x.IdUser)))
+                    {
+                        result.Add(user);
+                    }
+                }
+                return result;
             }
             catch (FileSharingException)
             {

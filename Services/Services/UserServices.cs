@@ -50,9 +50,23 @@ namespace FileSharing.Services
 			{
 				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
-		}
+        }
 
-		public void Update(string securityToken, UserDto user)
+        public UserDto Read(string securityToken, long idUser)
+        {
+            try
+            {
+                var session = CheckSession(securityToken);
+                var user = _dao.Read(idUser);
+                return Mapper.Map<UserDto>(user);
+            }
+            catch (Exception e)
+            {
+                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+            }
+        }
+
+        public void Update(string securityToken, UserDto user)
 		{
 			try
 			{

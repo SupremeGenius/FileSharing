@@ -213,4 +213,16 @@
   <data name="TRANSFER_GROUP" xml:space="preserve">
     <value>Transferir grupo</value>
   </data>
+  <data name="FILES" xml:space="preserve">
+    <value>Archivos</value>
+  </data>
+  <data name="MEMBERS" xml:space="preserve">
+    <value>Miembros</value>
+  </data>
+  <data name="NO_GROUP_FILES" xml:space="preserve">
+    <value>Aún no existen archivos compartidos con este grupo</value>
+  </data>
+  <data name="YOU" xml:space="preserve">
+    <value>Tú</value>
+  </data>
 </root>

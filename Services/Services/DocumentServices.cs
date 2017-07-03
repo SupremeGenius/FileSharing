@@ -172,6 +172,24 @@ namespace FileSharing.Services
 			}
 		}
 
+        public List<DocumentDto> GetDocumentsByGroup(string securityToken, long idGroup)
+        {
+            try
+            {
+                var session = CheckSession(securityToken);
+                var result = _dao.GetDocumentsByIdGroup(idGroup);
+                return Mapper.Map<List<DocumentDto>>(result);
+            }
+            catch (FileSharingException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+            }
+        }
+
 		#region Private methods
 
 		string GetFilePath(string securityToken, Document document)

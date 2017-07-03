@@ -2281,3 +2281,12 @@ body.is-loading #header.alt .logo {
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
     background-color: #ababab;
 }
+
+.group-files {
+    float: left;
+    width: 65%
+}
+
+.group-members {
+    float: right;
+}

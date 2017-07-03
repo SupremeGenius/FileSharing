@@ -1,4 +1,4 @@
-﻿@model Group
+﻿@model GroupDetails
 @using FileSharingWeb.ViewModels
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IHtmlLocalizer<Resources> Localizer
@@ -13,3 +13,38 @@
         ViewData["Options"] = new[] { "SearchFiles(),SEARCH_FILES", "Groups,LeaveGroup,LEAVE_GROUP" };
     }
 }
+<!-- Aquí deben ir los modales para todas las acciones -->
+
+<div class="group-files">
+    <div class="text-center">
+        <h3>@Localizer["FILES"]</h3>
+    </div>
+    @if (Model.Files.Count == 0)
+    {
+        <div class="text-center">
+            <p>@Localizer["NO_GROUP_FILES"]</p>
+        </div>
+    }
+    else
+    {
+
+    }
+</div>
+<div class="group-members">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>@Localizer["MEMBERS"].Value.ToUpper()</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var member in Model.Members)
+            {
+                <tr onclick="OpenMemberDetails('@member.Id')">
+                    <td>@member.Username</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div style="clear:both"></div>
