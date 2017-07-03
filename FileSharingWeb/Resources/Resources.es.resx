@@ -228,4 +228,7 @@
   <data name="LOGIN_ALREADY_IN_USE" xml:space="preserve">
     <value>Este nombre de usuario ya existe.</value>
   </data>
+  <data name="FOLDER_ALREADY_EXISTS" xml:space="preserve">
+    <value>Ya existe una carpeta con ese nombre en este directorio</value>
+  </data>
 </root>

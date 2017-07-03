@@ -21,9 +21,10 @@ namespace FileSharingWeb.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(int? id)
+        public IActionResult Index(int? id, string ErrorMessage)
         {
             List<File> files = new List<File>();
+            ViewBag.ErrorMessage = ErrorMessage;
             try
             {
                 ViewBag.FolderRootId = id;
@@ -70,7 +71,7 @@ namespace FileSharingWeb.Controllers
             }
             catch (FileSharingException e)
             {
-                //TODO Mostrar error
+                ViewBag.ErrorMessage = _localizer[e.Code];
                 _logger.LogError(2, e.Message);
             }
             return View(files);
@@ -98,6 +99,7 @@ namespace FileSharingWeb.Controllers
         public IActionResult CreateFolder(string folderName, string folderRoot)
         {
             long? idFolder = null;
+            string ErrorMessage = null;
             try
             {
                 if (!string.IsNullOrWhiteSpace(folderRoot))
@@ -115,9 +117,10 @@ namespace FileSharingWeb.Controllers
             }
             catch (FileSharingException e)
             {
+                ErrorMessage = _localizer[e.Code];
                 _logger.LogError(2, e.Message);
             }
-            return RedirectToAction("Index", "Home", new { id = idFolder });
+            return RedirectToAction("Index", "Home", new { id = idFolder, ErrorMessage = ErrorMessage });
         }
 
         [HttpGet]
