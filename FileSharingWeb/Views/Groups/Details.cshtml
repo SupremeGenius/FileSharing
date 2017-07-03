@@ -6,7 +6,7 @@
     ViewData["Title"] = Model.Name;
     if (Model.IsAdministrable)
     {
-        ViewData["Options"] = new[] { "SearchFiles(),SEARCH_FILES", "InviteUser(),INVITE_USER", "ExpelUser(),EXPEL_USER", "TransferGroup(),TRANSFER_GROUP", "Groups,DeleteGroup,DELETE_GROUP" };
+        ViewData["Options"] = new[] { "SearchFiles(),SEARCH_FILES", "InviteUser(),INVITE_USER", "ExpelUser(),EXPEL_USER", "TransferGroup(),TRANSFER_GROUP", "Groups,DeleteGroup," + Model.Id + ",DELETE_GROUP" };
     }
     else
     {

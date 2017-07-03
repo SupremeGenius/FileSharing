@@ -117,10 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="FIELD_MAX_LENGTH" xml:space="preserve">
-    <value>Este campo no puede tener más de {1} caractéres.</value>
-    <comment>This field must be at max {1} characters long.</comment>
-  </data>
   <data name="FIELD_MIN_MAX_LENGTH" xml:space="preserve">
     <value>Este campo debe tener como mínimo {2} y como máximo {1} caractéres</value>
     <comment>The {0} must be at least {2} and at max {1} characters long.</comment>

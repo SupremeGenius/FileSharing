@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="~/lib/jquery-modal/jquery.modal.min.css" />
     <link rel="stylesheet" href="~/css/site.min.css" />
 </head>
-<body>
+<body style="min-height:89.9vh">
     <nav class="navbar navbar-inverse navbar-fixed-top fs-navbar">
         <div class="container">
             <div class="navbar-header">
@@ -56,7 +56,12 @@
                             <a asp-controller="@parts[0]" asp-action="@parts[1]">@Localizer[parts[2]]</a>
                         </li>
                     }
-
+                    else if (parts.Length == 4)
+                    {
+                        <li>
+                            <a asp-controller="@parts[0]" asp-action="@parts[1]" asp-route-id="@parts[2]">@Localizer[parts[3]]</a>
+                        </li>
+                    }
                 }
             </ul>
         </div>

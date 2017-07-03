@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using AutoMapper;
+﻿using AutoMapper;
 using FileSharing.Persistence.Daos;
 using FileSharing.Persistence.Models;
 using FileSharing.Services.Dtos;
 using FileSharing.Services.Exceptions;
-using System.Linq;
+using System;
+using System.Collections.Generic;
 
 namespace FileSharing.Services
 {
-	public class GroupServices : AbstractServices<GroupDao>
+    public class GroupServices : AbstractServices<GroupDao>
 	{
 		public GroupServices() : base(new GroupDao()) { }
 
@@ -33,7 +32,14 @@ namespace FileSharing.Services
 
                 using (var userGroupService = new UserGroupServices())
                 {
-                    userGroupService.Create(securityToken, groupDom.Id);
+                    var userGroup = new UserGroupDto
+                    {
+                        IdUser = session.IdUser,
+                        IdGroup = groupDom.Id,
+                        DateInclusionRequest = DateTime.Now,
+                        DateInclusionApproval = DateTime.Now
+                    };
+                    userGroupService.Create(securityToken, userGroup);
                 }
                 return groupDom.Id;
 			}
@@ -112,8 +118,8 @@ namespace FileSharing.Services
 						throw new FileSharingException(FileSharingException.UNAUTHORIZED,
 														   "You do not have permissions to delete this group");
 				_dao.Delete(groupDom);
-				//TODO Audit
-			}
+                Audit(session.IdUser, groupDom.Id.ToString(), typeof(Group).Name, ActionDto.Delete, "Group deleted: " + groupDom);
+            }
 			catch (FileSharingException)
 			{
 				throw;

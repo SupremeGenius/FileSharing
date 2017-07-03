@@ -6,6 +6,7 @@ using FileSharing.Services.Dtos;
 using FileSharing.Services.Exceptions;
 using System.Collections.Generic;
 using System.Linq;
+using FileSharing.Persistence.Models.Filters;
 
 namespace FileSharing.Services
 {
@@ -13,24 +14,19 @@ namespace FileSharing.Services
 	{
 		public UserGroupServices() : base(new UserGroupDao()) { }
 
-		public void Create(string securityToken, long idGroup)
+		public void Create(string securityToken, UserGroupDto userGroup)
 		{
 			try
 			{
 				var session = CheckSession(securityToken);
-				if (_dao.Read(session.IdUser, idGroup) != null)
+                if (Read(securityToken, userGroup.IdUser, userGroup.IdGroup) != null)
 					throw new FileSharingException(FileSharingException.USER_GROUP_ALREADY_EXISTS,
 												   "User group already exists");
 
-				var userGroup = new UserGroup
-				{
-                    IdUser = session.IdUser,
-                    DateInclusionRequest = DateTime.Now,
-					IdGroup = idGroup
-				};
+                var userGroupDom = Mapper.Map<UserGroup>(userGroup);
 
-				userGroup = _dao.Create(userGroup);
-                Audit(session.IdUser, userGroup.IdGroup.ToString(), typeof(UserGroup).Name, ActionDto.Create, "User add to group: " + userGroup);
+                userGroupDom = _dao.Create(userGroupDom);
+                Audit(session.IdUser, userGroup.IdGroup.ToString(), typeof(UserGroup).Name, ActionDto.Create, "User add to group: " + userGroupDom);
             }
 			catch (FileSharingException)
 			{
@@ -47,17 +43,13 @@ namespace FileSharing.Services
 			try
 			{
 				var session = CheckSession(securityToken);
-				var userGroup = _dao.Read(idUser, idGroup);
-				if (userGroup == null) return null;
-				if (idUser != session.IdUser)
-				{
-					if (userGroup.IdGroupNavigation.IdAdmin != session.IdUser)
-					{
-						throw new FileSharingException(FileSharingException.UNAUTHORIZED,
-														   "You do not have permissions to read this user group");
-					}
-				}
-				return Mapper.Map<UserGroupDto>(userGroup);
+				var userGroups = _dao.Query(new UserGroupFilter
+                {
+                    IdUser = session.IdUser,
+                    IdGroup = idGroup
+                });
+				if (userGroups == null || userGroups.Count == 0) return null;
+				return Mapper.Map<UserGroupDto>(userGroups[0]);
 			}
 			catch (FileSharingException)
 			{
@@ -74,18 +66,19 @@ namespace FileSharing.Services
 			try
 			{
 				var session = CheckSession(securityToken);
-				var userGroupDom = _dao.Read(userGroup.IdUser, userGroup.IdGroup);
-				if (userGroupDom == null)
+				var userGroups = _dao.Query(new UserGroupFilter
+                {
+                    IdUser = userGroup.IdUser,
+                    IdGroup = userGroup.IdGroup
+                });
+                if (userGroups == null || userGroups.Count == 0)
 					throw new FileSharingException(FileSharingException.GROUP_NOT_FOUND,
 							"User Group of user " + userGroup.IdUser + " and group " + userGroup.IdGroup + " does not exist");
-			
-				if (userGroupDom.IdGroupNavigation.IdAdmin != session.IdUser)
-					throw new FileSharingException(FileSharingException.UNAUTHORIZED,
-													   "You do not have permissions to update this user group");
-				Mapper.Map(userGroup, userGroupDom);
-				_dao.Update(userGroupDom);
 
-				string action = "Update:\r\n" + "-Previous: " + userGroupDom + "\r\n" + "-Updated: " + userGroup;
+				Mapper.Map(userGroup, userGroups[0]);
+				_dao.Update(userGroups[0]);
+
+				string action = "Update:\r\n" + "-Previous: " + userGroups + "\r\n" + "-Updated: " + userGroup;
 				//TODO Audit
 			}
 			catch (FileSharingException)
@@ -103,19 +96,27 @@ namespace FileSharing.Services
 			try
 			{
 				var session = CheckSession(securityToken);
-				var userGroup = _dao.Read(idUser, idGroup);
-				if (userGroup != null)
+                var userGroups = _dao.Query(new UserGroupFilter
+                {
+                    IdUser = idUser,
+                    IdGroup = idGroup
+                });
+                if (userGroups != null && userGroups.Count == 1)
 				{
 					if (idUser != session.IdUser)
 					{
-						if (userGroup.IdGroupNavigation.IdAdmin != session.IdUser)
-						{
-							throw new FileSharingException(FileSharingException.UNAUTHORIZED,
-															   "You do not have permissions to delete this user group");
-						}
+                        using (var groupService = new GroupServices())
+                        {
+                            var group = groupService.Read(securityToken, idGroup);
+                            if (group.IdAdmin != session.IdUser)
+                            {
+                                throw new FileSharingException(FileSharingException.UNAUTHORIZED,
+                                                                   "You do not have permissions to delete this user group");
+                            }
+                        }
 					}
-					_dao.Delete(userGroup);
-					string action = "User Group: " + userGroup + " deleted";
+					_dao.Delete(userGroups[0]);
+					string action = "User Group: " + userGroups[0] + " deleted";
 					//TODO Audit
 				}
 			}
@@ -137,7 +138,11 @@ namespace FileSharing.Services
                 List<GroupDto> result = new List<GroupDto>();
                 using (var groupService = new GroupServices())
                 {
-                    var userGroups = _dao.FindByUser(session.IdUser);
+                    var userGroups = _dao.Query(new UserGroupFilter
+                    {
+                        IdUser = session.IdUser,
+                        DateInclusionApprovalTo = DateTime.Now
+                    });
                     foreach (var group in userGroups.Select(x => groupService.Read(securityToken, x.IdGroup)))
                     {
                         result.Add(group);
@@ -163,8 +168,13 @@ namespace FileSharing.Services
                 List<UserDto> result = new List<UserDto>();
                 using (var userService = new UserServices())
                 {
-                    var userGroups = _dao.FindByGroup(idGroup);
-                    foreach (var user in userGroups.Select(x => userService.Read(securityToken, x.IdUser)))
+                    var userGroups = _dao.Query(new UserGroupFilter
+                    {
+                        IdGroup = idGroup,
+                        DateInclusionApprovalTo = DateTime.Now
+                    });
+                    foreach (var user in 
+                        userGroups.Where(x => x.DateInclusionApproval.HasValue).Select(x => userService.Read(securityToken, x.IdUser)))
                     {
                         result.Add(user);
                     }
@@ -186,8 +196,14 @@ namespace FileSharing.Services
             try
             {
                 var session = CheckSession(securityToken);
-                var userGroups = _dao.FindByGroup(idGroup);
-                return userGroups != null ? userGroups.Count : 0;
+                var userGroups = _dao.Query(new UserGroupFilter
+                {
+                    IdUser = session.IdUser,
+                    IdGroup = idGroup,
+                    DateInclusionApprovalTo = DateTime.Now
+                });
+                if (userGroups == null) return 0;
+                return userGroups.Where(x => x.DateInclusionApproval.HasValue).ToList().Count;
             }
             catch (FileSharingException)
             {

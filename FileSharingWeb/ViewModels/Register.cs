@@ -5,7 +5,7 @@ namespace FileSharingWeb.ViewModels
 	public class Register
 	{
         [Required]
-		[StringLength(50, ErrorMessage = "FIELD_MAX_LENGTH")]
+		[StringLength(50, ErrorMessage = "FIELD_MIN_MAX_LENGTH", MinimumLength = 6)]
 		public string Username { get; set; }
 
         [Required]

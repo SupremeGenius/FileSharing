@@ -118,5 +118,20 @@ namespace FileSharingWeb.Controllers
             }
             return View(result);
         }
+
+        [HttpGet]
+        public IActionResult DeleteGroup(long id)
+        {
+            try
+            {
+                Services.Group.Delete(SecurityToken, id);
+            }
+            catch (FileSharingException e)
+            {
+                _logger.LogError(2, e.Message);
+                return View();
+            }
+            return RedirectToAction("Index", "Groups");
+        }
     }
 }

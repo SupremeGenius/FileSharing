@@ -16,7 +16,9 @@ namespace FileSharing.Persistence.Models
             string result = "";
 
             result += "IdUser: " + IdUser + "\r\n";
-            result += "IdGroup: " + IdGroup;
+            result += "IdGroup: " + IdGroup + "\r\n";
+            result += "DateInclusionRequest: " + DateInclusionRequest + "\r\n";
+            result += "DateInclusionApproval: " + (DateInclusionApproval.HasValue ? DateInclusionApproval.Value.ToString() : "null");
 
             return result;
         }

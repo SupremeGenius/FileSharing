@@ -225,4 +225,7 @@
   <data name="YOU" xml:space="preserve">
     <value>Tú</value>
   </data>
+  <data name="LOGIN_ALREADY_IN_USE" xml:space="preserve">
+    <value>Este nombre de usuario ya existe.</value>
+  </data>
 </root>
