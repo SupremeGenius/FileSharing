@@ -1,5 +1,5 @@
-﻿@model GroupDetails
-@using FileSharingWeb.ViewModels
+﻿@model GroupDetailsExtendedDto
+@using FileSharing.Services.Dtos
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IHtmlLocalizer<Resources> Localizer
 @{
@@ -22,7 +22,7 @@
     <div class="text-center">
         <h3>@Localizer["FILES"]</h3>
     </div>
-    @if (Model.Files.Count == 0)
+    @if (Model.Documents.Count == 0)
     {
         <div class="text-center">
             <p>@Localizer["NO_GROUP_FILES"]</p>
@@ -44,7 +44,7 @@
             @foreach (var member in Model.Members)
             {
                 <tr onclick="OpenMemberDetails('@member.Id')">
-                    <td>@member.Username</td>
+                    <td>@member.Login</td>
                 </tr>
             }
         </tbody>

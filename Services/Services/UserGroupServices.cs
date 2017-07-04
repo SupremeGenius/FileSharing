@@ -130,36 +130,6 @@ namespace FileSharing.Services
 			}
         }
 
-        public List<GroupDto> GetGroupsOfUser(string securityToken)
-        {
-            try
-            {
-                var session = CheckSession(securityToken);
-                List<GroupDto> result = new List<GroupDto>();
-                using (var groupService = new GroupServices())
-                {
-                    var userGroups = _dao.Query(new UserGroupFilter
-                    {
-                        IdUser = session.IdUser,
-                        DateInclusionApprovalTo = DateTime.Now
-                    });
-                    foreach (var group in userGroups.Select(x => groupService.Read(securityToken, x.IdGroup)))
-                    {
-                        result.Add(group);
-                    }
-                }
-                return result;
-            }
-            catch (FileSharingException)
-            {
-                throw;
-            }
-            catch (Exception e)
-            {
-                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
-            }
-        }
-
         public List<UserDto> GetUsersOfGroup(string securityToken, long idGroup)
         {
             try
@@ -191,7 +161,24 @@ namespace FileSharing.Services
             }
         }
 
-        public long NumOfMembersOfAGroup(string securityToken, long idGroup)
+        public List<UserGroupDto> Query(string securityToken, UserGroupFilter filter)
+        {
+            try
+            {
+                var session = CheckSession(securityToken);
+                return Mapper.Map<List<UserGroupDto>>(_dao.Query(filter));
+            }
+            catch (FileSharingException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+            }
+        }
+
+        public int NumOfMembersOfAGroup(string securityToken, long idGroup)
         {
             try
             {

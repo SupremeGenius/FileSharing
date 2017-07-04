@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using FileSharing.Persistence.Daos;
 using FileSharing.Persistence.Models;
+using FileSharing.Persistence.Models.Filters;
 using FileSharing.Services.Dtos;
 using FileSharing.Services.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FileSharing.Services
 {
@@ -146,6 +148,69 @@ namespace FileSharing.Services
 			{
 				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
 			}
-		}
-	}
+        }
+
+        public List<GroupDetailsDto> GetGroupsOfUser(string securityToken)
+        {
+            try
+            {
+                var session = CheckSession(securityToken);
+                List<GroupDetailsDto> result = new List<GroupDetailsDto>();
+                using (var userGroupService = new UserGroupServices())
+                {
+                    var userGroups = userGroupService.Query(securityToken, new UserGroupFilter
+                    {
+                        IdUser = session.IdUser,
+                        DateInclusionApprovalTo = DateTime.Now
+                    });
+                    if (userGroups == null || userGroups.Count == 0) return result;
+
+                    foreach (var group in userGroups.Select(x => _dao.Read(x.IdGroup)))
+                    {
+                        var groupDetails = Mapper.Map<GroupDetailsDto>(group);
+                        groupDetails.IsAdministrable = group.IdAdmin == session.IdUser;
+                        groupDetails.NumOfMembers = userGroupService.NumOfMembersOfAGroup(securityToken, group.Id);
+                        result.Add(groupDetails);
+                    }
+                }
+                return result;
+            }
+            catch (FileSharingException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+            }
+        }
+
+        public GroupDetailsExtendedDto GetGroupDetails(string securityToken, long idGroup)
+        {
+            try
+            {
+                var session = CheckSession(securityToken);
+                var group = _dao.Read(idGroup);
+                var result = Mapper.Map<GroupDetailsExtendedDto>(group);
+                result.IsAdministrable = group.IdAdmin == session.IdUser;
+
+                using (var userGroupService = new UserGroupServices())
+                using (var documentService = new DocumentServices())
+                {
+                    result.Members = userGroupService.GetUsersOfGroup(securityToken, result.Id);
+                    result.Documents = documentService.GetDocumentsByGroup(securityToken, result.Id);
+                }
+
+                return result;
+            }
+            catch (FileSharingException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+            }
+        }
+    }
 }
