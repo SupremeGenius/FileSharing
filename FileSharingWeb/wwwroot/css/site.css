@@ -2202,7 +2202,8 @@ body.is-loading #header.alt .logo {
     }
 
     .link-to-previous-folder {
-        top: 150px;
+        position: relative !important;
+        top: 0px !important;
     }
 }
 
@@ -2223,7 +2224,7 @@ body.is-loading #header.alt .logo {
 }
 
 .files {
-    margin-top: 15px;
+    padding-top: 15px;
 }
 
 .file {

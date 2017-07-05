@@ -42,7 +42,8 @@ namespace FileSharing.Services
 				var folderDom = Mapper.Map<Folder>(folder);
 				folderDom.IdUser = session.IdUser;
 
-				Directory.CreateDirectory(GetFullPath(folderDom));
+                var path = GetFullPath(securityToken, folderDom.IdFolderRoot) + Path.DirectorySeparatorChar.ToString() + folderDom.Name;
+                Directory.CreateDirectory(path);
 
 				folderDom = _dao.Create(folderDom);
                 Audit(session.IdUser, folderDom.Id.ToString(), typeof(Folder).Name, ActionDto.Create, "Folder created: " + folderDom);
@@ -88,7 +89,7 @@ namespace FileSharing.Services
 			try
 			{
 				var session = CheckSession(securityToken);
-				var folderDom = _dao.Read(folder.Id);
+				var folderDom = _dao.ReadFullFolder(folder.Id);
 				if (folderDom == null)
 					throw new FileSharingException(FileSharingException.FOLDER_NOT_FOUND,
 						 "Folder with id " + folder.Id + " does not exist");

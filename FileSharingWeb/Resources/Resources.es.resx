@@ -234,13 +234,16 @@
   <data name="CANCEL" xml:space="preserve">
     <value>Cancelar</value>
   </data>
-  <data name="DELETE_THIS_FOLDER" xml:space="preserve">
-    <value>Eliminar esta carpeta</value>
+  <data name="DELETE_FOLDER" xml:space="preserve">
+    <value>Eliminar carpeta</value>
   </data>
   <data name="ASK_SURE" xml:space="preserve">
     <value>¿Estás seguro?</value>
   </data>
   <data name="DELETE_FOLDER_INFORMATION" xml:space="preserve">
     <value>Al eliminar la carpeta también eliminas todo su contenido de forma permanente.</value>
+  </data>
+  <data name="FOLDER_MUST_BE_SELECTED" xml:space="preserve">
+    <value>Debe seleccionar la carpeta que desea eliminar</value>
   </data>
 </root>

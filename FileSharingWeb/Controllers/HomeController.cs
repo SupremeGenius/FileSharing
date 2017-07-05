@@ -114,6 +114,6 @@ namespace FileSharingWeb.Controllers
                 _logger.LogError(2, e.Message);
             }
             return Json(Url.Action("Index", "Home", new { id = idFolder, ErrorMessage = ErrorMessage }));
-        }
+        }        
     }
 }

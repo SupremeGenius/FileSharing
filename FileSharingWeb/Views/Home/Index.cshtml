@@ -4,7 +4,7 @@
 @inject IHtmlLocalizer<Resources> Localizer
 @{
     ViewData["Title"] = Localizer["HOME"];
-    if (ViewBag.FolderId == null)
+    if (Model.Folders == null || Model.Folders.Count == 0)
     {
         ViewData["Options"] = new[]
         {
@@ -18,7 +18,7 @@
         {
             "CreateFolder(),CREATE_FOLDER",
             "Home,UploadFile,UPLOAD_FILE",
-            "DeleteFolder(),DELETE_THIS_FOLDER"
+            "DeleteFolder(),DELETE_FOLDER"
         };
     }
 }
@@ -87,16 +87,33 @@
         swal({
             title: "@Localizer["ASK_SURE"]",
             text: "@Localizer["DELETE_FOLDER_INFORMATION"]",
-            type: 'warning',
+            input: 'select',
+            inputOptions: {
+                '0': '',
+                @foreach (var folder in Model.Folders)
+                {
+                    @:'@folder.Id': '@folder.Name',
+                }
+            },
+            inputPlaceholder: '',
+            inputValidator: function (value) {
+                return new Promise(function (resolve, reject) {
+                    if (value !== '0') {
+                        resolve();
+                    } else {
+                        reject('@Localizer["FOLDER_MUST_BE_SELECTED"]');
+                    }
+                });
+            },
             showCancelButton: true,
             confirmButtonColor: '#935d8c',
             confirmButtonText: "@Localizer["CONTINUE"]",
             cancelButtonText: "@Localizer["CANCEL"]"
-        }).then(function () {
+        }).then(function (result) {
             $.ajax({
                 url: '/Home/DeleteFolder',
                 type: 'DELETE',
-                data: { folder: '@ViewBag.FolderId' },
+                data: { folder: result },
                 success: function (result) {
                     window.location.href = result;
                 }
