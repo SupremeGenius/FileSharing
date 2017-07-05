@@ -24,21 +24,10 @@ namespace FileSharingWeb.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            List<Group> result = new List<Group>();
+            List<GroupDetailsDto> result = new List<GroupDetailsDto>();
             try
             {
-                var groups = Services.UserGroup.GetGroupsOfUser(SecurityToken);
-                var user = Services.User.Read(SecurityToken);
-                foreach(var group in groups)
-                {
-                    result.Add(new Group
-                    {
-                        Id = group.Id,
-                        Name = group.Name,
-                        NumOfMembers = Services.UserGroup.NumOfMembersOfAGroup(SecurityToken, group.Id),
-                        IsAdministrable = group.IdAdmin == user.Id
-                    });
-                }
+                result = Services.Group.GetGroupsOfUser(SecurityToken);
             }
             catch (Exception e)
             {
@@ -65,51 +54,11 @@ namespace FileSharingWeb.Controllers
         [HttpGet]
         public IActionResult Details(long? id)
         {
-            GroupDetails result;
+            GroupDetailsExtendedDto result;
             if (!id.HasValue) return View();
             try
             {
-                var group = Services.Group.Read(SecurityToken, id.Value);
-                var user = Services.User.Read(SecurityToken);
-                result = new GroupDetails
-                {
-                    Id = id.Value,
-                    Name = group.Name,
-                    IsAdministrable = group.IdAdmin == user.Id,
-                    Files = new List<File>(),
-                    Members = new List<User>
-                    {
-                         new User
-                        {
-                            Id = user.Id,
-                            FullName = user.FullName,
-                            Username = user.Login + " (" + _localizer["YOU"] + ")"
-                        }
-                    }
-                };
-
-                var files = Services.Document.GetDocumentsByGroup(SecurityToken, id.Value);
-                foreach (var file in files)
-                {
-                    result.Files.Add(new File
-                    {
-                        Id = file.Id,
-                        Name = file.Filename,
-                        Type = FileType.Document
-                    });
-                }
-
-                var members = Services.UserGroup.GetUsersOfGroup(SecurityToken, id.Value);
-                foreach (var member in members)
-                {
-                    if (member.Id == user.Id) continue;
-                    result.Members.Add(new User
-                    {
-                        Id = member.Id,
-                        FullName = member.FullName,
-                        Username = member.Login
-                    });
-                }
+                result = Services.Group.GetGroupDetails(SecurityToken, id.Value);
             }
             catch (FileSharingException e)
             {

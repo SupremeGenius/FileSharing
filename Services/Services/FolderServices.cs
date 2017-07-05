@@ -150,23 +150,29 @@ namespace FileSharing.Services
 			}
 		}
 
-		public List<FolderDto> GetFoldersInFolder(string securityToken, long? idFolder)
-		{
-			try
-			{
-				var session = CheckSession(securityToken);
-                var result = _dao.GetFoldersInFolder(session.IdUser, idFolder);
-                return Mapper.Map<List<FolderDto>>(result);
-			}
-			catch (FileSharingException)
-			{
-				throw;
-			}
-			catch (Exception e)
-			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
-			}
-		}
+        public FolderDetailsDto GetFolderDetails(string securityToken, long? idFolder)
+        {
+            try
+            {
+                var session = CheckSession(securityToken);
+                FolderDetailsDto result = new FolderDetailsDto();
+                if (idFolder.HasValue) result = Mapper.Map<FolderDetailsDto>(Read(securityToken, idFolder.Value));
+                result.Folders = GetFoldersInFolder(session.IdUser, idFolder);
+                using (var documentService = new DocumentServices())
+                {
+                    result.Documents = documentService.GetDocumentsInFolder(securityToken, idFolder);
+                }
+                return result;
+            }
+            catch (FileSharingException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+            }
+        }
 
 		public string GetFullPath(string securityToken, long? idFolder)
 		{
@@ -213,8 +219,25 @@ namespace FileSharing.Services
 			if (!Directory.Exists(path))
 				Directory.CreateDirectory(path);
 			return path;
-		}
+        }
 
-		#endregion
-	}
+        List<FolderDto> GetFoldersInFolder(long idUser, long? idFolder)
+        {
+            try
+            {
+                var result = _dao.GetFoldersInFolder(idUser, idFolder);
+                return Mapper.Map<List<FolderDto>>(result);
+            }
+            catch (FileSharingException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+            }
+        }
+
+        #endregion
+    }
 }

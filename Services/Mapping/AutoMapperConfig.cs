@@ -18,13 +18,21 @@ namespace FileSharing.Services.Mapping
 			Mapper.Initialize(cfg =>
 			{
 				cfg.CreateMap<User, UserDto>().ReverseMap();
-				cfg.CreateMap<Session, SessionDto>().ReverseMap();
-				cfg.CreateMap<Group, GroupDto>().ReverseMap();
-				cfg.CreateMap<UserGroup, UserGroupDto>().ReverseMap();
-				cfg.CreateMap<Folder, FolderDto>().ReverseMap();
-				cfg.CreateMap<Document, DocumentDto>().ReverseMap();
-				cfg.CreateMap<Audit, AuditDto>().ReverseMap();
 
+				cfg.CreateMap<Session, SessionDto>().ReverseMap();
+
+				cfg.CreateMap<Group, GroupDto>().ReverseMap();
+                cfg.CreateMap<Group, GroupDetailsDto>();
+                cfg.CreateMap<Group, GroupDetailsExtendedDto>();
+
+                cfg.CreateMap<UserGroup, UserGroupDto>().ReverseMap();
+
+				cfg.CreateMap<Folder, FolderDto>().ReverseMap();
+                cfg.CreateMap<FolderDto, FolderDetailsDto>();
+
+				cfg.CreateMap<Document, DocumentDto>().ReverseMap();
+
+				cfg.CreateMap<Audit, AuditDto>().ReverseMap();
 				cfg.CreateMap<AuditFilterDto, AuditFilterDto>();
 			});
 		}

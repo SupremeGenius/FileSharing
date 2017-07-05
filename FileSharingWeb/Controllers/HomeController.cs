@@ -24,11 +24,12 @@ namespace FileSharingWeb.Controllers
         [HttpGet]
         public IActionResult Index(int? id, string ErrorMessage)
         {
-            List<File> files = new List<File>();
+            FolderDetailsDto result = new FolderDetailsDto();
             ViewBag.ErrorMessage = ErrorMessage;
             try
             {
                 ViewBag.FolderRootId = id;
+                result = Services.Folder.GetFolderDetails(SecurityToken, id);
                 if (id.HasValue)
                 {
                     var folder = Services.Folder.Read(SecurityToken, id.Value);
@@ -43,39 +44,13 @@ namespace FileSharingWeb.Controllers
                     }
                     ViewBag.LinkFolder = idRoot.HasValue ? idRoot + "," + path : path;
                 }
-                var folders = Services.Folder.GetFoldersInFolder(SecurityToken, id);
-                if (folders != null && folders.Count > 0)
-                {
-                    foreach(var folder in folders)
-                    {
-                        files.Add(new File
-                        {
-                            Id = folder.Id,
-                            Name = folder.Name,
-                            Type = FileType.Folder
-                        });
-                    }
-                }
-                var documents = Services.Document.GetDocumentsInFolder(SecurityToken, id);
-                if (documents != null && documents.Count > 0)
-                {
-                    foreach(var document in documents)
-                    {
-                        files.Add(new File
-                        {
-                            Id = document.Id,
-                            Name = document.Filename,
-                            Type = FileType.Document
-                        });
-                    }
-                }
             }
             catch (FileSharingException e)
             {
                 ViewBag.ErrorMessage = _localizer[e.Code];
                 _logger.LogError(2, e.Message);
             }
-            return View(files);
+            return View(result);
         }
 
         [HttpGet]
