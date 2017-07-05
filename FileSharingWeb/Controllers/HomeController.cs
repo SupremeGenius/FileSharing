@@ -1,11 +1,8 @@
 ﻿using FileSharing.Services.Dtos;
 using FileSharing.Services.Exceptions;
-using FileSharingWeb.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
 
 namespace FileSharingWeb.Controllers
 {
@@ -28,7 +25,7 @@ namespace FileSharingWeb.Controllers
             ViewBag.ErrorMessage = ErrorMessage;
             try
             {
-                ViewBag.FolderRootId = id;
+                ViewBag.FolderId = id;
                 result = Services.Folder.GetFolderDetails(SecurityToken, id);
                 if (id.HasValue)
                 {
@@ -78,17 +75,15 @@ namespace FileSharingWeb.Controllers
             string ErrorMessage = null;
             try
             {
-                if (!string.IsNullOrWhiteSpace(folderRoot))
-                {
-                    long idFolderRoot;
-                    long.TryParse(folderRoot, out idFolderRoot);
-                    idFolder = idFolderRoot;
-                }
                 var folder = new FolderDto
                 {
                     Name = folderName,
-                    IdFolderRoot = idFolder
                 };
+                long idFolderRoot;
+                if (long.TryParse(folderRoot, out idFolderRoot))
+                {
+                    folder.IdFolderRoot = idFolder = idFolderRoot;
+                }
                 Services.Folder.Create(SecurityToken, folder);
             }
             catch (FileSharingException e)
@@ -99,10 +94,26 @@ namespace FileSharingWeb.Controllers
             return Json(Url.Action("Index", "Home", new { id = idFolder, ErrorMessage = ErrorMessage }));
         }
 
-        [HttpGet]
-        public IActionResult UploadFile()
+        [HttpDelete]
+        public IActionResult DeleteFolder(string folder)
         {
-            return RedirectToAction("Index", "Home");
+            long? idFolder = null;
+            string ErrorMessage = null;
+            try
+            {
+                long idFolderToDelete;
+                if (long.TryParse(folder, out idFolderToDelete))
+                {
+                    idFolder = Services.Folder.Read(SecurityToken, idFolderToDelete)?.IdFolderRoot;
+                    Services.Folder.Delete(SecurityToken, idFolderToDelete);
+                }
+            }
+            catch (FileSharingException e)
+            {
+                ErrorMessage = _localizer[e.Code];
+                _logger.LogError(2, e.Message);
+            }
+            return Json(Url.Action("Index", "Home", new { id = idFolder, ErrorMessage = ErrorMessage }));
         }
     }
 }

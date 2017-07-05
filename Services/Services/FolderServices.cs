@@ -133,13 +133,15 @@ namespace FileSharing.Services
 				if (folderDom.IdUser != session.IdUser)
 					throw new FileSharingException(FileSharingException.UNAUTHORIZED,
 													   "You do not have permissions to update this folder");
-				
-				string path = GetFullPath(folderDom);
-				Directory.Delete(path);
 
+                var folders = GetFoldersInFolder(session.IdUser, idFolder);
+                foreach(var folder in folders){
+                    Delete(securityToken, folder.Id);
+                }
+				
 				_dao.Delete(folderDom);
-				//TODO Audit
-			}
+                Audit(session.IdUser, folderDom.Id.ToString(), typeof(Folder).Name, ActionDto.Delete, "Folder deletes: " + folderDom);
+            }
 			catch (FileSharingException)
 			{
 				throw;

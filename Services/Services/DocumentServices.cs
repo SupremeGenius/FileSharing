@@ -136,14 +136,9 @@ namespace FileSharing.Services
 					throw new FileSharingException(FileSharingException.UNAUTHORIZED,
 													   "You do not have permissions to update this document");
 				
-				string filePath = GetFilePath(securityToken, documentDom);
-
-				if (File.Exists(filePath))
-					File.Delete(filePath);
-
 				_dao.Delete(documentDom);
-				//TODO Audit
-			}
+                Audit(session.IdUser, documentDom.Id.ToString(), typeof(Document).Name, ActionDto.Delete, "Document deleted: " + documentDom);
+            }
 			catch (FileSharingException)
 			{
 				throw;

@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="~/lib/sweetalert2/dist/sweetalert2.min.css"/>
     <link rel="stylesheet" href="~/css/site.min.css" />
 </head>
-<body style="min-height:89.9vh">
+<body>
     <nav class="navbar navbar-inverse navbar-fixed-top fs-navbar">
         <div class="container">
             <div class="navbar-header">
@@ -67,7 +67,7 @@
             </ul>
         </div>
     </div>
-    <div class="container body-content site-content">
+    <div class="body-content site-content">
         @RenderBody()
     </div>
         
@@ -77,7 +77,7 @@
     <script src="~/lib/sweetalert2/dist/sweetalert2.min.js"></script>
     <script src="~/lib/core.js/client/core.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
+    
     @if (@ViewBag.ErrorMessage != null)
     {
         <script>

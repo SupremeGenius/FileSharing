@@ -231,4 +231,16 @@
   <data name="FOLDER_ALREADY_EXISTS" xml:space="preserve">
     <value>Ya existe una carpeta con ese nombre en este directorio</value>
   </data>
+  <data name="CANCEL" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="DELETE_THIS_FOLDER" xml:space="preserve">
+    <value>Eliminar esta carpeta</value>
+  </data>
+  <data name="ASK_SURE" xml:space="preserve">
+    <value>¿Estás seguro?</value>
+  </data>
+  <data name="DELETE_FOLDER_INFORMATION" xml:space="preserve">
+    <value>Al eliminar la carpeta también eliminas todo su contenido de forma permanente.</value>
+  </data>
 </root>

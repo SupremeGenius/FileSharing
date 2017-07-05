@@ -14,6 +14,8 @@
 }
 
 body {
+    height: 100%;
+    margin: 0;
     -ms-overflow-style: scrollbar;
     background-color: #935d8c;
     color: rgba(255, 255, 255, 0.65);
@@ -21,7 +23,8 @@ body {
     background-image: url("images/overlay.png"), -webkit-linear-gradient(45deg, #e37682 15%, #5f4d93 85%);
     background-image: url("images/overlay.png"), -ms-linear-gradient(45deg, #e37682 15%, #5f4d93 85%);
     background-image: url("images/overlay.png"), linear-gradient(45deg, #e37682 15%, #5f4d93 85%);
-    min-height: 100vh;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
     body.is-loading *, body.is-loading *:before, body.is-loading *:after {
@@ -2223,10 +2226,11 @@ body.is-loading #header.alt .logo {
     margin-top: 15px;
 }
 
-.folder {
+.file {
     display: inline-block;
     text-align: center;
     margin-right: 20px;
+    margin-bottom: 15px;
 }
 
 .create-modal.modal {

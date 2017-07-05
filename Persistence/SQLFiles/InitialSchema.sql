@@ -328,6 +328,7 @@ GO
 
 ALTER TABLE [dbo].[Document]  WITH CHECK ADD  CONSTRAINT [FK_Document_Folder] FOREIGN KEY([IdFolder])
 REFERENCES [dbo].[Folder] ([Id])
+ON DELETE CASCADE
 GO
 
 ALTER TABLE [dbo].[Document] CHECK CONSTRAINT [FK_Document_Folder]

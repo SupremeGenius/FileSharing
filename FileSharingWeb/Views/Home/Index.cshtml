@@ -4,7 +4,23 @@
 @inject IHtmlLocalizer<Resources> Localizer
 @{
     ViewData["Title"] = Localizer["HOME"];
-    ViewData["Options"] = new[] { "CreateFolder(),CREATE_FOLDER", "Home,UploadFile,UPLOAD_FILE" };
+    if (ViewBag.FolderId == null)
+    {
+        ViewData["Options"] = new[]
+        {
+            "CreateFolder(),CREATE_FOLDER",
+            "Home,UploadFile,UPLOAD_FILE"
+        };
+    }
+    else
+    {
+        ViewData["Options"] = new[]
+        {
+            "CreateFolder(),CREATE_FOLDER",
+            "Home,UploadFile,UPLOAD_FILE",
+            "DeleteFolder(),DELETE_THIS_FOLDER"
+        };
+    }
 }
 
 <div class="link-to-previous-folder">
@@ -24,7 +40,7 @@
 <div class="files">
     @foreach (var folder in Model.Folders)
     {
-        <div class="folder">
+        <div class="file">
             <a asp-controller="Home" asp-action="Index" asp-route-id="@folder.Id">
                 <img src="~/images/folder.png" />
                 <br />
@@ -34,7 +50,7 @@
     }
     @foreach (var document in Model.Documents)
     {
-        <div class="folder">
+        <div class="file">
             <a onclick="OpenDocumentDetails('@document.Id')">
                 <img src="~/images/file.png" />
                 <br />
@@ -48,18 +64,43 @@
 <script>
     function CreateFolder() {
         swal({
-            title: "@Localizer["NEW_FOLDER_NAME"]",
-            text: "",
+            title: "",
+            text: "@Localizer["NEW_FOLDER_NAME"]",
             input: 'text',
             showCancelButton: true,
             confirmButtonColor: '#935d8c',
             confirmButtonText: "@Localizer["CONTINUE"]",
             cancelButtonText: "@Localizer["CANCEL"]"
         }).then(function (folderName) {
-            $.post("/Home/CreateFolder", { folderName: folderName, folderRoot: '@ViewBag.FolderRootId' },
-                function (data) {
-                    window.location.href = data;
-                });
+            $.ajax({
+                url: '/Home/CreateFolder',
+                type: 'POST',
+                data: { folderName: folderName, folderRoot: '@ViewBag.FolderId' },
+                success: function (result) {
+                    window.location.href = result;
+                }
             });
+        });
+    }
+
+    function DeleteFolder() {
+        swal({
+            title: "@Localizer["ASK_SURE"]",
+            text: "@Localizer["DELETE_FOLDER_INFORMATION"]",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#935d8c',
+            confirmButtonText: "@Localizer["CONTINUE"]",
+            cancelButtonText: "@Localizer["CANCEL"]"
+        }).then(function () {
+            $.ajax({
+                url: '/Home/DeleteFolder',
+                type: 'DELETE',
+                data: { folder: '@ViewBag.FolderId' },
+                success: function (result) {
+                    window.location.href = result;
+                }
+            });
+        });
     }
 </script>
