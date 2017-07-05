@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 namespace FileSharing.Persistence.Models
 {
-	public class User : AbstractModel
+    public class User : AbstractModel
 	{
 		public User()
 		{
-			Document = new HashSet<Document>();
-			Folder = new HashSet<Folder>();
-			Group = new HashSet<Group>();
-			Session = new HashSet<Session>();
-			UserGroup = new HashSet<UserGroup>();
+            Documents = new HashSet<Document>();
+			Folders = new HashSet<Folder>();
+			AdministrableGroups = new HashSet<Group>();
+			Sessions = new HashSet<Session>();
+			Groups = new HashSet<UserGroup>();
 		}
 
 		public long Id { get; set; }
@@ -19,11 +18,11 @@ namespace FileSharing.Persistence.Models
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
         
-		public virtual ICollection<Document> Document { get; set; }
-		public virtual ICollection<Folder> Folder { get; set; }
-		public virtual ICollection<Group> Group { get; set; }
-		public virtual ICollection<Session> Session { get; set; }
-		public virtual ICollection<UserGroup> UserGroup { get; set; }
+		public virtual ICollection<Document> Documents { get; set; }
+		public virtual ICollection<Folder> Folders { get; set; }
+		public virtual ICollection<Group> AdministrableGroups { get; set; }
+		public virtual ICollection<Session> Sessions { get; set; }
+		public virtual ICollection<UserGroup> Groups { get; set; }
 
         public override string ToString()
         {

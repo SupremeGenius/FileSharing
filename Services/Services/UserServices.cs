@@ -127,7 +127,7 @@ namespace FileSharing.Services
 
 				using (var documentServices = new DocumentServices())
 				{
-					foreach (var doc in user.Document)
+					foreach (var doc in user.Documents)
 					{
 						documentServices.Delete(securityToken, doc.Id);
 					}
@@ -135,7 +135,7 @@ namespace FileSharing.Services
 
 				using (var folderServices = new FolderServices())
 				{
-					foreach (var folder in user.Folder)
+					foreach (var folder in user.Folders)
 					{
 						folderServices.Delete(securityToken, folder.Id);
 					}

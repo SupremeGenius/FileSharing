@@ -46,18 +46,18 @@ namespace FileSharing.Persistence.Models
                     .IsRequired()
                     .HasColumnType("varchar(200)");
 
-                entity.HasOne(d => d.IdFolderNavigation)
-                    .WithMany(p => p.Document)
+                entity.HasOne(d => d.Folder)
+                    .WithMany(p => p.Documents)
                     .HasForeignKey(d => d.IdFolder)
                     .HasConstraintName("FK_Document_Folder");
 
                 entity.HasOne(d => d.IdGroupNavigation)
-                    .WithMany(p => p.Document)
+                    .WithMany(p => p.Documents)
                     .HasForeignKey(d => d.IdGroup)
                     .HasConstraintName("FK_Document_Group");
 
                 entity.HasOne(d => d.IdUserNavigation)
-                    .WithMany(p => p.Document)
+                    .WithMany(p => p.Documents)
                     .HasForeignKey(d => d.IdUser)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("FK_Document_User");
@@ -69,13 +69,13 @@ namespace FileSharing.Persistence.Models
                     .IsRequired()
                     .HasColumnType("varchar(200)");
 
-                entity.HasOne(d => d.IdFolderRootNavigation)
-                    .WithMany(p => p.InverseIdFolderRootNavigation)
+                entity.HasOne(d => d.FolderRoot)
+                    .WithMany(p => p.Folders)
                     .HasForeignKey(d => d.IdFolderRoot)
                     .HasConstraintName("FK_Folder_Folder");
 
                 entity.HasOne(d => d.IdUserNavigation)
-                    .WithMany(p => p.Folder)
+                    .WithMany(p => p.Folders)
                     .HasForeignKey(d => d.IdUser)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("FK_Folder_User");
@@ -91,8 +91,8 @@ namespace FileSharing.Persistence.Models
                     .IsRequired()
                     .HasColumnType("varchar(200)");
 
-                entity.HasOne(d => d.IdAdminNavigation)
-                    .WithMany(p => p.Group)
+                entity.HasOne(d => d.Admin)
+                    .WithMany(p => p.AdministrableGroups)
                     .HasForeignKey(d => d.IdAdmin)
                     .OnDelete(DeleteBehavior.Restrict)
                     .HasConstraintName("FK_Group_User");
@@ -107,8 +107,8 @@ namespace FileSharing.Persistence.Models
 
                 entity.Property(e => e.DateLastAccess).HasColumnType("datetime");
 
-                entity.HasOne(d => d.IdUserNavigation)
-                    .WithMany(p => p.Session)
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Sessions)
                     .HasForeignKey(d => d.IdUser)
                     .HasConstraintName("FK_Session_User");
             });
@@ -145,13 +145,13 @@ namespace FileSharing.Persistence.Models
 
                 entity.Property(e => e.DateInclusionRequest).HasColumnType("datetime");
 
-                entity.HasOne(d => d.IdGroupNavigation)
-                    .WithMany(p => p.UserGroup)
+                entity.HasOne(d => d.Group)
+                    .WithMany(p => p.Users)
                     .HasForeignKey(d => d.IdGroup)
                     .HasConstraintName("FK_UserGroup_Group");
 
                 entity.HasOne(d => d.IdUserNavigation)
-                    .WithMany(p => p.UserGroup)
+                    .WithMany(p => p.Groups)
                     .HasForeignKey(d => d.IdUser)
                     .HasConstraintName("FK_UserGroup_User");
             });

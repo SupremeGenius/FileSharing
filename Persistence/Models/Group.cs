@@ -5,17 +5,17 @@ namespace FileSharing.Persistence.Models
 	{
 		public Group()
 		{
-			Document = new HashSet<Document>();
-			UserGroup = new HashSet<UserGroup>();
+            Documents = new HashSet<Document>();
+			Users = new HashSet<UserGroup>();
 		}
 
 		public long Id { get; set; }
 		public string Name { get; set; }
 		public long IdAdmin { get; set; }
 
-		public virtual ICollection<Document> Document { get; set; }
-		public virtual ICollection<UserGroup> UserGroup { get; set; }
-		public virtual User IdAdminNavigation { get; set; }
+		public virtual ICollection<Document> Documents { get; set; }
+		public virtual ICollection<UserGroup> Users { get; set; }
+		public virtual User Admin { get; set; }
 
         public override string ToString()
         {

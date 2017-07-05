@@ -149,12 +149,12 @@ namespace FileSharing.Services
 			}
 		}
 
-		public List<DocumentDto> GetDocumentsInFolder(string securityToken, long? idFolder)
+		public List<DocumentDto> GetDocumentsInRoot(string securityToken)
 		{
 			try
 			{
 				var session = CheckSession(securityToken);
-				var result = _dao.GetDocumentsInFolder(session.IdUser, idFolder);
+				var result = _dao.GetDocumentsInRoot(session.IdUser);
 				return Mapper.Map<List<DocumentDto>>(result);
 			}
 			catch (FileSharingException)

@@ -7,6 +7,6 @@ namespace FileSharing.Persistence.Models
 		public long IdUser { get; set; }
 		public DateTime DateLastAccess { get; set; }
 
-		public virtual User IdUserNavigation { get; set; }
+		public virtual User User { get; set; }
 	}
 }

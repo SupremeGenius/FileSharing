@@ -28,7 +28,9 @@ namespace FileSharing.Services.Mapping
                 cfg.CreateMap<UserGroup, UserGroupDto>().ReverseMap();
 
 				cfg.CreateMap<Folder, FolderDto>().ReverseMap();
-                cfg.CreateMap<FolderDto, FolderDetailsDto>();
+                cfg.CreateMap<Folder, FolderDetailsDto>()
+                    .ForMember(dest => dest.Folders, opt => opt.MapFrom(src => src.Folders))
+                    .ForMember(dest => dest.Documents, opt => opt.MapFrom(src => src.Documents));
 
 				cfg.CreateMap<Document, DocumentDto>().ReverseMap();
 

@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using AutoMapper;
+﻿using AutoMapper;
 using FileSharing.Persistence.Daos;
 using FileSharing.Persistence.Models;
 using FileSharing.Services.Dtos;
 using FileSharing.Services.Exceptions;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace FileSharing.Services
 {
-	public class FolderServices : AbstractServices<FolderDao>
+    public class FolderServices : AbstractServices<FolderDao>
 	{
 		readonly string repoPath;
 
@@ -125,7 +125,7 @@ namespace FileSharing.Services
 			try
 			{
 				var session = CheckSession(securityToken);
-				var folderDom = _dao.Read(idFolder);
+				var folderDom = _dao.ReadFullFolder(idFolder);
 				if (folderDom == null)
 					throw new FileSharingException(FileSharingException.FOLDER_NOT_FOUND,
 						 "Folder with id " + idFolder + " does not exist");
@@ -133,9 +133,8 @@ namespace FileSharing.Services
 				if (folderDom.IdUser != session.IdUser)
 					throw new FileSharingException(FileSharingException.UNAUTHORIZED,
 													   "You do not have permissions to update this folder");
-
-                var folders = GetFoldersInFolder(session.IdUser, idFolder);
-                foreach(var folder in folders){
+                
+                foreach(var folder in folderDom.Folders){
                     Delete(securityToken, folder.Id);
                 }
 				
@@ -158,11 +157,17 @@ namespace FileSharing.Services
             {
                 var session = CheckSession(securityToken);
                 FolderDetailsDto result = new FolderDetailsDto();
-                if (idFolder.HasValue) result = Mapper.Map<FolderDetailsDto>(Read(securityToken, idFolder.Value));
-                result.Folders = GetFoldersInFolder(session.IdUser, idFolder);
-                using (var documentService = new DocumentServices())
+                if (idFolder.HasValue)
                 {
-                    result.Documents = documentService.GetDocumentsInFolder(securityToken, idFolder);
+                    result = Mapper.Map<FolderDetailsDto>(_dao.ReadFullFolder(idFolder.Value));
+                }
+                else
+                {
+                    result.Folders = Mapper.Map<List<FolderDto>>(_dao.GetFoldersInRoot(session.IdUser));
+                    using (var docService = new DocumentServices())
+                    {
+                        result.Documents = docService.GetDocumentsInRoot(securityToken);
+                    }
                 }
                 return result;
             }
@@ -184,11 +189,11 @@ namespace FileSharing.Services
 
 				if (idFolder.HasValue)
 				{
-					var folder = _dao.Read(idFolder.Value);
+					var folder = _dao.ReadFullFolder(idFolder.Value);
 					if (folder == null)
 						throw new FileSharingException(FileSharingException.FOLDER_NOT_FOUND,
 							 "Folder with id " + idFolder.Value + " does not exist");
-					return GetFullPath(_dao.Read(idFolder.Value)) + Path.DirectorySeparatorChar.ToString();
+					return GetFullPath(folder) + Path.DirectorySeparatorChar.ToString();
 				}
                 else
                 {
@@ -210,7 +215,7 @@ namespace FileSharing.Services
 		string GetFullPath(Folder folder)
 		{
 			if (folder.IdFolderRoot.HasValue)
-				return GetFullPath(_dao.Read(folder.IdFolderRoot.Value)) + Path.DirectorySeparatorChar.ToString() + folder.Name;
+				return GetFullPath(folder.FolderRoot) + Path.DirectorySeparatorChar.ToString() + folder.Name;
 					
 			return GetUserRootFolder(folder.IdUser) + Path.DirectorySeparatorChar.ToString() + folder.Name;
 		}
@@ -221,23 +226,6 @@ namespace FileSharing.Services
 			if (!Directory.Exists(path))
 				Directory.CreateDirectory(path);
 			return path;
-        }
-
-        List<FolderDto> GetFoldersInFolder(long idUser, long? idFolder)
-        {
-            try
-            {
-                var result = _dao.GetFoldersInFolder(idUser, idFolder);
-                return Mapper.Map<List<FolderDto>>(result);
-            }
-            catch (FileSharingException)
-            {
-                throw;
-            }
-            catch (Exception e)
-            {
-                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
-            }
         }
 
         #endregion

@@ -6,7 +6,7 @@ namespace FileSharing.Persistence.Models
 	{
 		public Folder()
 		{
-			Document = new HashSet<Document>();
+			Documents = new HashSet<Document>();
 		}
 
 		public long Id { get; set; }
@@ -14,9 +14,9 @@ namespace FileSharing.Persistence.Models
 		public string Name { get; set; }
 		public long? IdFolderRoot { get; set; }
 
-		public virtual ICollection<Document> Document { get; set; }
-		public virtual Folder IdFolderRootNavigation { get; set; }
-		public virtual ICollection<Folder> InverseIdFolderRootNavigation { get; set; }
+		public virtual ICollection<Document> Documents { get; set; }
+		public virtual Folder FolderRoot { get; set; }
+		public virtual ICollection<Folder> Folders { get; set; }
 		public virtual User IdUserNavigation { get; set; }
         
         public override string ToString()
