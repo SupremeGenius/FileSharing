@@ -2,6 +2,7 @@
 using FileSharing.Services.Exceptions;
 using FileSharingWeb.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
@@ -120,7 +121,7 @@ namespace FileSharingWeb.Controllers
                 ErrorMessage = _localizer[e.Code];
                 _logger.LogError(2, e.Message);
             }
-            return RedirectToAction("Index", "Home", new { id = idFolder, ErrorMessage = ErrorMessage });
+            return Json(Url.Action("Index", "Home", new { id = idFolder, ErrorMessage = ErrorMessage }));
         }
 
         [HttpGet]

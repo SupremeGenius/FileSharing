@@ -6,12 +6,6 @@
     ViewData["Title"] = Localizer["GROUPS"];
     ViewData["Options"] = new[] { "CreateGroup(),CREATE_GROUP", "Groups,Search,SEARCH_GROUPS" };
 }
-<a id="CreateGroupBtn" href="#CreateGroup" rel="modal:open"></a>
-<form id="CreateGroup" class="create-modal modal" style="display:none;" asp-controller="Groups" asp-action="CreateGroup" method="post">
-    <h3>@Localizer["NEW_GROUP_NAME"]</h3>
-    <p><input type="text" name="groupName" required/></p>
-    <p><button type="submit">@Localizer["CONTINUE"]</button></p>
-</form>
 
 @if (Model != null && Model.Count > 0)
 {
@@ -47,7 +41,20 @@
 
 <script>
     function CreateGroup() {
-        $("#CreateGroupBtn").click();
+        swal({
+            title: "",
+            text: "@Localizer["NEW_GROUP_NAME"]",
+            input: 'text',
+            showCancelButton: true,
+            confirmButtonColor: '#935d8c',
+            confirmButtonText: "@Localizer["CONTINUE"]",
+            cancelButtonText: "@Localizer["CANCEL"]"
+        }).then(function (groupName) {
+            $.post("/Groups/CreateGroup", { groupName: groupName },
+                function (data) {
+                    window.location.href = data;
+                });
+            });
     }
 
     function OpenGroupDetails(id) {

@@ -6,13 +6,6 @@
     ViewData["Title"] = Localizer["HOME"];
     ViewData["Options"] = new[] { "CreateFolder(),CREATE_FOLDER", "Home,UploadFile,UPLOAD_FILE" };
 }
-<a id="CreateFolderBtn" href="#CreateFolder" rel="modal:open"></a>
-<form id="CreateFolder" class="create-modal modal" style="display:none;" asp-controller="Home" asp-action="CreateFolder" method="post">
-    <h3>@Localizer["NEW_FOLDER_NAME"]</h3>
-    <p><input type="text" name="folderName" required/></p>
-    <p style="display:none"><input type="text" name="folderRoot" value="@ViewBag.FolderRootId"/></p>
-    <p><button type="submit">@Localizer["CONTINUE"]</button></p>
-</form>
 
 <div class="link-to-previous-folder">
     @if (ViewBag.LinkFolder != null)
@@ -44,6 +37,19 @@
 
 <script>
     function CreateFolder() {
-        $("#CreateFolderBtn").click();
+        swal({
+            title: "@Localizer["NEW_FOLDER_NAME"]",
+            text: "",
+            input: 'text',
+            showCancelButton: true,
+            confirmButtonColor: '#935d8c',
+            confirmButtonText: "@Localizer["CONTINUE"]",
+            cancelButtonText: "@Localizer["CANCEL"]"
+        }).then(function (folderName) {
+            $.post("/Home/CreateFolder", { folderName: folderName, folderRoot: '@ViewBag.FolderRootId' },
+                function (data) {
+                    window.location.href = data;
+                });
+            });
     }
 </script>

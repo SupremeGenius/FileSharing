@@ -2294,5 +2294,7 @@ body.is-loading #header.alt .logo {
 .swal2-modal .swal2-styled {
     padding: 0 !important;
     font-family: 'Raleway', sans-serif;
-    background-color: #935d8c !important;
+}
+.swal2-input {
+    color: #222 !important;
 }
