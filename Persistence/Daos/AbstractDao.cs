@@ -52,8 +52,9 @@ namespace FileSharing.Persistence.Daos
 		}
 
 		public void Delete(T entity)
-		{
-			_dbSet.Remove(entity);
+        {
+            _context.Entry(entity).State = EntityState.Deleted;
+            _dbSet.Remove(entity);
 			_context.SaveChanges();
 		}
 

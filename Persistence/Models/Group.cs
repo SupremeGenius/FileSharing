@@ -5,7 +5,7 @@ namespace FileSharing.Persistence.Models
 	{
 		public Group()
 		{
-            Documents = new HashSet<Document>();
+            Files = new HashSet<File>();
 			Users = new HashSet<UserGroup>();
 		}
 
@@ -13,7 +13,7 @@ namespace FileSharing.Persistence.Models
 		public string Name { get; set; }
 		public long IdAdmin { get; set; }
 
-		public virtual ICollection<Document> Documents { get; set; }
+		public virtual ICollection<File> Files { get; set; }
 		public virtual ICollection<UserGroup> Users { get; set; }
 		public virtual User Admin { get; set; }
 

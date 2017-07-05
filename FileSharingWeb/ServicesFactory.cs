@@ -11,7 +11,7 @@ namespace FileSharingWeb
 			Group = new GroupServices();
 			UserGroup = new UserGroupServices();
 			Folder = new FolderServices();
-			Document = new DocumentServices();
+            File = new FileServices();
 		}
 
 		public UserServices User { get; set; }
@@ -19,6 +19,6 @@ namespace FileSharingWeb
 		public GroupServices Group { get; set; }
 		public UserGroupServices UserGroup { get; set; }
 		public FolderServices Folder { get; set; }
-		public DocumentServices Document { get; set; }
+		public FileServices File { get; set; }
 	}
 }

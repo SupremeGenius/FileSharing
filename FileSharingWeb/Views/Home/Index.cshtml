@@ -9,7 +9,7 @@
         ViewData["Options"] = new[]
         {
             "CreateFolder(),CREATE_FOLDER",
-            "Home,UploadFile,UPLOAD_FILE"
+            "UploadFile(),UPLOAD_FILE"
         };
     }
     else
@@ -17,7 +17,7 @@
         ViewData["Options"] = new[]
         {
             "CreateFolder(),CREATE_FOLDER",
-            "Home,UploadFile,UPLOAD_FILE",
+            "UploadFile(),UPLOAD_FILE",
             "DeleteFolder(),DELETE_FOLDER"
         };
     }
@@ -48,13 +48,13 @@
             </a>
         </div>
     }
-    @foreach (var document in Model.Documents)
+    @foreach (var file in Model.Files)
     {
         <div class="file">
-            <a onclick="OpenDocumentDetails('@document.Id')">
+            <a onclick="OpenFileDetails('@file.Id')">
                 <img src="~/images/file.png" />
                 <br />
-                @document.Filename
+                @file.Filename
             </a>
         </div>
     }
@@ -76,6 +76,32 @@
                 url: '/Home/CreateFolder',
                 type: 'POST',
                 data: { folderName: folderName, folderRoot: '@ViewBag.FolderId' },
+                success: function (result) {
+                    window.location.href = result;
+                }
+            });
+        });
+    }
+
+    function UploadFile() {
+        swal({
+            title: '@Localizer["SELECT_FILE"]',
+            input: 'file',
+            showCancelButton: true,
+            confirmButtonColor: '#935d8c',
+            confirmButtonText: "@Localizer["CONTINUE"]",
+            cancelButtonText: "@Localizer["CANCEL"]"
+        }).then(function (file) {
+            var formData = new FormData();
+            formData.append("FileUpload", file);
+            formData.append("FolderRoot", '@ViewBag.FolderId');
+
+            $.ajax({
+                url: '/Home/UploadFile/@ViewBag.FolderId',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
                 success: function (result) {
                     window.location.href = result;
                 }

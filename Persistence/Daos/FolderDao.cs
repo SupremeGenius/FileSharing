@@ -22,7 +22,7 @@ namespace FileSharing.Persistence.Daos
             return _dbSet
                 .Include(f => f.FolderRoot)
                 .Include(f => f.Folders)
-                .Include(f => f.Documents)
+                .Include(f => f.Files)
                 .Where(f => f.Id == idFolder).FirstOrDefault();
         }
 	}

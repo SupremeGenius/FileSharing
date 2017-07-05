@@ -55,7 +55,7 @@ namespace FileSharing.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
 			}
 		}
 
@@ -80,7 +80,7 @@ namespace FileSharing.Services
             }
             catch (Exception e)
             {
-                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+                throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
             }
         }
 
@@ -117,7 +117,7 @@ namespace FileSharing.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
 			}
 		}
 
@@ -135,11 +135,7 @@ namespace FileSharing.Services
 					throw new FileSharingException(FileSharingException.UNAUTHORIZED,
 													   "You do not have permissions to update this folder");
                 
-                foreach(var folder in folderDom.Folders){
-                    Delete(securityToken, folder.Id);
-                }
-				
-				_dao.Delete(folderDom);
+                _dao.Delete(folderDom);
                 Audit(session.IdUser, folderDom.Id.ToString(), typeof(Folder).Name, ActionDto.Delete, "Folder deletes: " + folderDom);
             }
 			catch (FileSharingException)
@@ -148,7 +144,7 @@ namespace FileSharing.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
 			}
 		}
 
@@ -165,9 +161,9 @@ namespace FileSharing.Services
                 else
                 {
                     result.Folders = Mapper.Map<List<FolderDto>>(_dao.GetFoldersInRoot(session.IdUser));
-                    using (var docService = new DocumentServices())
+                    using (var fileService = new FileServices())
                     {
-                        result.Documents = docService.GetDocumentsInRoot(securityToken);
+                        result.Files = fileService.GetFilesInRoot(securityToken);
                     }
                 }
                 return result;
@@ -178,7 +174,7 @@ namespace FileSharing.Services
             }
             catch (Exception e)
             {
-                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+                throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
             }
         }
 
@@ -207,7 +203,7 @@ namespace FileSharing.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
 			}
 		}
 

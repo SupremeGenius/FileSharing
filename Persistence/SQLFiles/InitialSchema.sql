@@ -297,6 +297,7 @@ GO
 
 ALTER TABLE [dbo].[Folder]  WITH CHECK ADD  CONSTRAINT [FK_Folder_User] FOREIGN KEY([IdUser])
 REFERENCES [dbo].[User] ([Id])
+ON DELETE CASCADE
 GO
 
 ALTER TABLE [dbo].[Folder] CHECK CONSTRAINT [FK_Folder_User]
@@ -311,14 +312,14 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE TABLE [dbo].[Document](
+CREATE TABLE [dbo].[File](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[IdUser] [bigint] NOT NULL,
 	[Filename] [varchar](200) NOT NULL,
-	[IsPublic] [bigint] NOT NULL,
+	[IsPublic] [bit] NOT NULL,
 	[IdGroup] [bigint] NULL,
 	[IdFolder] [bigint] NULL,
- CONSTRAINT [PK_Document] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_File] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -326,26 +327,26 @@ CREATE TABLE [dbo].[Document](
 
 GO
 
-ALTER TABLE [dbo].[Document]  WITH CHECK ADD  CONSTRAINT [FK_Document_Folder] FOREIGN KEY([IdFolder])
+ALTER TABLE [dbo].[File]  WITH CHECK ADD  CONSTRAINT [FK_File_Folder] FOREIGN KEY([IdFolder])
 REFERENCES [dbo].[Folder] ([Id])
 ON DELETE CASCADE
 GO
 
-ALTER TABLE [dbo].[Document] CHECK CONSTRAINT [FK_Document_Folder]
+ALTER TABLE [dbo].[File] CHECK CONSTRAINT [FK_File_Folder]
 GO
 
-ALTER TABLE [dbo].[Document]  WITH CHECK ADD  CONSTRAINT [FK_Document_Group] FOREIGN KEY([IdGroup])
+ALTER TABLE [dbo].[File]  WITH CHECK ADD  CONSTRAINT [FK_File_Group] FOREIGN KEY([IdGroup])
 REFERENCES [dbo].[Group] ([Id])
 GO
 
-ALTER TABLE [dbo].[Document] CHECK CONSTRAINT [FK_Document_Group]
+ALTER TABLE [dbo].[File] CHECK CONSTRAINT [FK_File_Group]
 GO
 
-ALTER TABLE [dbo].[Document]  WITH CHECK ADD  CONSTRAINT [FK_Document_User] FOREIGN KEY([IdUser])
+ALTER TABLE [dbo].[File]  WITH CHECK ADD  CONSTRAINT [FK_File_User] FOREIGN KEY([IdUser])
 REFERENCES [dbo].[User] ([Id])
 GO
 
-ALTER TABLE [dbo].[Document] CHECK CONSTRAINT [FK_Document_User]
+ALTER TABLE [dbo].[File] CHECK CONSTRAINT [FK_File_User]
 GO
 
 USE [FileSharing]

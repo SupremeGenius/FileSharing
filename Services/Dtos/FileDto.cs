@@ -1,6 +1,6 @@
 ﻿namespace FileSharing.Services.Dtos
 {
-	public class DocumentDto
+	public class FileDto
 	{
 		public long Id { get; set; }
 		public long IdUser { get; set; }

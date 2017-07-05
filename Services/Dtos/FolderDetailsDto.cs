@@ -5,6 +5,6 @@ namespace FileSharing.Services.Dtos
     public class FolderDetailsDto : FolderDto
     {
         public List<FolderDto> Folders { get; set; }
-        public List<DocumentDto> Documents { get; set; }
+        public List<FileDto> Files { get; set; }
     }
 }

@@ -34,7 +34,7 @@ namespace FileSharing.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
 			}
 		}
 
@@ -57,7 +57,7 @@ namespace FileSharing.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
 			}
 		}
 
@@ -87,7 +87,7 @@ namespace FileSharing.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
 			}
 		}
 
@@ -126,7 +126,7 @@ namespace FileSharing.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
 			}
         }
 
@@ -157,7 +157,7 @@ namespace FileSharing.Services
             }
             catch (Exception e)
             {
-                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+                throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
             }
         }
 
@@ -174,7 +174,7 @@ namespace FileSharing.Services
             }
             catch (Exception e)
             {
-                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+                throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
             }
         }
 
@@ -198,7 +198,7 @@ namespace FileSharing.Services
             }
             catch (Exception e)
             {
-                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+                throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
             }
         }
 	}

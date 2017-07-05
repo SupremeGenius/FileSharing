@@ -34,7 +34,7 @@ namespace FileSharing.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
 			}
 		}
 
@@ -48,7 +48,7 @@ namespace FileSharing.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
 			}
         }
 
@@ -62,7 +62,7 @@ namespace FileSharing.Services
             }
             catch (Exception e)
             {
-                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+                throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
             }
         }
 
@@ -103,7 +103,7 @@ namespace FileSharing.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
 			}
 		}
 
@@ -125,11 +125,11 @@ namespace FileSharing.Services
 													   "The user cannot be removed because he is group admin");
 				}
 
-				using (var documentServices = new DocumentServices())
+				using (var fileService = new FileServices())
 				{
-					foreach (var doc in user.Documents)
+					foreach (var doc in user.Files)
 					{
-						documentServices.Delete(securityToken, doc.Id);
+                        fileService.Delete(securityToken, doc.Id);
 					}
 				}
 
@@ -147,7 +147,7 @@ namespace FileSharing.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
 			}
 		}
 
@@ -168,7 +168,7 @@ namespace FileSharing.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
 			}
 		}
 
@@ -181,7 +181,7 @@ namespace FileSharing.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
 			}
 		}
 
@@ -205,7 +205,7 @@ namespace FileSharing.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
 			}
 		}
 

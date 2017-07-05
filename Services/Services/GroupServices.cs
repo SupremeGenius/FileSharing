@@ -51,7 +51,7 @@ namespace FileSharing.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
 			}
 		}
 
@@ -69,7 +69,7 @@ namespace FileSharing.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
 			}
 		}
 
@@ -102,7 +102,7 @@ namespace FileSharing.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
 			}
 		}
 
@@ -128,7 +128,7 @@ namespace FileSharing.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
 			}
 		}
 
@@ -146,7 +146,7 @@ namespace FileSharing.Services
 			}
 			catch (Exception e)
 			{
-				throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+				throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
 			}
         }
 
@@ -181,7 +181,7 @@ namespace FileSharing.Services
             }
             catch (Exception e)
             {
-                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+                throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
             }
         }
 
@@ -195,10 +195,10 @@ namespace FileSharing.Services
                 result.IsAdministrable = group.IdAdmin == session.IdUser;
 
                 using (var userGroupService = new UserGroupServices())
-                using (var documentService = new DocumentServices())
+                using (var fileService = new FileServices())
                 {
                     result.Members = userGroupService.GetUsersOfGroup(securityToken, result.Id);
-                    result.Documents = documentService.GetDocumentsByGroup(securityToken, result.Id);
+                    result.Files = fileService.GetFilesByGroup(securityToken, result.Id);
                 }
 
                 return result;
@@ -209,7 +209,7 @@ namespace FileSharing.Services
             }
             catch (Exception e)
             {
-                throw new FileSharingException(FileSharingException.ERROR_DOCUMENT_MANAGER_SERVER, e.Message, e);
+                throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
             }
         }
     }

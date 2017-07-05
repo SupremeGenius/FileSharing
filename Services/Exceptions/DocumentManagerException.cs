@@ -8,14 +8,13 @@ namespace FileSharing.Services.Exceptions
 
 		#region Const strings
 
-		public const string ERROR_DOCUMENT_MANAGER_SERVER = "ERROR_DOCUMENT_MANAGER_SERVER";
+		public const string ERROR_FILESHARING_SERVER = "ERROR_FILESHARING_SERVER";
 		public const string NULL_VALUE = "NULL_VALUE";
 		public const string UNAUTHORIZED = "UNAUTHORIZED";
 
-		#region Document
+        #region File
 
-		public const string DOCUMENT_ALREADY_EXISTS = "DOCUMENT_ALREADY_EXISTS";
-		public const string DOCUMENT_NOT_FOUND = "DOCUMENT_NOT_FOUND";
+        public const string FILE_ALREADY_EXISTS = "FILE_ALREADY_EXISTS";
 		public const string FILE_NOT_FOUND = "FILE_NOT_FOUND";
 
 		#endregion

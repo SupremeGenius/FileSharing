@@ -1,8 +1,11 @@
 ﻿using FileSharing.Services.Dtos;
 using FileSharing.Services.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using System;
+using System.IO;
 
 namespace FileSharingWeb.Controllers
 {
@@ -92,6 +95,39 @@ namespace FileSharingWeb.Controllers
                 _logger.LogError(2, e.Message);
             }
             return Json(Url.Action("Index", "Home", new { id = idFolder, ErrorMessage = ErrorMessage }));
+        }
+
+        [HttpPost]
+        public IActionResult UploadFile(long? id)
+        {
+            string ErrorMessage = null;
+            try
+            {
+                if (HttpContext.Request.Form.Files != null
+                    && HttpContext.Request.Form.Files.Count > 0
+                    && HttpContext.Request.Form.Files[0].Length > 0)
+                {
+                    var uploadFile = HttpContext.Request.Form.Files[0];
+                    var file = new FileDto
+                    {
+                        Filename = Path.GetFileName(uploadFile.FileName),
+                        IdFolder = id,
+                    };
+                    using (var fileStream = uploadFile.OpenReadStream())
+                    using (var ms = new MemoryStream())
+                    {
+                        fileStream.CopyTo(ms);
+                        file.Content = ms.ToArray();
+                    }
+                    Services.File.Create(SecurityToken, file);
+                }
+            }
+            catch (FileSharingException e)
+            {
+                ErrorMessage = _localizer[e.Code];
+                _logger.LogError(2, e.Message);
+            }
+            return Json(Url.Action("Index", "Home", new { id = id, ErrorMessage = ErrorMessage }));
         }
 
         [HttpDelete]
