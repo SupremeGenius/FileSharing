@@ -84,17 +84,68 @@
     }
 
     function UploadFile() {
-        swal({
-            title: '@Localizer["SELECT_FILE"]',
-            input: 'file',
+        var groups = {};
+        $.ajax({
+            url: '/Home/GetGroups',
+            type: 'GET',
+            async: false,
+            success: function (result) {
+                groups = result;
+            }
+        });
+        var html = '<input type="checkbox" id="is-public"><span> @Localizer["PUBLIC"]</span><br/>';
+        if (groups != null && groups.length > 0) {
+            html += '<br/>@Localizer["GROUPS"]<select id="id-group" class="swal2-select">' +
+                '<option value= "0"></option>';
+            for (var i in groups) {
+                html += '<option value= "' + groups[i].id + '">' + groups[i].name + '</option>';
+            }
+            html += '</select>'
+        }
+        console.log(html);
+
+        swal.setDefaults({
             showCancelButton: true,
             confirmButtonColor: '#935d8c',
-            confirmButtonText: "@Localizer["CONTINUE"]",
-            cancelButtonText: "@Localizer["CANCEL"]"
-        }).then(function (file) {
+            confirmButtonText: "@Localizer["NEXT"] &rarr;",
+            cancelButtonText: "@Localizer["CANCEL"]",
+            animation: false,
+            progressSteps: ['1', '2']
+        });
+
+        var steps = [
+            {
+                title: '@Localizer["SELECT_FILE"]',
+                input: 'file',
+                inputValidator: function (result) {
+                    return new Promise(function (resolve, reject) {
+                        if (result) {
+                            resolve()
+                        } else {
+                            reject('@Localizer["FILE_MUST_BE_SELETED"]')
+                        }
+                    })
+                }
+            }, {
+                title: '@Localizer["SHARING"]',
+                html: html,
+                preConfirm: function () {
+                    return new Promise(function (resolve) {
+                        resolve([
+                            $("#is-public").is(':checked'),
+                            $('#id-group').val()
+                        ])
+                    })
+                }
+            }
+        ];
+
+        swal.queue(steps).then(function (result) {
+            console.log(result);
             var formData = new FormData();
-            formData.append("FileUpload", file);
-            formData.append("FolderRoot", '@ViewBag.FolderId');
+            formData.append("FileUpload", result[0]);
+            formData.append("IsPublic", result[1][0]);
+            formData.append("IdGroup", result[1][1]);
 
             $.ajax({
                 url: '/Home/UploadFile/@ViewBag.FolderId',
@@ -106,6 +157,8 @@
                     window.location.href = result;
                 }
             });
+        }, function () {
+            swal.resetDefaults()
         });
     }
 

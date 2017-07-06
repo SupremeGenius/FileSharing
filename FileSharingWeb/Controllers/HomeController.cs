@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace FileSharingWeb.Controllers
@@ -112,7 +113,15 @@ namespace FileSharingWeb.Controllers
                     {
                         Filename = Path.GetFileName(uploadFile.FileName),
                         IdFolder = id,
+                        IsPublic = Convert.ToBoolean(HttpContext.Request.Form["IsPublic"])
                     };
+                    long idGroup;
+                    if (long.TryParse(HttpContext.Request.Form["IdGroup"], out idGroup)
+                        && idGroup > 0)
+                    {
+                        file.IdGroup = idGroup;
+                    }
+
                     using (var fileStream = uploadFile.OpenReadStream())
                     using (var ms = new MemoryStream())
                     {
@@ -151,5 +160,20 @@ namespace FileSharingWeb.Controllers
             }
             return Json(Url.Action("Index", "Home", new { id = idFolder, ErrorMessage = ErrorMessage }));
         }        
+
+        [HttpGet]
+        public IActionResult GetGroups()
+        {
+            List<GroupDetailsDto> result = new List<GroupDetailsDto>();
+            try
+            {
+                result = Services.Group.GetGroupsOfUser(SecurityToken);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(2, e.Message);
+            }
+            return Json(result);
+        }
     }
 }

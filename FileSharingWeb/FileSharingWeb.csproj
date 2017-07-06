@@ -11,6 +11,13 @@
     <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="wwwroot\css\images\**" />
+    <Content Remove="wwwroot\css\images\**" />
+    <EmbeddedResource Remove="wwwroot\css\images\**" />
+    <None Remove="wwwroot\css\images\**" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
@@ -19,11 +26,6 @@
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.2" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <Folder Include="wwwroot\css\images\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Services\Services.csproj" />

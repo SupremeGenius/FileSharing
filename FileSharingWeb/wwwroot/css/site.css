@@ -515,70 +515,6 @@ textarea {
     padding: 0.75em 1em;
 }
 
-input[type="checkbox"],
-input[type="radio"] {
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    -ms-appearance: none;
-    appearance: none;
-    display: block;
-    float: left;
-    margin-right: -2em;
-    opacity: 0;
-    width: 1em;
-    z-index: -1;
-}
-
-    input[type="checkbox"] + label,
-    input[type="radio"] + label {
-        text-decoration: none;
-        cursor: pointer;
-        display: inline-block;
-        font-size: 1em;
-        font-weight: 300;
-        padding-left: 2.4em;
-        padding-right: 0.75em;
-        position: relative;
-    }
-
-        input[type="checkbox"] + label:before,
-        input[type="radio"] + label:before {
-            -moz-osx-font-smoothing: grayscale;
-            -webkit-font-smoothing: antialiased;
-            font-family: FontAwesome;
-            font-style: normal;
-            font-weight: normal;
-            text-transform: none !important;
-        }
-
-        input[type="checkbox"] + label:before,
-        input[type="radio"] + label:before {
-            border-radius: 8px;
-            border: solid 1px;
-            content: '';
-            display: inline-block;
-            height: 1.65em;
-            left: 0;
-            line-height: 1.58125em;
-            position: absolute;
-            text-align: center;
-            top: 0;
-            width: 1.65em;
-        }
-
-    input[type="checkbox"]:checked + label:before,
-    input[type="radio"]:checked + label:before {
-        content: '\f00c';
-    }
-
-    input[type="checkbox"] + label:before {
-        border-radius: 8px;
-    }
-
-    input[type="radio"] + label:before {
-        border-radius: 100%;
-    }
-
 ::-webkit-input-placeholder {
     opacity: 1.0;
 }
@@ -623,30 +559,6 @@ textarea {
 
 .select-wrapper:before {
     color: rgba(255, 255, 255, 0.35);
-}
-
-input[type="checkbox"] + label,
-input[type="radio"] + label {
-    color: rgba(255, 255, 255, 0.65);
-}
-
-    input[type="checkbox"] + label:before,
-    input[type="radio"] + label:before {
-        background: rgba(255, 255, 255, 0.075);
-        border-color: rgba(255, 255, 255, 0.35);
-    }
-
-input[type="checkbox"]:checked + label:before,
-input[type="radio"]:checked + label:before {
-    background-color: #ffffff;
-    border-color: #ffffff;
-    color: #935d8c;
-}
-
-input[type="checkbox"]:focus + label:before,
-input[type="radio"]:focus + label:before {
-    border-color: #8cc9f0;
-    box-shadow: 0 0 0 1px #8cc9f0;
 }
 
 ::-webkit-input-placeholder {
@@ -1833,30 +1745,6 @@ body.is-loading #header.alt .logo {
         color: #dddddd;
     }
 
-    #main input[type="checkbox"] + label,
-    #main input[type="radio"] + label {
-        color: #636363;
-    }
-
-        #main input[type="checkbox"] + label:before,
-        #main input[type="radio"] + label:before {
-            background: rgba(222, 222, 222, 0.25);
-            border-color: #dddddd;
-        }
-
-    #main input[type="checkbox"]:checked + label:before,
-    #main input[type="radio"]:checked + label:before {
-        background-color: #636363;
-        border-color: #636363;
-        color: #ffffff;
-    }
-
-    #main input[type="checkbox"]:focus + label:before,
-    #main input[type="radio"]:focus + label:before {
-        border-color: #8cc9f0;
-        box-shadow: 0 0 0 1px #8cc9f0;
-    }
-
     #main ::-webkit-input-placeholder {
         color: rgba(99, 99, 99, 0.25) !important;
     }
@@ -2287,6 +2175,10 @@ body.is-loading #header.alt .logo {
     background-color: #ababab;
 }
 
+.groups {
+    width: 95%;
+}
+
 .group-files {
     float: left;
     width: 65%
@@ -2294,12 +2186,28 @@ body.is-loading #header.alt .logo {
 
 .group-members {
     float: right;
+    margin-right: 100px;
 }
 
 .swal2-modal .swal2-styled {
     padding: 0 !important;
     font-family: 'Raleway', sans-serif;
 }
+
 .swal2-input {
     color: #222 !important;
+}
+
+.swal2-progresssteps .swal2-progresscircle {
+    padding-left: 0px;
+}
+
+.swal2-modal .swal2-checkbox input,
+.swal2-modal .swal2-checkbox span {
+    vertical-align: auto;
+    margin-left: 5px;
+}
+
+.swal2-select {
+    border-color: #935d8c;
 }

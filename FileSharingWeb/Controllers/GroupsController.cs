@@ -48,7 +48,7 @@ namespace FileSharingWeb.Controllers
             {
                 _logger.LogError(2, e.Message);
             }
-            return RedirectToAction("Index", "Groups");
+            return Json(Url.Action("Index", "Groups"));
         }
 
         [HttpGet]
