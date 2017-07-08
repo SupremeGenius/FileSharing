@@ -23,7 +23,9 @@ namespace FileSharing.Services
                                                            "You already have a file with this filename");
 
                 file.IdUser = session.IdUser;
-				var fileDom = Mapper.Map<File>(file);
+                file.CreationDate = file.ModificationDate = DateTime.Now;
+
+                var fileDom = Mapper.Map<File>(file);
 
                 string filePath = GetFilePath(securityToken, fileDom);
 
@@ -75,6 +77,7 @@ namespace FileSharing.Services
 
 				var file = Mapper.Map<FileDto>(fileDom);
 				file.Content = System.IO.File.ReadAllBytes(filePath);
+                file.ContentSize = file.Content.Length/1024;
 
 				return file;
 			}
@@ -101,17 +104,24 @@ namespace FileSharing.Services
 					throw new FileSharingException(FileSharingException.UNAUTHORIZED,
 													   "You do not have permissions to update this file");
 
-				string filePath = GetFilePath(securityToken, fileDom);
+				string oldFilePath = GetFilePath(securityToken, fileDom);
+                var oldFile = fileDom.ToString();
+                Mapper.Map(file, fileDom);
+                fileDom.ModificationDate = DateTime.Now;
+                var newFilePath = GetFilePath(securityToken, fileDom);
 
-				if (System.IO.File.Exists(filePath))
-                    System.IO.File.Delete(filePath);
+                if (oldFilePath != newFilePath)
+                {
+                    if (System.IO.File.Exists(oldFilePath))
+                        System.IO.File.Delete(oldFilePath);
 
-                System.IO.File.WriteAllBytes(filePath, file.Content);
-
-				Mapper.Map(file, fileDom);
+                    System.IO.File.WriteAllBytes(newFilePath, file.Content);
+                }
+                
 				_dao.Update(fileDom);
-				//TODO Audit
-			}
+                Audit(session.IdUser, fileDom.Id.ToString(), typeof(File).Name, ActionDto.Update,
+                       "File updated:\r\n" + "-Previous: " + oldFile + "\r\n" + "-Updated: " + fileDom.ToString());
+            }
 			catch (FileSharingException)
 			{
 				throw;
@@ -122,7 +132,7 @@ namespace FileSharing.Services
 			}
 		}
 
-		public void Delete(string securityToken, long idFile)
+		public long? Delete(string securityToken, long idFile)
 		{
 			try
 			{
@@ -137,6 +147,7 @@ namespace FileSharing.Services
 				
 				_dao.Delete(fileDom);
                 Audit(session.IdUser, fileDom.Id.ToString(), typeof(File).Name, ActionDto.Delete, "File deleted: " + fileDom);
+                return fileDom.IdFolder;
             }
 			catch (FileSharingException)
 			{

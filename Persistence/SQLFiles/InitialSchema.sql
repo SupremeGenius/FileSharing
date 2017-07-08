@@ -316,9 +316,12 @@ CREATE TABLE [dbo].[File](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[IdUser] [bigint] NOT NULL,
 	[Filename] [varchar](200) NOT NULL,
+	[ContentType] [varchar](50) NOT NULL,
 	[IsPublic] [bit] NOT NULL,
 	[IdGroup] [bigint] NULL,
 	[IdFolder] [bigint] NULL,
+	[CreationDate] [datetime] NOT NULL,
+	[ModificationDate] [datetime] NOT NULL,
  CONSTRAINT [PK_File] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -365,7 +368,7 @@ CREATE TABLE [dbo].[Audit](
 	[Object] [varchar](50) NOT NULL,
 	[IdObject] [varchar](50) NOT NULL,
 	[Action] [varchar](50) NOT NULL,
-	[Description] [nvarchar](400) NOT NULL,
+	[Description] [nvarchar](max) NOT NULL,
  CONSTRAINT [PK_Audit] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC

@@ -29,7 +29,7 @@ namespace FileSharing.Persistence.Models
 
                 entity.Property(e => e.Description)
                     .IsRequired()
-                    .HasColumnType("nvarchar(400)");
+                    .HasColumnType("nvarchar(max)");
 
                 entity.Property(e => e.IdObject)
                     .IsRequired()
@@ -45,6 +45,18 @@ namespace FileSharing.Persistence.Models
                 entity.Property(e => e.Filename)
                     .IsRequired()
                     .HasColumnType("varchar(200)");
+
+                entity.Property(e => e.ContentType)
+                    .IsRequired()
+                    .HasColumnType("varchar(50)");
+
+                entity.Property(e => e.CreationDate)
+                    .IsRequired()
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.ModificationDate)
+                    .IsRequired()
+                    .HasColumnType("datetime");
 
                 entity.HasOne(d => d.Folder)
                     .WithMany(p => p.Files)

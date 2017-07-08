@@ -98,6 +98,28 @@ namespace FileSharingWeb.Controllers
             return Json(Url.Action("Index", "Home", new { id = idFolder, ErrorMessage = ErrorMessage }));
         }
 
+        [HttpDelete]
+        public IActionResult DeleteFolder(string folder)
+        {
+            long? idFolder = null;
+            string ErrorMessage = null;
+            try
+            {
+                long idFolderToDelete;
+                if (long.TryParse(folder, out idFolderToDelete))
+                {
+                    idFolder = Services.Folder.Read(SecurityToken, idFolderToDelete)?.IdFolderRoot;
+                    Services.Folder.Delete(SecurityToken, idFolderToDelete);
+                }
+            }
+            catch (FileSharingException e)
+            {
+                ErrorMessage = _localizer[e.Code];
+                _logger.LogError(2, e.Message);
+            }
+            return Json(Url.Action("Index", "Home", new { id = idFolder, ErrorMessage = ErrorMessage }));
+        }
+
         [HttpPost]
         public IActionResult UploadFile(long? id)
         {
@@ -112,6 +134,7 @@ namespace FileSharingWeb.Controllers
                     var file = new FileDto
                     {
                         Filename = Path.GetFileName(uploadFile.FileName),
+                        ContentType = uploadFile.ContentType,
                         IdFolder = id,
                         IsPublic = Convert.ToBoolean(HttpContext.Request.Form["IsPublic"])
                     };
@@ -139,18 +162,22 @@ namespace FileSharingWeb.Controllers
             return Json(Url.Action("Index", "Home", new { id = id, ErrorMessage = ErrorMessage }));
         }
 
-        [HttpDelete]
-        public IActionResult DeleteFolder(string folder)
+        [HttpPost]
+        public IActionResult UpdateFile(long? id, string filename, bool isPublic, long? idGroup)
         {
-            long? idFolder = null;
             string ErrorMessage = null;
+            FileDto file = new FileDto();
             try
             {
-                long idFolderToDelete;
-                if (long.TryParse(folder, out idFolderToDelete))
+                if (id.HasValue)
                 {
-                    idFolder = Services.Folder.Read(SecurityToken, idFolderToDelete)?.IdFolderRoot;
-                    Services.Folder.Delete(SecurityToken, idFolderToDelete);
+                    file = Services.File.Read(SecurityToken, id.Value);
+
+                    file.Filename = filename;
+                    file.IsPublic = isPublic;
+                    file.IdGroup = idGroup == 0? null : idGroup;
+
+                    Services.File.Update(SecurityToken, file);
                 }
             }
             catch (FileSharingException e)
@@ -158,8 +185,25 @@ namespace FileSharingWeb.Controllers
                 ErrorMessage = _localizer[e.Code];
                 _logger.LogError(2, e.Message);
             }
+            return Json(Url.Action("Index", "Home", new { id = file.IdFolder, ErrorMessage = ErrorMessage }));
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteFile(long id)
+        {
+            string ErrorMessage = null;
+            long? idFolder = null;
+            try
+            {
+                idFolder = Services.File.Delete(SecurityToken, id);
+            }
+            catch (FileSharingException e)
+            {
+                ErrorMessage = _localizer[e.Code];
+                _logger.LogError(2, e.Message);
+            }
             return Json(Url.Action("Index", "Home", new { id = idFolder, ErrorMessage = ErrorMessage }));
-        }        
+        }
 
         [HttpGet]
         public IActionResult GetGroups()
@@ -174,6 +218,36 @@ namespace FileSharingWeb.Controllers
                 _logger.LogError(2, e.Message);
             }
             return Json(result);
+        }
+
+        [HttpGet]
+        public IActionResult GetFile(long id)
+        {
+            FileDto result = null;
+            try
+            {
+                result = Services.File.Read(SecurityToken, id);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(2, e.Message);
+            }
+            return Json(result);
+        }
+
+        [HttpGet]
+        public FileResult DownloadFile(long id)
+        {
+            FileDto result = null;
+            try
+            {
+                result = Services.File.Read(SecurityToken, id);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(2, e.Message);
+            }
+            return File(result.Content, result.ContentType, result.Filename);
         }
     }
 }

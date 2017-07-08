@@ -261,4 +261,16 @@
   <data name="SHARING" xml:space="preserve">
     <value>Elija si desea compartirlo</value>
   </data>
+  <data name="CREATION_DATE" xml:space="preserve">
+    <value>Fecha de creación</value>
+  </data>
+  <data name="DELETE" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="MODIFICATION_DATE" xml:space="preserve">
+    <value>Fecha de modificación</value>
+  </data>
+  <data name="SIZE" xml:space="preserve">
+    <value>Tamaño</value>
+  </data>
 </root>

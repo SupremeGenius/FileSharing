@@ -51,7 +51,7 @@
     @foreach (var file in Model.Files)
     {
         <div class="file">
-            <a onclick="OpenFileDetails('@file.Id')">
+            <a onclick="OpenFileDetails('@file.Id', groups)">
                 <img src="~/images/file.png" />
                 <br />
                 @file.Filename
@@ -62,6 +62,17 @@
 
 
 <script>
+    var groups = {};
+    $(document).ready(function () {
+        $.ajax({
+            url: '/Home/GetGroups',
+            type: 'GET',
+            async: false,
+            success: function (result) {
+                groups = result;
+            }
+        });
+    });
     function CreateFolder() {
         swal({
             title: "",
@@ -84,15 +95,6 @@
     }
 
     function UploadFile() {
-        var groups = {};
-        $.ajax({
-            url: '/Home/GetGroups',
-            type: 'GET',
-            async: false,
-            success: function (result) {
-                groups = result;
-            }
-        });
         var html = '<input type="checkbox" id="is-public"><span> @Localizer["PUBLIC"]</span><br/>';
         if (groups != null && groups.length > 0) {
             html += '<br/>@Localizer["GROUPS"]<select id="id-group" class="swal2-select">' +
@@ -102,7 +104,6 @@
             }
             html += '</select>'
         }
-        console.log(html);
 
         swal.setDefaults({
             showCancelButton: true,
@@ -141,7 +142,6 @@
         ];
 
         swal.queue(steps).then(function (result) {
-            console.log(result);
             var formData = new FormData();
             formData.append("FileUpload", result[0]);
             formData.append("IsPublic", result[1][0]);
@@ -184,7 +184,6 @@
                     }
                 });
             },
-            showCancelButton: true,
             confirmButtonColor: '#935d8c',
             confirmButtonText: "@Localizer["CONTINUE"]",
             cancelButtonText: "@Localizer["CANCEL"]"
@@ -199,4 +198,80 @@
             });
         });
     }
+
+function OpenFileDetails(idFile) {
+    $.ajax({
+        url: '/Home/GetFile/' + idFile,
+        type: 'GET',
+        async: false,
+        success: function (file) {
+            var html = '<input id="filename" class="swal2-input" type="text" value="' + file.filename + '"/><br/>';
+            if (file.contentType.indexOf("image") !== -1) {
+                html += '<img src="data:' + file.contentType + ';base64,' + file.content + '"/><br/><br/>';
+            }
+
+            html += '<div class="swal2-div-info"><span class="swal2-label-info">@Localizer["SIZE"]:</span> <span class="swal2-text-info">' + file.contentSize + 'KB</span><br/>' +
+                '<span class="swal2-label-info">@Localizer["CREATION_DATE"]:</span> <span class="swal2-text-info">' + formatDate(new Date(file.creationDate)) + '</span><br/>' +
+                '<span class="swal2-label-info">@Localizer["MODIFICATION_DATE"]:</span> <span class="swal2-text-info">' + formatDate(new Date(file.modificationDate)) + '</span></div><br/>';
+
+            if (file.isPublic) {
+                html += '<input type="checkbox" id="is-public" checked><span> @Localizer["PUBLIC"]</span><br/>';
+            } else {
+                html += '<input type="checkbox" id="is-public"><span> @Localizer["PUBLIC"]</span><br/>';
+            }
+            if (groups != null && groups.length > 0) {
+                    html += '@Localizer["GROUPS"]<select id="id-group" class="swal2-select">' +
+                    '<option value= "0"></option>';
+                    for (var i in groups) {
+                        if (groups[i].id === file.idGroup) {
+                            html += '<option value= "' + groups[i].id + '" selected>' + groups[i].name + '</option>';
+                        } else {
+                            html += '<option value= "' + groups[i].id + '">' + groups[i].name + '</option>';
+                        }
+                    }
+                    html += '</select>'
+            }
+            html += '<a href="/Home/DownloadFile/' + file.id + '">@Localizer["DOWNLOAD"]</a>'
+
+            swal({
+                html: html,
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonColor: '#935d8c',
+                confirmButtonText: "@Localizer["CONTINUE"]",
+                cancelButtonColor: '#d33',
+                cancelButtonText: "@Localizer["DELETE"]",
+                allowOutsideClick: false,
+                preConfirm: function () {
+                    return new Promise(function (resolve) {
+                        resolve([
+                            $("#filename").val(),
+                            $("#is-public").is(':checked'),
+                            $('#id-group').val()
+                        ])
+                    })
+                }
+            }).then(function (result) {
+                $.ajax({
+                    url: '/Home/UpdateFile/',
+                    type: 'POST',
+                    data: { id: idFile, filename: result[0], isPublic: result[1], idGroup: result[2] },
+                    async: false,
+                    success: function (result) {
+                        window.location.href = result;
+                    }
+                });
+            }, function () {
+                $.ajax({
+                    url: '/Home/DeleteFile/' + idFile,
+                    type: 'DELETE',
+                    async: false,
+                    success: function (result) {
+                        window.location.href = result;
+                    }
+                });
+            });
+        }
+    });
+}
 </script>

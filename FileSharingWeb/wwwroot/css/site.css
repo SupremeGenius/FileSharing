@@ -2211,3 +2211,28 @@ body.is-loading #header.alt .logo {
 .swal2-select {
     border-color: #935d8c;
 }
+
+.swal2-div-info {
+    text-align: left;
+    position: relative;
+    float: none;
+    margin: 0;
+    padding: 0;
+    line-height: normal;
+    color: #545454;
+    word-wrap: break-word;
+}
+.swal2-label-info {
+    font-size: 18px;
+    font-weight: 300;
+}
+
+.swal2-text-info {
+    font-size: 14px;
+    font-weight: 200;
+}
+
+.swal2-modal .swal2-close {
+    min-width: 0;
+    color: #ccc !important;
+}
