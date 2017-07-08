@@ -97,12 +97,17 @@
     function UploadFile() {
         var html = '<input type="checkbox" id="is-public"><span> @Localizer["PUBLIC"]</span><br/>';
         if (groups != null && groups.length > 0) {
-            html += '<br/>@Localizer["GROUPS"]<select id="id-group" class="swal2-select">' +
+            html += '<div class="form-group">' +
+                '<label for="id-group" class="col-sm-3 control-label" style="color: #222 !important; top: 28px;">@Localizer["GROUP"]</label>' +
+                '<div class="col-sm-9">' +
+                '<select id="id-group" class="form-control swal2-select">' +
                 '<option value= "0"></option>';
             for (var i in groups) {
                 html += '<option value= "' + groups[i].id + '">' + groups[i].name + '</option>';
             }
-            html += '</select>'
+            html += '</select>' +
+                '</div>' +
+                '</div>';
         }
 
         swal.setDefaults({
@@ -207,7 +212,7 @@ function OpenFileDetails(idFile) {
         success: function (file) {
             var html = '<input id="filename" class="swal2-input" type="text" value="' + file.filename + '"/><br/>';
             if (file.contentType.indexOf("image") !== -1) {
-                html += '<img src="data:' + file.contentType + ';base64,' + file.content + '"/><br/><br/>';
+                html += '<img src="data:' + file.contentType + ';base64,' + file.content + '" style="max-width: 400px;"/><br/><br/>';
             }
 
             html += '<div class="swal2-div-info"><span class="swal2-label-info">@Localizer["SIZE"]:</span> <span class="swal2-text-info">' + file.contentSize + 'KB</span><br/>' +
@@ -220,16 +225,21 @@ function OpenFileDetails(idFile) {
                 html += '<input type="checkbox" id="is-public"><span> @Localizer["PUBLIC"]</span><br/>';
             }
             if (groups != null && groups.length > 0) {
-                    html += '@Localizer["GROUPS"]<select id="id-group" class="swal2-select">' +
+                html += '<div class="form-group">' +
+                    '<label for="id-group" class="col-sm-3 control-label" style="color: #222 !important; top: 28px;">@Localizer["GROUP"]</label>' +
+                    '<div class="col-sm-9">' +
+                    '<select id="id-group" class="form-control swal2-select">' +
                     '<option value= "0"></option>';
-                    for (var i in groups) {
-                        if (groups[i].id === file.idGroup) {
-                            html += '<option value= "' + groups[i].id + '" selected>' + groups[i].name + '</option>';
-                        } else {
-                            html += '<option value= "' + groups[i].id + '">' + groups[i].name + '</option>';
-                        }
+                for (var i in groups) {
+                    if (groups[i].id === file.idGroup) {
+                        html += '<option value= "' + groups[i].id + '" selected>' + groups[i].name + '</option>';
+                    } else {
+                        html += '<option value= "' + groups[i].id + '">' + groups[i].name + '</option>';
                     }
-                    html += '</select>'
+                }
+                html += '</select>' +
+                    '</div>' +
+                    '</div>';
             }
             html += '<a href="/Home/DownloadFile/' + file.id + '">@Localizer["DOWNLOAD"]</a>'
 

@@ -12,12 +12,12 @@ namespace FileSharingWeb.Controllers
 {
     public class HomeController : BaseController
     {
-        readonly ILogger _logger;
+        readonly ILogger<HomeController> _logger;
         readonly IStringLocalizer _localizer;
 
-        public HomeController(ILoggerFactory loggerFactory, IStringLocalizerFactory factory)
+        public HomeController(ILogger<HomeController> logger, IStringLocalizerFactory factory)
         {
-            _logger = loggerFactory.CreateLogger<PublicController>();
+            _logger = logger;
             var type = typeof(Resources);
             _localizer = factory.Create(type);
         }
@@ -48,8 +48,8 @@ namespace FileSharingWeb.Controllers
             }
             catch (FileSharingException e)
             {
+                _logger.LogError(e.Message);
                 ViewBag.ErrorMessage = _localizer[e.Code];
-                _logger.LogError(2, e.Message);
             }
             return View(result);
         }
@@ -67,7 +67,7 @@ namespace FileSharingWeb.Controllers
             }
             catch (FileSharingException e)
             {
-                _logger.LogError(2, e.Message);
+                _logger.LogError(e.Message);
             }
             return RedirectToAction("Index", "Public");
         }
@@ -92,8 +92,8 @@ namespace FileSharingWeb.Controllers
             }
             catch (FileSharingException e)
             {
+                _logger.LogError(e.Message);
                 ErrorMessage = _localizer[e.Code];
-                _logger.LogError(2, e.Message);
             }
             return Json(Url.Action("Index", "Home", new { id = idFolder, ErrorMessage = ErrorMessage }));
         }
@@ -114,8 +114,8 @@ namespace FileSharingWeb.Controllers
             }
             catch (FileSharingException e)
             {
+                _logger.LogError(e.Message);
                 ErrorMessage = _localizer[e.Code];
-                _logger.LogError(2, e.Message);
             }
             return Json(Url.Action("Index", "Home", new { id = idFolder, ErrorMessage = ErrorMessage }));
         }
@@ -156,8 +156,8 @@ namespace FileSharingWeb.Controllers
             }
             catch (FileSharingException e)
             {
+                _logger.LogError(e.Message);
                 ErrorMessage = _localizer[e.Code];
-                _logger.LogError(2, e.Message);
             }
             return Json(Url.Action("Index", "Home", new { id = id, ErrorMessage = ErrorMessage }));
         }
@@ -182,8 +182,8 @@ namespace FileSharingWeb.Controllers
             }
             catch (FileSharingException e)
             {
+                _logger.LogError(e.Message);
                 ErrorMessage = _localizer[e.Code];
-                _logger.LogError(2, e.Message);
             }
             return Json(Url.Action("Index", "Home", new { id = file.IdFolder, ErrorMessage = ErrorMessage }));
         }
@@ -199,8 +199,8 @@ namespace FileSharingWeb.Controllers
             }
             catch (FileSharingException e)
             {
+                _logger.LogError(e.Message);
                 ErrorMessage = _localizer[e.Code];
-                _logger.LogError(2, e.Message);
             }
             return Json(Url.Action("Index", "Home", new { id = idFolder, ErrorMessage = ErrorMessage }));
         }
@@ -215,7 +215,7 @@ namespace FileSharingWeb.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(2, e.Message);
+                _logger.LogError(e.Message);
             }
             return Json(result);
         }
@@ -230,7 +230,7 @@ namespace FileSharingWeb.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(2, e.Message);
+                _logger.LogError(e.Message);
             }
             return Json(result);
         }
@@ -245,7 +245,7 @@ namespace FileSharingWeb.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(2, e.Message);
+                _logger.LogError(e.Message);
             }
             return File(result.Content, result.ContentType, result.Filename);
         }

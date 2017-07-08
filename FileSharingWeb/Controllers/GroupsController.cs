@@ -1,6 +1,5 @@
 ﻿using FileSharing.Services.Dtos;
 using FileSharing.Services.Exceptions;
-using FileSharingWeb.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -11,12 +10,12 @@ namespace FileSharingWeb.Controllers
 {
     public class GroupsController : BaseController
     {
-        readonly ILogger _logger;
+        readonly ILogger<GroupsController> _logger;
         readonly IStringLocalizer _localizer;
 
-        public GroupsController(ILoggerFactory loggerFactory, IStringLocalizerFactory factory)
+        public GroupsController(ILogger<GroupsController> logger, IStringLocalizerFactory factory)
         {
-            _logger = loggerFactory.CreateLogger<PublicController>();
+            _logger = logger;
             var type = typeof(Resources);
             _localizer = factory.Create(type);
         }
@@ -31,8 +30,8 @@ namespace FileSharingWeb.Controllers
             }
             catch (Exception e)
             {
+                _logger.LogError(e.Message);
                 //TODO Mostrar error
-                _logger.LogError(2, e.Message);
             }
             return View(result);
         }
@@ -46,7 +45,7 @@ namespace FileSharingWeb.Controllers
             }
             catch (FileSharingException e)
             {
-                _logger.LogError(2, e.Message);
+                _logger.LogError(e.Message);
             }
             return Json(Url.Action("Index", "Groups"));
         }
@@ -62,7 +61,7 @@ namespace FileSharingWeb.Controllers
             }
             catch (FileSharingException e)
             {
-                _logger.LogError(2, e.Message);
+                _logger.LogError(e.Message);
                 return View();
             }
             return View(result);
@@ -77,7 +76,7 @@ namespace FileSharingWeb.Controllers
             }
             catch (FileSharingException e)
             {
-                _logger.LogError(2, e.Message);
+                _logger.LogError(e.Message);
                 return View();
             }
             return RedirectToAction("Index", "Groups");

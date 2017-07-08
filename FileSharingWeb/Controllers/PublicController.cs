@@ -10,12 +10,12 @@ namespace FileSharingWeb.Controllers
 {
     public class PublicController : BaseController
     {
-		readonly ILogger _logger;
+		readonly ILogger<PublicController> _logger;
         readonly IStringLocalizer _localizer;
 
-        public PublicController(ILoggerFactory loggerFactory, IStringLocalizerFactory factory)
+        public PublicController(ILogger<PublicController> logger, IStringLocalizerFactory factory)
 		{
-			_logger = loggerFactory.CreateLogger<PublicController>();
+			_logger = logger;
             var type = typeof(Resources);
             _localizer = factory.Create(type);
         }
@@ -53,9 +53,9 @@ namespace FileSharingWeb.Controllers
                     return RedirectToAction("Index", "Home");
 				}
 				catch (FileSharingException e)
-				{
-					AddErrors(e.Code);
-					_logger.LogError(2, e.Message);
+                {
+                    _logger.LogError(e.Message);
+                    AddErrors(e.Code);
 				}
 			}
 			return View(model);
@@ -92,9 +92,9 @@ namespace FileSharingWeb.Controllers
 					}
 				}
 				catch (FileSharingException e)
-				{
-					AddErrors(e.Code);
-					_logger.LogError(1, e.Message);
+                {
+                    _logger.LogError(e.Message);
+                    AddErrors(e.Code);
 				}
 			}
 			return View(model);

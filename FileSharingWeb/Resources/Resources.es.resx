@@ -273,4 +273,7 @@
   <data name="SIZE" xml:space="preserve">
     <value>Tamaño</value>
   </data>
+  <data name="GROUP" xml:space="preserve">
+    <value>Grupo</value>
+  </data>
 </root>
