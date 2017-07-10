@@ -276,4 +276,7 @@
   <data name="GROUP" xml:space="preserve">
     <value>Grupo</value>
   </data>
+  <data name="DOWNLOAD" xml:space="preserve">
+    <value>Descargar</value>
+  </data>
 </root>

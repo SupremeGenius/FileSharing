@@ -69,3 +69,32 @@
     </table>
 </div>
 <div style="clear:both"></div>
+
+<script>
+    function OpenFileDetails(idFile) {
+        $.ajax({
+            url: '/Home/GetFile/' + idFile,
+            type: 'GET',
+            cache: false,
+            success: function (file) {
+                var html = '';
+                if (file.contentType.indexOf("image") !== -1) {
+                    html += '<img src="data:' + file.contentType + ';base64,' + file.content + '" style="max-width: 400px;"/><br/><br/>';
+                }
+
+                html += '<div class="swal2-div-info"><span class="swal2-label-info">@Localizer["SIZE"]:</span> <span class="swal2-text-info">' + file.contentSize + 'KB</span><br/>' +
+                    '<span class="swal2-label-info">@Localizer["CREATION_DATE"]:</span> <span class="swal2-text-info">' + formatDate(new Date(file.creationDate)) + '</span><br/>' +
+                    '<span class="swal2-label-info">@Localizer["MODIFICATION_DATE"]:</span> <span class="swal2-text-info">' + formatDate(new Date(file.modificationDate)) + '</span></div><br/>';
+                                
+                html += '<a href="/Home/DownloadFile/' + file.id + '">@Localizer["DOWNLOAD"]</a>'
+
+                swal({
+                    title: file.filename,
+                    html: html,
+                    showCloseButton: true,
+                    showConfirmButton: false
+                });
+            }
+        });
+    }
+</script>

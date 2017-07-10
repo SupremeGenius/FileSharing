@@ -65,14 +65,15 @@
     var groups = {};
     $(document).ready(function () {
         $.ajax({
-            url: '/Home/GetGroups',
+            url: '/Groups/GetGroups',
             type: 'GET',
-            async: false,
+            cache: false,
             success: function (result) {
                 groups = result;
             }
         });
     });
+
     function CreateFolder() {
         swal({
             title: "",
@@ -208,9 +209,9 @@ function OpenFileDetails(idFile) {
     $.ajax({
         url: '/Home/GetFile/' + idFile,
         type: 'GET',
-        async: false,
+        cache: false,
         success: function (file) {
-            var html = '<input id="filename" class="swal2-input" type="text" value="' + file.filename + '"/><br/>';
+            var html = '<input id="filename" class="swal2-input" type="text" value="' + file.filename + '"/>';
             if (file.contentType.indexOf("image") !== -1) {
                 html += '<img src="data:' + file.contentType + ';base64,' + file.content + '" style="max-width: 400px;"/><br/><br/>';
             }
@@ -241,17 +242,14 @@ function OpenFileDetails(idFile) {
                     '</div>' +
                     '</div>';
             }
-            html += '<a href="/Home/DownloadFile/' + file.id + '">@Localizer["DOWNLOAD"]</a>'
+            html += '<a href="/Home/DownloadFile/' + file.id + '">@Localizer["DOWNLOAD"]</a> | <a href="/Home/DeleteFile/' + file.id + '">@Localizer["DELETE"]</a>'
 
             swal({
                 html: html,
-                showCloseButton: true,
                 showCancelButton: true,
                 confirmButtonColor: '#935d8c',
                 confirmButtonText: "@Localizer["CONTINUE"]",
-                cancelButtonColor: '#d33',
-                cancelButtonText: "@Localizer["DELETE"]",
-                allowOutsideClick: false,
+                cancelButtonText: "@Localizer["CANCEL"]",
                 preConfirm: function () {
                     return new Promise(function (resolve) {
                         resolve([
@@ -266,15 +264,6 @@ function OpenFileDetails(idFile) {
                     url: '/Home/UpdateFile/',
                     type: 'POST',
                     data: { id: idFile, filename: result[0], isPublic: result[1], idGroup: result[2] },
-                    async: false,
-                    success: function (result) {
-                        window.location.href = result;
-                    }
-                });
-            }, function () {
-                $.ajax({
-                    url: '/Home/DeleteFile/' + idFile,
-                    type: 'DELETE',
                     async: false,
                     success: function (result) {
                         window.location.href = result;

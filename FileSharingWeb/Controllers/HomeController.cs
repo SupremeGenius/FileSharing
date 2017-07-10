@@ -188,7 +188,7 @@ namespace FileSharingWeb.Controllers
             return Json(Url.Action("Index", "Home", new { id = file.IdFolder, ErrorMessage = ErrorMessage }));
         }
 
-        [HttpDelete]
+        [HttpGet]
         public IActionResult DeleteFile(long id)
         {
             string ErrorMessage = null;
@@ -202,22 +202,7 @@ namespace FileSharingWeb.Controllers
                 _logger.LogError(e.Message);
                 ErrorMessage = _localizer[e.Code];
             }
-            return Json(Url.Action("Index", "Home", new { id = idFolder, ErrorMessage = ErrorMessage }));
-        }
-
-        [HttpGet]
-        public IActionResult GetGroups()
-        {
-            List<GroupDetailsDto> result = new List<GroupDetailsDto>();
-            try
-            {
-                result = Services.Group.GetGroupsOfUser(SecurityToken);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-            }
-            return Json(result);
+            return RedirectToAction("Index", "Home", new { id = idFolder, ErrorMessage = ErrorMessage });
         }
 
         [HttpGet]

@@ -81,5 +81,20 @@ namespace FileSharingWeb.Controllers
             }
             return RedirectToAction("Index", "Groups");
         }
+
+        [HttpGet]
+        public IActionResult GetGroups()
+        {
+            List<GroupDetailsDto> result = new List<GroupDetailsDto>();
+            try
+            {
+                result = Services.Group.GetGroupsOfUser(SecurityToken);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+            }
+            return Json(result);
+        }
     }
 }
