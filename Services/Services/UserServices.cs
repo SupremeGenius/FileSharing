@@ -12,7 +12,7 @@ namespace FileSharing.Services
 	{
 		public UserServices() : base(new UserDao()) { }
 
-		public long Register(UserDto user)
+		public string Register(UserDto user)
 		{
 			try
 			{
@@ -26,8 +26,9 @@ namespace FileSharing.Services
 
 				Audit(userDom.Id, userDom.Id.ToString(), typeof(User).Name, ActionDto.Create, "User registered: " + userDom);
 
-				return userDom.Id;
-			}
+                using (var _sessionServices = new SessionServices())
+                    return _sessionServices.Create(userDom.Id);
+            }
 			catch (FileSharingException)
 			{
 				throw;

@@ -83,19 +83,21 @@ namespace FileSharingWeb.Controllers
 					Password = model.Password
                 };
 
-				try
-				{
-					long result = Services.User.Register(user);
-					if (result > 0)
-					{
-						return Redirect("Login");
-					}
-				}
-				catch (FileSharingException e)
+                try
+                {
+                    var securityToken = Services.User.Register(user);
+                    if (!string.IsNullOrWhiteSpace(securityToken))
+                    {
+                        Response.Cookies.Append("SecurityToken", securityToken);
+                        Response.Cookies.Append("FirstName", user.FirstName);
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                catch (FileSharingException e)
                 {
                     _logger.LogError(e.Message);
                     AddErrors(e.Code);
-				}
+                }
 			}
 			return View(model);
 		}
