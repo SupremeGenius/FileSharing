@@ -6,7 +6,7 @@
 [Bb]in/
 packages/
 lib/
-wwwroot/*.min.*
+*.min.*
 TestResults/
 
 # globs

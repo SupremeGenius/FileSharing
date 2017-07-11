@@ -12,7 +12,7 @@ namespace FileSharing.Services
 	{
 		public FileServices() : base(new FileDao()) { }
 
-		public long Create(string securityToken, FileDto file)
+		public long Create(string securityToken, FileDto file, byte[] content)
 		{
 			try
 			{
@@ -30,7 +30,7 @@ namespace FileSharing.Services
                 string filePath = GetFilePath(securityToken, fileDom);
 
 
-                System.IO.File.WriteAllBytes(filePath, file.Content);
+                System.IO.File.WriteAllBytes(filePath, content);
 				
 				fileDom = _dao.Create(fileDom);
                 Audit(session.IdUser, fileDom.Id.ToString(), typeof(File).Name, ActionDto.Create, "File uploaded: " + fileDom);
@@ -54,30 +54,10 @@ namespace FileSharing.Services
 				var fileDom = _dao.Read(idFile);
 				if (fileDom == null) return null;
 
-				if (fileDom.IdUser != session.IdUser && !fileDom.IsPublic)
-				{
-					UserGroupDto userGroup = null;
-					if (fileDom.IdGroup.HasValue)
-					{
-						using (var userGroupServices = new UserGroupServices())
-						{
-							userGroup = userGroupServices.Read(securityToken, session.IdUser, fileDom.IdGroup.Value);
-						}
-					}
-					if (userGroup == null)
-						throw new FileSharingException(FileSharingException.UNAUTHORIZED,
-														   "You do not have permissions to read this file");
-				}
-
-				string filePath = GetFilePath(securityToken, fileDom);
-
-				if (!System.IO.File.Exists(filePath))
-					throw new FileSharingException(FileSharingException.FILE_NOT_FOUND,
-													   "The file does not exist in the repository");
+                CheckAuthorizationToFile(session, fileDom);
 
 				var file = Mapper.Map<FileDto>(fileDom);
-				file.Content = System.IO.File.ReadAllBytes(filePath);
-                file.ContentSize = file.Content.Length/1024;
+                file.ContentSize = GetFileContent(securityToken, fileDom).Length/1024;
 
 				return file;
 			}
@@ -113,9 +93,7 @@ namespace FileSharing.Services
                 if (oldFilePath != newFilePath)
                 {
                     if (System.IO.File.Exists(oldFilePath))
-                        System.IO.File.Delete(oldFilePath);
-
-                    System.IO.File.WriteAllBytes(newFilePath, file.Content);
+                        System.IO.File.Move(oldFilePath, newFilePath);
                 }
                 
 				_dao.Update(fileDom);
@@ -195,15 +173,53 @@ namespace FileSharing.Services
             }
         }
 
-		#region Private methods
+        public byte[] GetFileContent(string securityToken, long idFile)
+        {
+            var session = CheckSession(securityToken);
+            var fileDom = _dao.Read(idFile);
+            if (fileDom == null) return null;
 
-		string GetFilePath(string securityToken, File file)
+            return GetFileContent(securityToken, fileDom);
+        }
+
+        #region Private methods
+
+        string GetFilePath(string securityToken, File file)
 		{
 			using (var folderServices = new FolderServices())
 			{
 				return folderServices.GetFullPath(securityToken, file.IdFolder) + file.Filename;
 			}
 		}
+
+        void CheckAuthorizationToFile(SessionDto session, File file)
+        {
+            if (file.IdUser != session.IdUser && !file.IsPublic)
+            {
+                UserGroupDto userGroup = null;
+                if (file.IdGroup.HasValue)
+                {
+                    using (var userGroupServices = new UserGroupServices())
+                    {
+                        userGroup = userGroupServices.Read(session.SecurityToken, session.IdUser, file.IdGroup.Value);
+                    }
+                }
+                if (userGroup == null)
+                    throw new FileSharingException(FileSharingException.UNAUTHORIZED,
+                                                       "You do not have permissions to read this file");
+            }
+        }
+
+        byte[] GetFileContent(string securityToken, File file)
+        {
+            string filePath = GetFilePath(securityToken, file);
+
+            if (!System.IO.File.Exists(filePath))
+                throw new FileSharingException(FileSharingException.FILE_NOT_FOUND,
+                                                   "The file does not exist in the repository");
+
+            return System.IO.File.ReadAllBytes(filePath);
+        }
 
 		#endregion
 	}

@@ -145,13 +145,14 @@ namespace FileSharingWeb.Controllers
                         file.IdGroup = idGroup;
                     }
 
+                    byte[] content;
                     using (var fileStream = uploadFile.OpenReadStream())
                     using (var ms = new MemoryStream())
                     {
                         fileStream.CopyTo(ms);
-                        file.Content = ms.ToArray();
+                        content = ms.ToArray();
                     }
-                    Services.File.Create(SecurityToken, file);
+                    Services.File.Create(SecurityToken, file, content);
                 }
             }
             catch (FileSharingException e)
@@ -221,18 +222,35 @@ namespace FileSharingWeb.Controllers
         }
 
         [HttpGet]
-        public FileResult DownloadFile(long id)
+        public IActionResult GetFileContent(long id)
         {
-            FileDto result = null;
+            byte[] content = null;
             try
             {
-                result = Services.File.Read(SecurityToken, id);
+                content = Services.File.GetFileContent(SecurityToken, id);
             }
             catch (Exception e)
             {
                 _logger.LogError(e.Message);
             }
-            return File(result.Content, result.ContentType, result.Filename);
+            return Json(content);
+        }
+
+        [HttpGet]
+        public FileResult DownloadFile(long id)
+        {
+            FileDto result = null;
+            byte[] content = null;
+            try
+            {
+                result = Services.File.Read(SecurityToken, id);
+                content = Services.File.GetFileContent(SecurityToken, id);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+            }
+            return File(content, result.ContentType, result.Filename);
         }
     }
 }
