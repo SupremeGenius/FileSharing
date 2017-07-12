@@ -9,7 +9,7 @@ namespace FileSharing.Persistence.Models
 		public DateTime? DateInclusionApproval { get; set; }
 
 		public virtual Group Group { get; set; }
-		public virtual User IdUserNavigation { get; set; }
+		public virtual User User { get; set; }
 
         public override string ToString()
         {

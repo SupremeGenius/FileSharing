@@ -2240,3 +2240,27 @@ body.is-loading #header.alt .logo {
 .swal2-content a:hover {
     color: #935d8c;
 }
+
+.groups-search-select {
+    width: 70%;
+    border-color: #935d8c;
+}
+
+.select2-selection__rendered {
+    text-align: left;
+}
+
+.select2-search__field {
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: 18px;
+    border-radius: 3px;
+    border: 1px solid #d9d9d9;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .06);
+    box-shadow: inset 0px 1px 1px rgba(0,0,0,0.06);
+    -webkit-transition: border-color box-shadow .3s;
+    transition: border-color box-shadow .3s;
+    color: #222 !important;
+    vertical-align: middle;
+}

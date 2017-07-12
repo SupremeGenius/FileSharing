@@ -2,6 +2,7 @@
 using FileSharing.Persistence.Models;
 using FileSharing.Services.Dtos;
 using FileSharing.Services.Filters;
+using System.Linq;
 
 namespace FileSharing.Services.Mapping
 {
@@ -22,8 +23,11 @@ namespace FileSharing.Services.Mapping
 				cfg.CreateMap<Session, SessionDto>().ReverseMap();
 
 				cfg.CreateMap<Group, GroupDto>().ReverseMap();
-                cfg.CreateMap<Group, GroupDetailsDto>();
-                cfg.CreateMap<Group, GroupDetailsExtendedDto>();
+                cfg.CreateMap<Group, GroupDetailsDto>()
+                    .ForMember(dest => dest.NumOfFiles, opt => opt.MapFrom(src => src.Files.Count))
+                    .ForMember(dest => dest.NumOfMembers, opt => opt.MapFrom(src => src.Users.Count));
+                cfg.CreateMap<Group, GroupDetailsExtendedDto>()
+                    .ForMember(dest => dest.Members, opt => opt.MapFrom(src => src.Users.Select(x => x.User)));
 
                 cfg.CreateMap<UserGroup, UserGroupDto>().ReverseMap();
 

@@ -8,7 +8,8 @@
     "jquery-validation-unobtrusive": "3.2.6",
     "font-awesome": "Font-Awesome#v4.7.0",
     "sweetalert2": "v6.6.5",
-    "core.js": "v2.4.1"
+    "core.js": "v2.4.1",
+    "select2": "4.0.3"
   },
   "resolutions": {
     "jquery-validation": "1.16.0",

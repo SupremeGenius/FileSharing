@@ -247,7 +247,7 @@
     <value>Debe seleccionar la carpeta que desea eliminar</value>
   </data>
   <data name="SELECT_FILE" xml:space="preserve">
-    <value>Elija el fichero que desea subir</value>
+    <value>Elija el archivo que desea subir</value>
   </data>
   <data name="FILE_MUST_BE_SELETED" xml:space="preserve">
     <value>Debe seleccionar el archivo que desea subir</value>
@@ -278,5 +278,11 @@
   </data>
   <data name="DOWNLOAD" xml:space="preserve">
     <value>Descargar</value>
+  </data>
+  <data name="NUM_FILES" xml:space="preserve">
+    <value>Número de  archivos</value>
+  </data>
+  <data name="SEARCH" xml:space="preserve">
+    <value>Buscar</value>
   </data>
 </root>

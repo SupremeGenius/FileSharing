@@ -19,7 +19,7 @@ namespace FileSharing.Services
 			try
 			{
 				var session = CheckSession(securityToken);
-				var similarName = _dao.QueryByName(name);
+				var similarName = _dao.QueryByName(name,0 ,0);
 				if (similarName.Count > 0 &&
 					similarName.Find(g => g.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)) != null)
 					throw new FileSharingException(FileSharingException.GROUP_NAME_ALREADY_IN_USE,
@@ -87,7 +87,7 @@ namespace FileSharing.Services
 					throw new FileSharingException(FileSharingException.UNAUTHORIZED,
 					                                   "You do not have permissions to update this group");
 				
-				var similarName = _dao.QueryByName(groupDto.Name);
+				var similarName = _dao.QueryByName(groupDto.Name, 0, 0);
 				if (similarName.Count > 0 &&
 				    similarName.Find(g => g.Name.Equals(groupDto.Name, StringComparison.CurrentCultureIgnoreCase)) != null)
 					throw new FileSharingException(FileSharingException.GROUP_NAME_ALREADY_IN_USE,
@@ -155,23 +155,12 @@ namespace FileSharing.Services
             try
             {
                 var session = CheckSession(securityToken);
-                List<GroupDetailsDto> result = new List<GroupDetailsDto>();
-                using (var userGroupService = new UserGroupServices())
-                {
-                    var userGroups = userGroupService.Query(securityToken, new UserGroupFilter
-                    {
-                        IdUser = session.IdUser,
-                        DateInclusionApprovalTo = DateTime.Now
-                    });
-                    if (userGroups == null || userGroups.Count == 0) return result;
+                var groups = _dao.GetByUser(session.IdUser);
+                List<GroupDetailsDto> result = Mapper.Map<List<GroupDetailsDto>>(groups);
 
-                    foreach (var group in userGroups.Select(x => _dao.Read(x.IdGroup)))
-                    {
-                        var groupDetails = Mapper.Map<GroupDetailsDto>(group);
-                        groupDetails.IsAdministrable = group.IdAdmin == session.IdUser;
-                        groupDetails.NumOfMembers = userGroupService.NumOfMembersOfAGroup(securityToken, group.Id);
-                        result.Add(groupDetails);
-                    }
+                for(var i = 0; i < groups.Count; i++)
+                {
+                    result[i].IsAdministrable = groups[i].IdAdmin == session.IdUser;
                 }
                 return result;
             }
@@ -190,16 +179,30 @@ namespace FileSharing.Services
             try
             {
                 var session = CheckSession(securityToken);
-                var group = _dao.Read(idGroup);
+                var group = _dao.ReadFullGroup(idGroup);
                 var result = Mapper.Map<GroupDetailsExtendedDto>(group);
                 result.IsAdministrable = group.IdAdmin == session.IdUser;
 
-                using (var userGroupService = new UserGroupServices())
-                using (var fileService = new FileServices())
-                {
-                    result.Members = userGroupService.GetUsersOfGroup(securityToken, result.Id);
-                    result.Files = fileService.GetFilesByGroup(securityToken, result.Id);
-                }
+                return result;
+            }
+            catch (FileSharingException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
+            }
+        }
+
+        public List<GroupDetailsDto> QueryByName(string securityToken, string name, int rowQty, int page)
+        {
+            try
+            {
+                var session = CheckSession(securityToken);
+                var group = _dao.QueryByName(idGroup);
+                var result = Mapper.Map<GroupDetailsExtendedDto>(group);
+                result.IsAdministrable = group.IdAdmin == session.IdUser;
 
                 return result;
             }

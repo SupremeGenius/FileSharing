@@ -96,5 +96,26 @@ namespace FileSharingWeb.Controllers
             }
             return Json(result);
         }
+
+        [HttpGet]
+        public IActionResult Search()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Query(string name, int rowQty, int page)
+        {
+            List<GroupDetailsDto> result = new List<GroupDetailsDto>();
+            try
+            {
+                result = Services.Group.GetGroupsOfUser(SecurityToken);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+            }
+            return Json(result);
+        }
     }
 }

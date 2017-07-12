@@ -130,67 +130,12 @@ namespace FileSharing.Services
 			}
         }
 
-        public List<UserDto> GetUsersOfGroup(string securityToken, long idGroup)
-        {
-            try
-            {
-                var session = CheckSession(securityToken);
-                List<UserDto> result = new List<UserDto>();
-                using (var userService = new UserServices())
-                {
-                    var userGroups = _dao.Query(new UserGroupFilter
-                    {
-                        IdGroup = idGroup,
-                        DateInclusionApprovalTo = DateTime.Now
-                    });
-                    foreach (var user in 
-                        userGroups.Where(x => x.DateInclusionApproval.HasValue).Select(x => userService.Read(securityToken, x.IdUser)))
-                    {
-                        result.Add(user);
-                    }
-                }
-                return result;
-            }
-            catch (FileSharingException)
-            {
-                throw;
-            }
-            catch (Exception e)
-            {
-                throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
-            }
-        }
-
         public List<UserGroupDto> Query(string securityToken, UserGroupFilter filter)
         {
             try
             {
                 var session = CheckSession(securityToken);
                 return Mapper.Map<List<UserGroupDto>>(_dao.Query(filter));
-            }
-            catch (FileSharingException)
-            {
-                throw;
-            }
-            catch (Exception e)
-            {
-                throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
-            }
-        }
-
-        public int NumOfMembersOfAGroup(string securityToken, long idGroup)
-        {
-            try
-            {
-                var session = CheckSession(securityToken);
-                var userGroups = _dao.Query(new UserGroupFilter
-                {
-                    IdUser = session.IdUser,
-                    IdGroup = idGroup,
-                    DateInclusionApprovalTo = DateTime.Now
-                });
-                if (userGroups == null) return 0;
-                return userGroups.Where(x => x.DateInclusionApproval.HasValue).ToList().Count;
             }
             catch (FileSharingException)
             {

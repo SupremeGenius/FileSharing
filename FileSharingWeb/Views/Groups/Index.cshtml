@@ -19,6 +19,7 @@
                 <thead>
                     <tr>
                         <th>@Localizer["NAME"].Value.ToUpper()</th>
+                        <th>@Localizer["NUM_FILES"].Value.ToUpper()</th>
                         <th>@Localizer["NUM_MEMBERS"].Value.ToUpper()</th>
                         <th>@Localizer["ADMINISTRABLE"].Value.ToUpper()</th>
                     </tr>
@@ -28,6 +29,7 @@
                     {
                         <tr onclick="OpenGroupDetails('@group.Id')">
                             <td>@group.Name</td>
+                            <td>@group.NumOfFiles</td>
                             <td>@group.NumOfMembers</td>
                             @if (@group.IsAdministrable)
                             {

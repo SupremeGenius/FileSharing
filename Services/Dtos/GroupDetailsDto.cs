@@ -5,6 +5,7 @@
         public long Id { get; set; }
         public string Name { get; set; }
         public int NumOfMembers { get; set; }
+        public int NumOfFiles { get; set; }
         public bool IsAdministrable { get; set; }
     }
 }

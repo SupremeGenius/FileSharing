@@ -166,7 +166,7 @@ namespace FileSharing.Persistence.Models
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_UserGroup_Group");
 
-                entity.HasOne(d => d.IdUserNavigation)
+                entity.HasOne(d => d.User)
                     .WithMany(p => p.Groups)
                     .HasForeignKey(d => d.IdUser)
                     .OnDelete(DeleteBehavior.Cascade)
