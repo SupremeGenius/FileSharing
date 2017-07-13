@@ -109,7 +109,7 @@ namespace FileSharingWeb.Controllers
             List<GroupDetailsDto> result = new List<GroupDetailsDto>();
             try
             {
-                result = Services.Group.GetGroupsOfUser(SecurityToken);
+                result = Services.Group.QueryByName(SecurityToken, name, rowQty, page);
             }
             catch (Exception e)
             {

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NLog.Extensions.Logging;
 using NLog.Web;
+using Microsoft.AspNetCore.Http;
 
 namespace FileSharingWeb
 {
@@ -23,6 +24,7 @@ namespace FileSharingWeb
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+
             env.ConfigureNLog("nlog.config");
         }
 
@@ -51,6 +53,8 @@ namespace FileSharingWeb
                     // UI strings that we have localized.
                     opts.SupportedUICultures = supportedCultures;
                 });
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

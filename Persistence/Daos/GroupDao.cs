@@ -9,7 +9,10 @@ namespace FileSharing.Persistence.Daos
 	{
 		public List<Group> QueryByName(string name, int rowQty, int page)
 		{
-            var query = _dbSet.Where(g => g.Name.Contains(name));
+            var query = _dbSet
+                .Include(g => g.Files)
+                .Include(g => g.Users)
+                .Where(g => g.Name.Contains(name));
             if (rowQty > 0)
             {
                 query = query.Skip(page * rowQty).Take(rowQty);

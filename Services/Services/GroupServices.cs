@@ -200,11 +200,8 @@ namespace FileSharing.Services
             try
             {
                 var session = CheckSession(securityToken);
-                var group = _dao.QueryByName(idGroup);
-                var result = Mapper.Map<GroupDetailsExtendedDto>(group);
-                result.IsAdministrable = group.IdAdmin == session.IdUser;
-
-                return result;
+                var groups = _dao.QueryByName(name, rowQty, page);
+                return Mapper.Map<List<GroupDetailsDto>>(groups);
             }
             catch (FileSharingException)
             {
