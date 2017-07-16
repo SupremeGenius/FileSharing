@@ -30,6 +30,7 @@ namespace FileSharing.Services.Exceptions
 
 		public const string GROUP_NAME_ALREADY_IN_USE = "GROUP_NAME_ALREADY_IN_USE";
 		public const string GROUP_NOT_FOUND = "GROUP_NOT_FOUND";
+        public const string CANNOT_DELETE_GROUP_WITH_MEMBERS = "CANNOT_DELETE_GROUP_WITH_MEMBERS";
 
 		#endregion
 
@@ -46,11 +47,12 @@ namespace FileSharing.Services.Exceptions
 		public const string INVALID_CREDENTIALS = "INVALID_CREDENTIALS";
 		public const string USER_CANNOT_BE_REMOVED = "USER_CANNOT_BE_REMOVED";
 
-		#endregion
+        #endregion
 
-		#region UserGroup
+        #region UserGroup
 
-		public const string USER_GROUP_ALREADY_EXISTS = "USER_GROUP_ALREADY_EXISTS";
+        public const string USER_GROUP_ALREADY_REQUESTED = "USER_GROUP_ALREADY_REQUESTED";
+        public const string USER_GROUP_ALREADY_MEMBER = "USER_GROUP_ALREADY_MEMBER";
 
 		#endregion
 

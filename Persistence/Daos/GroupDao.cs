@@ -29,7 +29,7 @@ namespace FileSharing.Persistence.Daos
         {
             return _dbSet
                 .Include(g => g.Files)
-                .Include(g => g.Users)
+                .Include(g => g.Users).ThenInclude(g => g.User)
                 .Include(g => g.Admin)
                 .Where(g => g.Id == idGroup).FirstOrDefault();
         }
@@ -38,7 +38,7 @@ namespace FileSharing.Persistence.Daos
         {
             return (from g in _dbSet
                     join ug in _context.UserGroup on g.Id equals ug.IdGroup
-                    where ug.IdUser == idUser
+                    where ug.IdUser == idUser && ug.DateInclusionApproval.HasValue
                     select g)
                     .Include(g => g.Files)
                     .Include(g => g.Users)

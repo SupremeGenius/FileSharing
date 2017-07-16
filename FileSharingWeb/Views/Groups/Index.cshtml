@@ -6,13 +6,27 @@
     ViewData["Title"] = Localizer["GROUPS"];
     ViewData["Options"] = new[]
     {
-        "Groups,Search,SEARCH_GROUPS",
-        "CreateGroup(),CREATE_GROUP"
+        "CreateGroup(),CREATE_GROUP",
+        "SendGroupRequest(),REQUEST_UNION"
     };
 }
 
+<div class="text-center">
+    <select class="groups-search-select form-group">
+        <option value="0" selected="selected">@Localizer["SEARCH"]</option>
+    </select>
+    <div class="group-information">
+        <div class="text-center">
+            <div id="group-name"><h3></h3></div>
+            <div id="num-files"></div>
+            <div id="num-members"></div>
+        </div>
+    </div>
+</div>
+
 @if (Model != null && Model.Count > 0)
 {
+    <br/><br/>
     <div class="groups">
         <div class="table-responsive">
             <table class="table table-hover">
@@ -48,6 +62,7 @@
 }
 
 <script>
+    var selectedGroup = null;
     function CreateGroup() {
         swal({
             title: "",
@@ -58,14 +73,110 @@
             confirmButtonText: "@Localizer["CONTINUE"]",
             cancelButtonText: "@Localizer["CANCEL"]"
         }).then(function (groupName) {
-            $.post("/Groups/CreateGroup", { groupName: groupName },
-                function (data) {
-                    window.location.href = data;
-                });
+            $.ajax({
+                url: '/Groups/CreateGroup',
+                type: 'POST',
+                data: { groupName: groupName },
+                cache: false,
+                async: false,
+                success: function (result) {
+                    window.location.href = result;
+                }
             });
+        });
     }
 
     function OpenGroupDetails(id) {
         window.location.href = '@Url.Action("Details", "Groups")/' + id;
+    }
+
+    $(".groups-search-select").select2({
+        ajax: {
+            url: "/Groups/Query",
+            dataType: 'json',
+            data: function (params) {
+                return {
+                    name: params.term, // search term
+                    rowQty: params.rowQty,
+                    page: params.page
+                };
+            },
+            processResults: function (data, params) {
+                // parse the results into the format expected by Select2
+                // since we are using custom formatting functions we do not need to
+                // alter the remote JSON data, except to indicate that infinite
+                // scrolling can be used
+                params.rowQty = 5;
+                params.page = params.page;
+
+                return {
+                    results: data,
+                    pagination: {
+                        more: (params.page + 1 * 5) < data.total_count
+                    }
+                };
+            },
+            cache: false
+        },
+        escapeMarkup: function (markup) { return markup; },
+        minimumInputLength: 3,
+        templateResult: formatGroup,
+        templateSelection: formatGroupSelection
+    });
+
+    function formatGroup(group) {
+        if (group.loading) return group.text;
+
+        var markup = "<div class='clearfix'>" +
+            "<div style='display: flex;justify-content: space-between;'>" +
+            "<div style='text-align:left;'>" + group.name + "</div>" +
+            "<div style='text-align:right;'>" + group.numOfMembers + " @Localizer["MEMBERS"] | " + group.numOfFiles + " @Localizer["FILES"]</div></div>" +
+            "</div><hr/>";
+
+        return markup;
+    }
+
+    function formatGroupSelection(group) {
+        selectedGroup = group || null;
+        return group.name || group.text;
+    }
+
+    function SendGroupRequest() {
+        if (selectedGroup.id != 0) {
+            swal({
+                text: '@Localizer["SEND_UNION_RESQUEST"] "' + selectedGroup.name + '"?',
+                showCancelButton: true,
+                confirmButtonColor: '#935d8c',
+                confirmButtonText: '@Localizer["CONTINUE"]',
+                cancelButtonText: '@Localizer["CANCEL"]'
+            }).then(function () {
+                $.ajax({
+                    url: '/Groups/RequestGroupUnion/' + selectedGroup.id,
+                    type: 'POST',
+                    cache: false,
+                    async: false,
+                    success: function () {
+                        swal(
+                            '@Localizer["GREAT"]',
+                            '@Localizer["REQUEST_SENT"]',
+                            'success'
+                        );
+                    },
+                    error: function (message) {
+                        swal(
+                            '',
+                            message.responseText,
+                            'warning'
+                        );
+                    }
+                });
+            });
+        } else {
+            swal(
+                '@Localizer["NO_GROUP_SELECTED"]',
+                '@Localizer["MUST_SEARCH_GROUP_BEFORE"]',
+                'warning'
+            );
+        }
     }
 </script>

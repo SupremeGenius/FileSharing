@@ -285,4 +285,46 @@
   <data name="SEARCH" xml:space="preserve">
     <value>Buscar</value>
   </data>
+  <data name="GREAT" xml:space="preserve">
+    <value>Genial</value>
+  </data>
+  <data name="MUST_SEARCH_GROUP_BEFORE" xml:space="preserve">
+    <value>Debe buscar y seleccionar el grupo al que desea unirte</value>
+  </data>
+  <data name="NO_GROUP_SELECTED" xml:space="preserve">
+    <value>No hay grupo seleccionado</value>
+  </data>
+  <data name="REQUEST_SENT" xml:space="preserve">
+    <value>Tu petición ha sido enviada correctamente</value>
+  </data>
+  <data name="REQUEST_UNION" xml:space="preserve">
+    <value>Solicitar unión</value>
+  </data>
+  <data name="SEND_UNION_RESQUEST" xml:space="preserve">
+    <value>¿Enviar solicitud de unión al grupo</value>
+  </data>
+  <data name="USER_GROUP_ALREADY_MEMBER" xml:space="preserve">
+    <value>Ya es miembro del grupo seleccionado</value>
+  </data>
+  <data name="USER_GROUP_ALREADY_REQUESTED" xml:space="preserve">
+    <value>Ya había enviado una solicitud de unión al grupo seleccionado</value>
+  </data>
+  <data name="ERROR_FILESHARING_SERVER" xml:space="preserve">
+    <value>Lo sentimos, hubo un error interno. Por favor, inténtelo de nuevo más tarde.</value>
+  </data>
+  <data name="ACCEPT" xml:space="preserve">
+    <value>Aceptar</value>
+  </data>
+  <data name="OPTIONS" xml:space="preserve">
+    <value>Opciones</value>
+  </data>
+  <data name="REJECT" xml:space="preserve">
+    <value>Rechazar</value>
+  </data>
+  <data name="REQUESTS" xml:space="preserve">
+    <value>Solicitudes</value>
+  </data>
+  <data name="CANNOT_DELETE_GROUP_WITH_MEMBERS" xml:space="preserve">
+    <value>No es posible eliminar un grupo con miembros</value>
+  </data>
 </root>

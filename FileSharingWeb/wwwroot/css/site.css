@@ -2174,14 +2174,18 @@ body.is-loading #header.alt .logo {
     width: 95%;
 }
 
-.group-files {
-    float: left;
-    width: 65%
+.group-requests {
+    margin-right: 100px;
 }
 
-.group-members {
-    float: right;
-    margin-right: 100px;
+@media (min-width: 1742px){
+    .group-files {
+        float: left;
+        width: 65%
+    }
+    .group-requests {
+        float: right;
+    }
 }
 
 .swal2-modal .swal2-styled {
@@ -2264,4 +2268,15 @@ body.is-loading #header.alt .logo {
     transition: border-color box-shadow .3s;
     color: #222 !important;
     vertical-align: middle;
+}
+
+.select2-container--default .select2-results > .select2-results__options {
+    height: 200px;
+}
+.select2-results__options li {
+    height: 45px;
+    color: #222;
+}
+.select2-container--default [aria-selected].select2-results__option--highlighted {
+    background-color: darkSlateBlue;
 }

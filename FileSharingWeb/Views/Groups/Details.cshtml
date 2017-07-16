@@ -8,7 +8,6 @@
     {
         ViewData["Options"] = new[]
         {
-            "InviteUser(),INVITE_USER",
             "ExpelUser(),EXPEL_USER",
             "TransferGroup(),TRANSFER_GROUP",
             "Groups,DeleteGroup," + Model.Id + ",DELETE_GROUP"
@@ -18,8 +17,7 @@
     {
         ViewData["Options"] = new[]
         {
-            "SearchFiles(),SEARCH_FILES",
-            "Groups,LeaveGroup,LEAVE_GROUP"
+            "Groups,LeaveGroup," + Model.Id + ",LEAVE_GROUP"
         };
     }
 }
@@ -50,23 +48,35 @@
         }
     }
 </div>
-<div class="group-members">
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>@Localizer["MEMBERS"].Value.ToUpper()</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var member in Model.Members)
-        {
-                <tr onclick="OpenMemberDetails('@member.Id')">
-                    <td>@member.Login</td>
+@if (Model.IsAdministrable)
+{
+    <div class="group-requests">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>@Localizer["REQUESTS"].Value.ToUpper()</th>
+                    <th></th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
+                <tr>
+                    <th>@Localizer["LOGIN"].Value.ToUpper()</th>
+                    <th>@Localizer["NAME"].Value.ToUpper()</th>
+                    <th>@Localizer["OPTIONS"].Value.ToUpper()</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var request in Model.Requests)
+                {
+                    <tr>
+                        <td>@request.Login</td>
+                        <td>@request.FirstName @request.LastName</td>
+                        <td>@Html.ActionLink(Localizer["ACCEPT"].Value, "AcceptRequest", "Groups", new { idUser = request.Id, idGroup = Model.Id }) | @Html.ActionLink(Localizer["REJECT"].Value, "RejectRequest", "Groups", new { idUser = request.Id, idGroup = Model.Id })</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
 <div style="clear:both"></div>
 
 <script>

@@ -21,17 +21,18 @@ namespace FileSharingWeb.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(string ErrorMessage)
         {
             List<GroupDetailsDto> result = new List<GroupDetailsDto>();
+            ViewBag.ErrorMessage = ErrorMessage;
             try
             {
                 result = Services.Group.GetGroupsOfUser(SecurityToken);
             }
-            catch (Exception e)
+            catch (FileSharingException e)
             {
                 _logger.LogError(e.Message);
-                //TODO Mostrar error
+                ViewBag.ErrorMessage = _localizer[e.Code];
             }
             return View(result);
         }
@@ -51,9 +52,10 @@ namespace FileSharingWeb.Controllers
         }
 
         [HttpGet]
-        public IActionResult Details(long? id)
+        public IActionResult Details(long? id, string ErrorMessage)
         {
             GroupDetailsExtendedDto result;
+            ViewBag.ErrorMessage = ErrorMessage;
             if (!id.HasValue) return View();
             try
             {
@@ -62,7 +64,7 @@ namespace FileSharingWeb.Controllers
             catch (FileSharingException e)
             {
                 _logger.LogError(e.Message);
-                return View();
+                return RedirectToAction("Index", "Groups", new { ErrorMessage = _localizer[e.Code] });
             }
             return View(result);
         }
@@ -77,7 +79,7 @@ namespace FileSharingWeb.Controllers
             catch (FileSharingException e)
             {
                 _logger.LogError(e.Message);
-                return View();
+                return RedirectToAction("Details", "Groups", new { id = id, ErrorMessage = _localizer[e.Code] });
             }
             return RedirectToAction("Index", "Groups");
         }
@@ -90,17 +92,11 @@ namespace FileSharingWeb.Controllers
             {
                 result = Services.Group.GetGroupsOfUser(SecurityToken);
             }
-            catch (Exception e)
+            catch (FileSharingException e)
             {
                 _logger.LogError(e.Message);
             }
             return Json(result);
-        }
-
-        [HttpGet]
-        public IActionResult Search()
-        {
-            return View();
         }
 
         [HttpGet]
@@ -111,11 +107,83 @@ namespace FileSharingWeb.Controllers
             {
                 result = Services.Group.QueryByName(SecurityToken, name, rowQty, page);
             }
-            catch (Exception e)
+            catch (FileSharingException e)
             {
                 _logger.LogError(e.Message);
             }
             return Json(result);
+        }
+
+        [HttpPost]
+        public IActionResult RequestGroupUnion(long id)
+        {
+            try
+            {
+                var user = Services.User.Read(SecurityToken);
+                var result = new UserGroupDto
+                {
+                    IdGroup = id,
+                    IdUser = user.Id,
+                    DateInclusionRequest = DateTime.Now
+                };
+                Services.UserGroup.Create(SecurityToken, result);
+            }
+            catch (FileSharingException e)
+            {
+                _logger.LogError(e.Message);
+                return BadRequest(_localizer[e.Code].Value);
+            }
+            return Ok();
+        }
+
+        [HttpGet]
+        public IActionResult AcceptRequest(long idUser, long idGroup)
+        {
+            try
+            {
+                var userGroup = Services.UserGroup.Read(SecurityToken, idUser, idGroup);
+                userGroup.DateInclusionApproval = DateTime.Now;
+                Services.UserGroup.Update(SecurityToken, userGroup);
+            }
+            catch (FileSharingException e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Details", "Groups", new { id = idGroup, ErrorMessage = _localizer[e.Code] });
+            }
+            return RedirectToAction("Details", "Groups", new { id = idGroup });
+        }
+
+        [HttpGet]
+        public IActionResult RejectRequest(long idUser, long idGroup)
+        {
+            try
+            {
+                Services.UserGroup.Delete(SecurityToken, idUser, idGroup);
+
+            }
+            catch (FileSharingException e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Details", "Groups", new { id = idGroup, ErrorMessage = _localizer[e.Code] });
+            }
+            return RedirectToAction("Details", "Groups", new { id = idGroup });
+        }
+
+        [HttpGet]
+        public IActionResult LeaveGroup(long id)
+        {
+            try
+            {
+                var user = Services.User.Read(SecurityToken);
+                Services.UserGroup.Delete(SecurityToken, user.Id, id);
+
+            }
+            catch (FileSharingException e)
+            {
+                _logger.LogError(e.Message);
+                return RedirectToAction("Index", "Groups", new { ErrorMessage = _localizer[e.Code] });
+            }
+            return RedirectToAction("Index", "Groups");
         }
     }
 }

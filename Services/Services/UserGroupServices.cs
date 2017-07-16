@@ -1,16 +1,15 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using FileSharing.Persistence.Daos;
 using FileSharing.Persistence.Models;
+using FileSharing.Persistence.Models.Filters;
 using FileSharing.Services.Dtos;
 using FileSharing.Services.Exceptions;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using FileSharing.Persistence.Models.Filters;
 
 namespace FileSharing.Services
 {
-	public class UserGroupServices : AbstractServices<UserGroupDao>
+    public class UserGroupServices : AbstractServices<UserGroupDao>
 	{
 		public UserGroupServices() : base(new UserGroupDao()) { }
 
@@ -19,10 +18,19 @@ namespace FileSharing.Services
 			try
 			{
 				var session = CheckSession(securityToken);
-                if (Read(securityToken, userGroup.IdUser, userGroup.IdGroup) != null)
-					throw new FileSharingException(FileSharingException.USER_GROUP_ALREADY_EXISTS,
-												   "User group already exists");
-
+                var existent = Read(securityToken, userGroup.IdUser, userGroup.IdGroup);
+                if (existent != null)
+                    if (!existent.DateInclusionApproval.HasValue)
+                    {
+                        throw new FileSharingException(FileSharingException.USER_GROUP_ALREADY_REQUESTED,
+                            "The user " + userGroup.IdUser + " has already a request to the group " + userGroup.IdGroup);
+                    }
+                    else
+                    {
+                        throw new FileSharingException(FileSharingException.USER_GROUP_ALREADY_MEMBER,
+                            "The user " + userGroup.IdUser + " is already member of the group " + userGroup.IdGroup);
+                    }
+                
                 var userGroupDom = Mapper.Map<UserGroup>(userGroup);
 
                 userGroupDom = _dao.Create(userGroupDom);
@@ -45,7 +53,7 @@ namespace FileSharing.Services
 				var session = CheckSession(securityToken);
 				var userGroups = _dao.Query(new UserGroupFilter
                 {
-                    IdUser = session.IdUser,
+                    IdUser = idUser,
                     IdGroup = idGroup
                 });
 				if (userGroups == null || userGroups.Count == 0) return null;
@@ -75,12 +83,15 @@ namespace FileSharing.Services
 					throw new FileSharingException(FileSharingException.GROUP_NOT_FOUND,
 							"User Group of user " + userGroup.IdUser + " and group " + userGroup.IdGroup + " does not exist");
 
-				Mapper.Map(userGroup, userGroups[0]);
-				_dao.Update(userGroups[0]);
+                var userGroupDom = userGroups[0];
+                string action = "Update:\r\n" + "-Previous: " + userGroupDom + "\r\n";
 
-				string action = "Update:\r\n" + "-Previous: " + userGroups + "\r\n" + "-Updated: " + userGroup;
-				//TODO Audit
-			}
+                Mapper.Map(userGroup, userGroupDom);
+				_dao.Update(userGroupDom);
+
+				 action += "-Updated: " + userGroupDom;
+                Audit(session.IdUser, userGroup.IdGroup.ToString(), typeof(UserGroup).Name, ActionDto.Create, action);
+            }
 			catch (FileSharingException)
 			{
 				throw;

@@ -25,6 +25,6 @@ namespace FileSharing.Persistence.Daos
                 query = query.Where(ug => ug.DateInclusionApproval < filter.DateInclusionApprovalTo);
 
             return query.ToList();
-		}
+        }
     }
 }

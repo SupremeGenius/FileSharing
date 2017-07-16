@@ -25,9 +25,10 @@ namespace FileSharing.Services.Mapping
 				cfg.CreateMap<Group, GroupDto>().ReverseMap();
                 cfg.CreateMap<Group, GroupDetailsDto>()
                     .ForMember(dest => dest.NumOfFiles, opt => opt.MapFrom(src => src.Files.Count))
-                    .ForMember(dest => dest.NumOfMembers, opt => opt.MapFrom(src => src.Users.Count));
+                    .ForMember(dest => dest.NumOfMembers, opt => opt.MapFrom(src => src.Users.Where(x => x.DateInclusionApproval.HasValue).ToList().Count));
                 cfg.CreateMap<Group, GroupDetailsExtendedDto>()
-                    .ForMember(dest => dest.Members, opt => opt.MapFrom(src => src.Users.Select(x => x.User)));
+                    .ForMember(dest => dest.Members, opt => opt.MapFrom(src => src.Users.Where(x => x.DateInclusionApproval.HasValue).Select(x => x.User)))
+                    .ForMember(dest => dest.Requests, opt => opt.MapFrom(src => src.Users.Where(x => !x.DateInclusionApproval.HasValue).Select(x => x.User)));
 
                 cfg.CreateMap<UserGroup, UserGroupDto>().ReverseMap();
 

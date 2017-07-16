@@ -111,15 +111,19 @@ namespace FileSharing.Services
 			try
 			{
 				var session = CheckSession(securityToken);
-				var groupDom = _dao.Read(idGroup);
+				var groupDom = _dao.ReadFullGroup(idGroup);
 				if (groupDom == null)
 					throw new FileSharingException(FileSharingException.GROUP_NOT_FOUND,
 						"Group with id " + idGroup + " does not exist");
 				
-					if (groupDom.IdAdmin != session.IdUser)
-						throw new FileSharingException(FileSharingException.UNAUTHORIZED,
-														   "You do not have permissions to delete this group");
-				_dao.Delete(groupDom);
+				if (groupDom.IdAdmin != session.IdUser)
+					throw new FileSharingException(FileSharingException.UNAUTHORIZED,
+														"You do not have permissions to delete this group.");
+                if (groupDom.Users.Count > 1)
+                    throw new FileSharingException(FileSharingException.CANNOT_DELETE_GROUP_WITH_MEMBERS,
+                                                        "You cannot delete a group with members.");
+
+                _dao.Delete(groupDom);
                 Audit(session.IdUser, groupDom.Id.ToString(), typeof(Group).Name, ActionDto.Delete, "Group deleted: " + groupDom);
             }
 			catch (FileSharingException)

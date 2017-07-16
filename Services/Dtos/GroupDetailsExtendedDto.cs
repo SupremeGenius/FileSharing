@@ -6,5 +6,6 @@ namespace FileSharing.Services.Dtos
     {
         public List<FileDto> Files { get; set; }
         public List<UserDto> Members { get; set; }
+        public List<UserDto> Requests { get; set; }
     }
 }
