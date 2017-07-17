@@ -2244,7 +2244,18 @@ body.is-loading #header.alt .logo {
     width: 50% !important;
 }
 
-.groups-search-select option{
+.files-search-select {
+    margin-top: 12px;
+    width: 200px;
+}
+.select2-files {
+    margin-top: 10px;
+    width: 200px;
+}
+.select2-files .select2-selection__arrow {
+    top: 10px !important;
+}
+.groups-search-select option {
     font-family: 'Raleway', sans-serif;
     color: #222 !important;
     font-size: 16px;

@@ -245,5 +245,20 @@ namespace FileSharingWeb.Controllers
             }
             return File(content, result.ContentType, result.Filename);
         }
+
+        [HttpGet]
+        public IActionResult QueryFiles(string name, int rowQty, int page)
+        {
+            List<FileDto> result = new List<FileDto>();
+            try
+            {
+                result = Services.File.QueryByName(SecurityToken, name, rowQty, page);
+            }
+            catch (FileSharingException e)
+            {
+                _logger.LogError(e.Message);
+            }
+            return Json(result);
+        }
     }
 }

@@ -51,7 +51,7 @@
     @foreach (var file in Model.Files)
     {
         <div class="file">
-            <a onclick="OpenFileDetails('@file.Id', groups)">
+            <a onclick="OpenFileDetails('@file.Id')">
                 <img src="~/images/file.png" />
                 <br />
                 @file.Filename
@@ -62,18 +62,6 @@
 
 
 <script>
-    var groups = {};
-    $(document).ready(function () {
-        $.ajax({
-            url: '/Groups/GetGroups',
-            type: 'GET',
-            cache: false,
-            success: function (result) {
-                groups = result;
-            }
-        });
-    });
-
     function CreateFolder() {
         swal({
             title: "",

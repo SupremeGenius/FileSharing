@@ -34,8 +34,13 @@
                     @Localizer["HELLO"] @ViewBag.FirstName!
                 </a>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav navbar-right">
+            <div class="navbar-collapse collapse navbar-right">
+                <ul class="nav navbar-nav navbar-right text-center">
+                    <li>
+                        <select class="files-search-select form-group">
+                            <option value="0" selected="selected">@Localizer["SEARCH"]</option>
+                        </select>
+                    </li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Index" asp-route-id=""><i class="fa fa-home" aria-hidden="true"></i> @Localizer["HOME"]</a></li>
                     @*<li><a asp-area="" asp-controller="Account" asp-action="Index"><i class="fa fa-user" aria-hidden="true"></i> @Localizer["ACCOUNT"]</a></li>*@
                     <li><a asp-area="" asp-controller="Groups" asp-action="Index"><i class="fa fa-users" aria-hidden="true"></i> @Localizer["GROUPS"]</a></li>
@@ -93,7 +98,17 @@
             });
         }
 
-        function OpenFileDetails(idFile, groups) {
+        function OpenFileDetails(idFile) {
+            var groups = {};
+            $.ajax({
+                url: '/Groups/GetGroups',
+                type: 'GET',
+                cache: false,
+                async: false,
+                success: function (result) {
+                    groups = result;
+                }
+            });
             var file;
             $.ajax({
                 url: '/Home/GetFile/' + idFile,
@@ -192,6 +207,57 @@
                     showConfirmButton: false
                 });
             }
+        }
+        $(".files-search-select").select2({
+            containerCssClass: "select2-files",
+            ajax: {
+                url: "/Home/QueryFiles",
+                dataType: 'json',
+                data: function (params) {
+                    return {
+                        name: params.term, // search term
+                        rowQty: params.rowQty,
+                        page: params.page
+                    };
+                },
+                processResults: function (data, params) {
+                    // parse the results into the format expected by Select2
+                    // since we are using custom formatting functions we do not need to
+                    // alter the remote JSON data, except to indicate that infinite
+                    // scrolling can be used
+                    params.rowQty = 5;
+                    params.page = params.page;
+
+                    return {
+                        results: data,
+                        pagination: {
+                            more: (params.page + 1 * 5) < data.total_count
+                        }
+                    };
+                },
+                cache: false
+            },
+            escapeMarkup: function (markup) { return markup; },
+            minimumInputLength: 3,
+            templateResult: formatFile,
+            templateSelection: formatFileSelection
+        });
+
+        function formatFile(file) {
+            if (file.loading) return file.text;
+
+            var markup = "<div class='clearfix'>" +
+                "<div class='text-center'>" + file.filename + "</div>" +
+                "</div><hr/>";
+
+            return markup;
+        }
+
+        function formatFileSelection(file) {
+            if (file.id == 0) return file.text;
+            OpenFileDetails(file.id);
+            $(".files-search-select").val('').change();
+            return '@Localizer["SEARCH"]';
         }
 
         function ShowErrorMessage(title, text) {

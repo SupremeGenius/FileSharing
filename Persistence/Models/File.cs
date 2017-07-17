@@ -15,8 +15,8 @@ namespace FileSharing.Persistence.Models
         public DateTime ModificationDate { get; set; }
 
         public virtual Folder Folder { get; set; }
-		public virtual Group IdGroupNavigation { get; set; }
-		public virtual User IdUserNavigation { get; set; }
+		public virtual Group Group { get; set; }
+		public virtual User User { get; set; }
 
         public override string ToString()
         {

@@ -183,6 +183,24 @@ namespace FileSharing.Services
             return GetFileContent(fileDom);
         }
 
+        public List<FileDto> QueryByName(string securityToken, string name, int rowQty, int page)
+        {
+            try
+            {
+                var session = CheckSession(securityToken);
+                var files = _dao.QueryByName(session.IdUser, name, rowQty, page);
+                return Mapper.Map<List<FileDto>>(files);
+            }
+            catch (FileSharingException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
+            }
+        }
+
         #region Private methods
 
         string GetFilePath(File file)

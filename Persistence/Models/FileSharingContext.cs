@@ -64,12 +64,12 @@ namespace FileSharing.Persistence.Models
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_File_Folder");
 
-                entity.HasOne(d => d.IdGroupNavigation)
+                entity.HasOne(d => d.Group)
                     .WithMany(p => p.Files)
                     .HasForeignKey(d => d.IdGroup)
                     .HasConstraintName("FK_File_Group");
 
-                entity.HasOne(d => d.IdUserNavigation)
+                entity.HasOne(d => d.User)
                     .WithMany(p => p.Files)
                     .HasForeignKey(d => d.IdUser)
                     .OnDelete(DeleteBehavior.Restrict)
