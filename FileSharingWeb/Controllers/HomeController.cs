@@ -23,10 +23,9 @@ namespace FileSharingWeb.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(int? id, string ErrorMessage)
+        public IActionResult Index(int? id)
         {
             FolderDetailsDto result = new FolderDetailsDto();
-            ViewBag.ErrorMessage = ErrorMessage;
             try
             {
                 ViewBag.FolderId = id;
@@ -49,7 +48,6 @@ namespace FileSharingWeb.Controllers
             catch (FileSharingException e)
             {
                 _logger.LogError(e.Message);
-                ViewBag.ErrorMessage = _localizer[e.Code];
             }
             return View(result);
         }
@@ -76,7 +74,6 @@ namespace FileSharingWeb.Controllers
         public IActionResult CreateFolder(string folderName, string folderRoot)
         {
             long? idFolder = null;
-            string ErrorMessage = null;
             try
             {
                 var folder = new FolderDto
@@ -93,16 +90,15 @@ namespace FileSharingWeb.Controllers
             catch (FileSharingException e)
             {
                 _logger.LogError(e.Message);
-                ErrorMessage = _localizer[e.Code];
+                return BadRequest(_localizer[e.Code].Value);
             }
-            return Json(Url.Action("Index", "Home", new { id = idFolder, ErrorMessage = ErrorMessage }));
+            return Ok();
         }
 
         [HttpDelete]
         public IActionResult DeleteFolder(string folder)
         {
             long? idFolder = null;
-            string ErrorMessage = null;
             try
             {
                 long idFolderToDelete;
@@ -115,15 +111,14 @@ namespace FileSharingWeb.Controllers
             catch (FileSharingException e)
             {
                 _logger.LogError(e.Message);
-                ErrorMessage = _localizer[e.Code];
+                return BadRequest(_localizer[e.Code].Value);
             }
-            return Json(Url.Action("Index", "Home", new { id = idFolder, ErrorMessage = ErrorMessage }));
+            return Ok();
         }
 
         [HttpPost]
         public IActionResult UploadFile(long? id)
         {
-            string ErrorMessage = null;
             try
             {
                 if (HttpContext.Request.Form.Files != null
@@ -158,15 +153,14 @@ namespace FileSharingWeb.Controllers
             catch (FileSharingException e)
             {
                 _logger.LogError(e.Message);
-                ErrorMessage = _localizer[e.Code];
+                return BadRequest(_localizer[e.Code].Value);
             }
-            return Json(Url.Action("Index", "Home", new { id = id, ErrorMessage = ErrorMessage }));
+            return Ok();
         }
 
         [HttpPost]
         public IActionResult UpdateFile(long? id, string filename, bool isPublic, long? idGroup)
         {
-            string ErrorMessage = null;
             FileDto file = new FileDto();
             try
             {
@@ -184,15 +178,14 @@ namespace FileSharingWeb.Controllers
             catch (FileSharingException e)
             {
                 _logger.LogError(e.Message);
-                ErrorMessage = _localizer[e.Code];
+                return BadRequest(_localizer[e.Code].Value);
             }
-            return Json(Url.Action("Index", "Home", new { id = file.IdFolder, ErrorMessage = ErrorMessage }));
+            return Ok();
         }
 
-        [HttpGet]
+        [HttpDelete]
         public IActionResult DeleteFile(long id)
         {
-            string ErrorMessage = null;
             long? idFolder = null;
             try
             {
@@ -201,9 +194,9 @@ namespace FileSharingWeb.Controllers
             catch (FileSharingException e)
             {
                 _logger.LogError(e.Message);
-                ErrorMessage = _localizer[e.Code];
+                return BadRequest(_localizer[e.Code].Value);
             }
-            return RedirectToAction("Index", "Home", new { id = idFolder, ErrorMessage = ErrorMessage });
+            return Ok();
         }
 
         [HttpGet]

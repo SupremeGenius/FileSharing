@@ -327,4 +327,19 @@
   <data name="CANNOT_DELETE_GROUP_WITH_MEMBERS" xml:space="preserve">
     <value>No es posible eliminar un grupo con miembros</value>
   </data>
+  <data name="GROUP_NAME_ALREADY_IN_USE" xml:space="preserve">
+    <value>El nombre de grupo elegido ya existe. Por favor, elija otro e inténtelo de nuevo</value>
+  </data>
+  <data name="CANNOT_UNDO" xml:space="preserve">
+    <value>Esta acción no se puede deshacer</value>
+  </data>
+  <data name="MEMBER" xml:space="preserve">
+    <value>Miebro</value>
+  </data>
+  <data name="SELECT_MEMBER_TO_EXPEL" xml:space="preserve">
+    <value>Seleccione el miembro que desea expulsar</value>
+  </data>
+  <data name="SELECT_MEMBER_TO_TRANSFER" xml:space="preserve">
+    <value>Seleccione el miembro al que desea transferir el grupo</value>
+  </data>
 </root>

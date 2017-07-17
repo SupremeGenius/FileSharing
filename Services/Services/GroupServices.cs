@@ -87,15 +87,24 @@ namespace FileSharing.Services
 					throw new FileSharingException(FileSharingException.UNAUTHORIZED,
 					                                   "You do not have permissions to update this group");
 				
-				var similarName = _dao.QueryByName(groupDto.Name, 0, 0);
-				if (similarName.Count > 0 &&
-				    similarName.Find(g => g.Name.Equals(groupDto.Name, StringComparison.CurrentCultureIgnoreCase)) != null)
-					throw new FileSharingException(FileSharingException.GROUP_NAME_ALREADY_IN_USE,
-													   "Group name already in use");
-				Mapper.Map(groupDto, groupDom);
+                if (!groupDom.Name.Equals(groupDto.Name, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    var similarName = _dao.QueryByName(groupDto.Name, 0, 0);
+                    if (similarName.Count > 0 &&
+                        similarName.Find(g => g.Name.Equals(groupDto.Name, StringComparison.CurrentCultureIgnoreCase)) != null)
+                        throw new FileSharingException(FileSharingException.GROUP_NAME_ALREADY_IN_USE,
+                                                           "Group name already in use");
+                }
+
+                string action = "Update:\r\n" + "-Previous: " + groupDom + "\r\n";
+
+                Mapper.Map(groupDto, groupDom);
 				_dao.Update(groupDom);
-				//TODO Audit
-			}
+
+                action += "-Updated: " + groupDom;
+
+                Audit(session.IdUser, groupDom.Id.ToString(), typeof(Group).Name, ActionDto.Delete, action);
+            }
 			catch (FileSharingException)
 			{
 				throw;
@@ -185,7 +194,12 @@ namespace FileSharing.Services
                 var session = CheckSession(securityToken);
                 var group = _dao.ReadFullGroup(idGroup);
                 var result = Mapper.Map<GroupDetailsExtendedDto>(group);
+
                 result.IsAdministrable = group.IdAdmin == session.IdUser;
+
+                var self = result.Members.Where(x => x.Id == session.IdUser).FirstOrDefault();
+                if (self != null)
+                    result.Members.Remove(self);
 
                 return result;
             }

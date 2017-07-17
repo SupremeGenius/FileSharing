@@ -10,14 +10,14 @@
         {
             "ExpelUser(),EXPEL_USER",
             "TransferGroup(),TRANSFER_GROUP",
-            "Groups,DeleteGroup," + Model.Id + ",DELETE_GROUP"
+            "DeleteGroup(),DELETE_GROUP"
         };
     }
     else
     {
         ViewData["Options"] = new[]
         {
-            "Groups,LeaveGroup," + Model.Id + ",LEAVE_GROUP"
+            "LeaveGroup(),LEAVE_GROUP"
         };
     }
 }
@@ -39,7 +39,7 @@
         @foreach (var file in Model.Files)
         {
             <div class="file">
-                <a onclick="OpenFileDetails('@file.Id')">
+                <a onclick="OpenFileDetails('@file.Id', groups)">
                     <img src="~/images/file.png" />
                     <br />
                     @file.Filename
@@ -70,7 +70,7 @@
                     <tr>
                         <td>@request.Login</td>
                         <td>@request.FirstName @request.LastName</td>
-                        <td>@Html.ActionLink(Localizer["ACCEPT"].Value, "AcceptRequest", "Groups", new { idUser = request.Id, idGroup = Model.Id }) | @Html.ActionLink(Localizer["REJECT"].Value, "RejectRequest", "Groups", new { idUser = request.Id, idGroup = Model.Id })</td>
+                        <td><a onclick="AcceptRequest('@request.Id')" style="cursor: pointer">@Localizer["ACCEPT"]</a> | <a onclick="DeleteMember('@request.Id')" style="cursor: pointer">@Localizer["REJECT"]</a></td>
                     </tr>
                 }
             </tbody>
@@ -78,45 +78,170 @@
     </div>
 }
 <div style="clear:both"></div>
-
 <script>
-    function OpenFileDetails(idFile) {
-        var file;
+    var groups = {};
+    $(document).ready(function () {
         $.ajax({
-            url: '/Home/GetFile/' + idFile,
+            url: '/Groups/GetGroups',
             type: 'GET',
             cache: false,
-            async: false,
             success: function (result) {
-                file = result;
+                groups = result;
             }
         });
+    });
 
-        var html = '';
-        if (file.contentType.indexOf("image") !== -1) {
-            html += '<img id="image-viewer" style="max-width: 400px;" src="" /><br/><br/>';
+    function AcceptRequest(id) {
+        $.ajax({
+            url: '/Groups/AcceptRequest/',
+            type: 'POST',
+            data: { idUser: id, idGroup: @Model.Id },
+            cache: false,
+            success: function () {
+                location.reload();
+            },
+            error: function (message) {
+                ShowErrorMessage('', message.responseText);
+            }
+        });
+    }
+
+    function DeleteMember(id) {
+        $.ajax({
+            url: '/Groups/DeleteMember/',
+            type: 'POST',
+            data: { idUser: id, idGroup: @Model.Id },
+            cache: false,
+            success: function () {
+                location.reload();
+            },
+            error: function (message) {
+                ShowErrorMessage('', message.responseText);
+            }
+        });
+    }
+
+    function DeleteGroup() {
+        swal({
+            title: "@Localizer["ASK_SURE"]",
+            text: "@Localizer["CANNOT_UNDO"]",
+            showCancelButton: true,
+            confirmButtonColor: '#935d8c',
+            confirmButtonText: "@Localizer["CONTINUE"]",
+            cancelButtonText: "@Localizer["CANCEL"]"
+        }).then(function () {
             $.ajax({
-                url: '/Home/GetFileContent/' + idFile,
-                type: 'GET',
-                cache: true,
-                async: true,
-                success: function (result) {
-                    $("#image-viewer").attr("src", "data:" + file.contentType + ";base64," + result);
+                url: '/Groups/DeleteGroup/' + @Model.Id,
+                type: 'DELETE',
+                cache: false,
+                success: function () {
+                    location.reload();
+                },
+                error: function (message) {
+                    ShowErrorMessage('', message.responseText);
                 }
             });
-        }
-
-        html += '<div class="swal2-div-info"><span class="swal2-label-info">@Localizer["SIZE"]:</span> <span class="swal2-text-info">' + file.contentSize + 'KB</span><br/>' +
-            '<span class="swal2-label-info">@Localizer["CREATION_DATE"]:</span> <span class="swal2-text-info">' + formatDate(new Date(file.creationDate)) + '</span><br/>' +
-            '<span class="swal2-label-info">@Localizer["MODIFICATION_DATE"]:</span> <span class="swal2-text-info">' + formatDate(new Date(file.modificationDate)) + '</span></div><br/>';
-
-        html += '<a href="/Home/DownloadFile/' + file.id + '">@Localizer["DOWNLOAD"]</a>'
-
-        swal({
-            title: file.filename,
-            html: html,
-            showCloseButton: true,
-            showConfirmButton: false
         });
+    }
+
+    function LeaveGroup() {
+        swal({
+            title: "@Localizer["ASK_SURE"]",
+            text: "@Localizer["CANNOT_UNDO"]",
+            showCancelButton: true,
+            confirmButtonColor: '#935d8c',
+            confirmButtonText: "@Localizer["CONTINUE"]",
+            cancelButtonText: "@Localizer["CANCEL"]"
+        }).then(function () {
+            $.ajax({
+                url: '/Groups/LeaveGroup/' + @Model.Id,
+                type: 'DELETE',
+                cache: false,
+                success: function (url) {
+                    window.location.href = url;
+                },
+                error: function (message) {
+                    ShowErrorMessage('', message.responseText);
+                }
+            });
+        });
+    }
+
+    function ExpelUser() {
+        var members = @Json.Serialize(Model.Members);
+        if (members != null && members.length > 0) {
+            var html = '<div class="form-group">' +
+                '<label for="id-member" class="col-sm-3 control-label" style="color: #222 !important; top: 28px;">@Localizer["MEMBER"]</label>' +
+                '<div class="col-sm-9">' +
+                '<select id="id-member" class="form-control swal2-select">' +
+                '<option value= "0"></option>';
+            for (var i in members) {
+                html += '<option value= "' + members[i].id + '">' + members[i].login + '</option>';
+            }
+            html += '</select></div></div>';
+            swal({
+                title: '@Localizer["SELECT_MEMBER_TO_EXPEL"]',
+                html: html,
+                showCancelButton: true,
+                confirmButtonColor: '#935d8c',
+                confirmButtonText: "@Localizer["CONTINUE"]",
+                cancelButtonText: "@Localizer["CANCEL"]",
+                preConfirm: function () {
+                    return new Promise(function (resolve) {
+                        resolve($('#id-member').val());
+                    });
+                }
+            }).then(function (result) {
+                DeleteMember(result);
+            });
+        }
+        else {
+            ShowErrorMessage('', "You are the only member");
+        }
+    }
+
+
+    function TransferGroup() {
+        var members = @Json.Serialize(Model.Members);
+        if (members != null && members.length > 0) {
+            var html = '<div class="form-group">' +
+                '<label for="id-member" class="col-sm-3 control-label" style="color: #222 !important; top: 28px;">@Localizer["MEMBER"]</label>' +
+                '<div class="col-sm-9">' +
+                '<select id="id-member" class="form-control swal2-select">' +
+                '<option value= "0"></option>';
+            for (var i in members) {
+                html += '<option value= "' + members[i].id + '">' + members[i].login + '</option>';
+            }
+            html += '</select></div></div>';
+            swal({
+                title: '@Localizer["SELECT_MEMBER_TO_TRANSFER"]',
+                html: html,
+                showCancelButton: true,
+                confirmButtonColor: '#935d8c',
+                confirmButtonText: "@Localizer["CONTINUE"]",
+                cancelButtonText: "@Localizer["CANCEL"]",
+                preConfirm: function () {
+                    return new Promise(function (resolve) {
+                        resolve($('#id-member').val());
+                    });
+                }
+            }).then(function (result) {
+                $.ajax({
+                    url: '/Groups/UpdateGroup/',
+                    type: 'POST',
+                    data: { idUser: result, idGroup: @Model.Id, name: '' },
+                    cache: false,
+                    success: function () {
+                        location.reload();
+                    },
+                    error: function (message) {
+                        ShowErrorMessage('', message.responseText);
+                    }
+                });
+            });
+        }
+        else {
+            ShowErrorMessage('', "You are the only member");
+        }
     }
 </script>

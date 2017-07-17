@@ -42,7 +42,7 @@ namespace FileSharing.Services
 				var folderDom = Mapper.Map<Folder>(folder);
 				folderDom.IdUser = session.IdUser;
 
-                var path = GetFullPath(securityToken, folderDom.IdFolderRoot) + Path.DirectorySeparatorChar.ToString() + folderDom.Name;
+                var path = GetFullPath(session.IdUser, folderDom.IdFolderRoot) + Path.DirectorySeparatorChar.ToString() + folderDom.Name;
                 Directory.CreateDirectory(path);
 
 				folderDom = _dao.Create(folderDom);
@@ -178,12 +178,10 @@ namespace FileSharing.Services
             }
         }
 
-		public string GetFullPath(string securityToken, long? idFolder)
+		public string GetFullPath(long idUser, long? idFolder)
 		{
 			try
 			{
-				var session = CheckSession(securityToken);;
-
 				if (idFolder.HasValue)
 				{
 					var folder = _dao.ReadFullFolder(idFolder.Value);
@@ -194,7 +192,7 @@ namespace FileSharing.Services
 				}
                 else
                 {
-                    return GetUserRootFolder(session.IdUser) + Path.DirectorySeparatorChar.ToString();
+                    return GetUserRootFolder(idUser) + Path.DirectorySeparatorChar.ToString();
                 }
 			}
 			catch (FileSharingException)

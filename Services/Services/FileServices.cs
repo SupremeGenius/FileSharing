@@ -27,7 +27,7 @@ namespace FileSharing.Services
 
                 var fileDom = Mapper.Map<File>(file);
 
-                string filePath = GetFilePath(securityToken, fileDom);
+                string filePath = GetFilePath(fileDom);
 
 
                 System.IO.File.WriteAllBytes(filePath, content);
@@ -57,7 +57,8 @@ namespace FileSharing.Services
                 CheckAuthorizationToFile(session, fileDom);
 
 				var file = Mapper.Map<FileDto>(fileDom);
-                file.ContentSize = GetFileContent(securityToken, fileDom).Length/1024;
+                file.ContentSize = GetFileContent(fileDom).Length/1024;
+                file.IsOwn = file.IdUser == session.IdUser;
 
 				return file;
 			}
@@ -84,11 +85,11 @@ namespace FileSharing.Services
 					throw new FileSharingException(FileSharingException.UNAUTHORIZED,
 													   "You do not have permissions to update this file");
 
-				string oldFilePath = GetFilePath(securityToken, fileDom);
+				string oldFilePath = GetFilePath(fileDom);
                 var oldFile = fileDom.ToString();
                 Mapper.Map(file, fileDom);
                 fileDom.ModificationDate = DateTime.Now;
-                var newFilePath = GetFilePath(securityToken, fileDom);
+                var newFilePath = GetFilePath(fileDom);
 
                 if (oldFilePath != newFilePath)
                 {
@@ -179,16 +180,16 @@ namespace FileSharing.Services
             var fileDom = _dao.Read(idFile);
             if (fileDom == null) return null;
 
-            return GetFileContent(securityToken, fileDom);
+            return GetFileContent(fileDom);
         }
 
         #region Private methods
 
-        string GetFilePath(string securityToken, File file)
+        string GetFilePath(File file)
 		{
 			using (var folderServices = new FolderServices())
 			{
-				return folderServices.GetFullPath(securityToken, file.IdFolder) + file.Filename;
+				return folderServices.GetFullPath(file.IdUser, file.IdFolder) + file.Filename;
 			}
 		}
 
@@ -210,9 +211,9 @@ namespace FileSharing.Services
             }
         }
 
-        byte[] GetFileContent(string securityToken, File file)
+        byte[] GetFileContent(File file)
         {
-            string filePath = GetFilePath(securityToken, file);
+            string filePath = GetFilePath(file);
 
             if (!System.IO.File.Exists(filePath))
                 throw new FileSharingException(FileSharingException.FILE_NOT_FOUND,

@@ -90,7 +90,7 @@ namespace FileSharing.Services
 				_dao.Update(userGroupDom);
 
 				 action += "-Updated: " + userGroupDom;
-                Audit(session.IdUser, userGroup.IdGroup.ToString(), typeof(UserGroup).Name, ActionDto.Create, action);
+                Audit(session.IdUser, userGroup.IdGroup.ToString(), typeof(UserGroup).Name, ActionDto.Update, action);
             }
 			catch (FileSharingException)
 			{
@@ -127,9 +127,8 @@ namespace FileSharing.Services
                         }
 					}
 					_dao.Delete(userGroups[0]);
-					string action = "User Group: " + userGroups[0] + " deleted";
-					//TODO Audit
-				}
+                    Audit(session.IdUser, idGroup.ToString(), typeof(UserGroup).Name, ActionDto.Delete, "User Group: " + userGroups[0] + " deleted");
+                }
 			}
 			catch (FileSharingException)
 			{

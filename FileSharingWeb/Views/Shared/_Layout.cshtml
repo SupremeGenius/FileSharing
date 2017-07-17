@@ -37,7 +37,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index" asp-route-id=""><i class="fa fa-home" aria-hidden="true"></i> @Localizer["HOME"]</a></li>
-                    <li><a asp-area="" asp-controller="Account" asp-action="Index"><i class="fa fa-user" aria-hidden="true"></i> @Localizer["ACCOUNT"]</a></li>
+                    @*<li><a asp-area="" asp-controller="Account" asp-action="Index"><i class="fa fa-user" aria-hidden="true"></i> @Localizer["ACCOUNT"]</a></li>*@
                     <li><a asp-area="" asp-controller="Groups" asp-action="Index"><i class="fa fa-users" aria-hidden="true"></i> @Localizer["GROUPS"]</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Logout"><i class="fa fa-sign-out" aria-hidden="true"></i> @Localizer["LOGOUT"]</a></li>
                 </ul>
@@ -77,13 +77,127 @@
     <div class="body-content site-content">
         @RenderBody()
     </div>
-    
-    @if (@ViewBag.ErrorMessage != null)
-    {
-        <script>
-        swal("", "@ViewBag.ErrorMessage", "warning");
-        </script>
-    }
+    <script>
+        function DeleteFile(idFile) {
+            $.ajax({
+                url: '/Home/DeleteFile/' + idFile,
+                type: 'DELETE',
+                cache: false,
+                async: false,
+                success: function () {
+                    location.reload();
+                },
+                error: function (message) {
+                    ShowErrorMessage('', message.responseText);
+                }
+            });
+        }
+
+        function OpenFileDetails(idFile, groups) {
+            var file;
+            $.ajax({
+                url: '/Home/GetFile/' + idFile,
+                type: 'GET',
+                cache: false,
+                async: false,
+                success: function (result) {
+                    file = result;
+                }
+            });
+
+            var html = '';
+            if (file.isOwn) {
+                html += '<input id="filename" class="swal2-input" type="text" value="' + file.filename + '"/>';
+            }
+            if (file.contentType.indexOf("image") !== -1) {
+                html += '<img id="image-viewer" style="max-width: 400px; max-height:400px" src="" /><br/><br/>';
+                $.ajax({
+                    url: '/Home/GetFileContent/' + idFile,
+                    type: 'GET',
+                    cache: true,
+                    async: true,
+                    success: function (result) {
+                        $("#image-viewer").attr("src", "data:" + file.contentType + ";base64," + result);
+                    }
+                });
+            }
+            html += '<div class="swal2-div-info"><span class="swal2-label-info">@Localizer["SIZE"]:</span> <span class="swal2-text-info">' + file.contentSize + 'KB</span><br/>' +
+                '<span class="swal2-label-info">@Localizer["CREATION_DATE"]:</span> <span class="swal2-text-info">' + formatDate(new Date(file.creationDate)) + '</span><br/>' +
+                '<span class="swal2-label-info">@Localizer["MODIFICATION_DATE"]:</span> <span class="swal2-text-info">' + formatDate(new Date(file.modificationDate)) + '</span></div><br/>';
+            if (file.isOwn) {
+                if (file.isPublic) {
+                    html += '<input type="checkbox" id="is-public" checked><span> @Localizer["PUBLIC"]</span><br/>';
+                } else {
+                    html += '<input type="checkbox" id="is-public"><span> @Localizer["PUBLIC"]</span><br/>';
+                }
+                if (groups != null && groups.length > 0) {
+                    html += '<div class="form-group">' +
+                        '<label for="id-group" class="col-sm-3 control-label" style="color: #222 !important; top: 28px;">@Localizer["GROUP"]</label>' +
+                        '<div class="col-sm-9">' +
+                        '<select id="id-group" class="form-control swal2-select">' +
+                        '<option value= "0"></option>';
+                    for (var i in groups) {
+                        if (groups[i].id === file.idGroup) {
+                            html += '<option value= "' + groups[i].id + '" selected>' + groups[i].name + '</option>';
+                        } else {
+                            html += '<option value= "' + groups[i].id + '">' + groups[i].name + '</option>';
+                        }
+                    }
+                    html += '</select>' +
+                        '</div>' +
+                        '</div>';
+                }
+            }
+            html += '<a href="/Home/DownloadFile/' + file.id + '">@Localizer["DOWNLOAD"]</a>';
+            if (file.isOwn) {
+                html += ' | <a onclick="DeleteFile(' + file.id + ')">@Localizer["DELETE"]</a>';
+            }
+
+            if (file.isOwn) {
+                swal({
+                    html: html,
+                    showCancelButton: true,
+                    confirmButtonColor: '#935d8c',
+                    confirmButtonText: "@Localizer["CONTINUE"]",
+                    cancelButtonText: "@Localizer["CANCEL"]",
+                    preConfirm: function () {
+                        return new Promise(function (resolve) {
+                            resolve([
+                                $("#filename").val(),
+                                $("#is-public").is(':checked'),
+                                $('#id-group').val()
+                            ])
+                        })
+                    }
+                }).then(function (result) {
+                    $.ajax({
+                        url: '/Home/UpdateFile/',
+                        type: 'POST',
+                        data: { id: idFile, filename: result[0], isPublic: result[1], idGroup: result[2] },
+                        async: false,
+                        success: function () {
+                            location.reload();
+                        },
+                        error: function (message) {
+                            ShowErrorMessage('', message.responseText);
+                        }
+                    });
+                });
+            }
+            else {
+                swal({
+                    title: file.filename,
+                    html: html,
+                    showCloseButton: true,
+                    showConfirmButton: false
+                });
+            }
+        }
+
+        function ShowErrorMessage(title, text) {
+            swal(title, text, "warning");
+        }
+    </script>
 
     @RenderSection("Scripts", required: false)
 </body>

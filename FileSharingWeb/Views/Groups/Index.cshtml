@@ -79,8 +79,11 @@
                 data: { groupName: groupName },
                 cache: false,
                 async: false,
-                success: function (result) {
-                    window.location.href = result;
+                success: function () {
+                    location.reload();
+                },
+                error: function (message) {
+                    ShowErrorMessage('', message.responseText);
                 }
             });
         });
@@ -156,27 +159,21 @@
                     cache: false,
                     async: false,
                     success: function () {
-                        swal(
-                            '@Localizer["GREAT"]',
-                            '@Localizer["REQUEST_SENT"]',
-                            'success'
-                        );
+                        swal({
+                            title: '@Localizer["GREAT"]',
+                            text: '@Localizer["REQUEST_SENT"]',
+                            type: 'success',
+                        }).then(function () {
+                            location.reload();
+                        });
                     },
                     error: function (message) {
-                        swal(
-                            '',
-                            message.responseText,
-                            'warning'
-                        );
+                        ShowErrorMessage('', message.responseText);
                     }
                 });
             });
         } else {
-            swal(
-                '@Localizer["NO_GROUP_SELECTED"]',
-                '@Localizer["MUST_SEARCH_GROUP_BEFORE"]',
-                'warning'
-            );
+            ShowErrorMessage('@Localizer["NO_GROUP_SELECTED"]', '@Localizer["MUST_SEARCH_GROUP_BEFORE"]');
         }
     }
 </script>
