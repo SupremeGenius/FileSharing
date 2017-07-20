@@ -17,7 +17,7 @@ namespace FileSharing.Persistence.Models
 		public virtual ICollection<File> Files { get; set; }
 		public virtual Folder FolderRoot { get; set; }
 		public virtual ICollection<Folder> Folders { get; set; }
-		public virtual User IdUserNavigation { get; set; }
+		public virtual User User { get; set; }
         
         public override string ToString()
         {

@@ -3,7 +3,6 @@ using FileSharing.Persistence.Daos;
 using FileSharing.Persistence.Models;
 using FileSharing.Services.Dtos;
 using FileSharing.Services.Exceptions;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,10 +15,6 @@ namespace FileSharing.Services
 
 		public FolderServices() : base(new FolderDao())
 		{
-			var configurationBuilder = new ConfigurationBuilder()
-				 .AddJsonFile("repo_settings.json");
-			var configuration = configurationBuilder.Build();
-
 			repoPath = $"{configuration["RepositoryPath"]}";
 		}
 
@@ -102,15 +97,19 @@ namespace FileSharing.Services
 				if (similarName != null)
 					throw new FileSharingException(FileSharingException.FOLDER_ALREADY_EXISTS,
 													   "You already have a folder with this name in this directory");
-				string previousPath = GetFullPath(folderDom);
-				Mapper.Map(folder, folderDom);
 
-				Directory.Move(previousPath, GetFullPath(folderDom));
+				string previousPath = GetFullPath(folderDom);
+
+                string action = "Update:\r\n" + "-Previous: " + folderDom + "\r\n";
+                Mapper.Map(folder, folderDom);
+                action += "-Updated: " + folderDom;
+
+                Directory.Move(previousPath, GetFullPath(folderDom));
 				Directory.Delete(previousPath);
 
 				_dao.Update(folderDom);
-				//TODO Audit
-			}
+                Audit(session.IdUser, folderDom.Id.ToString(), typeof(Folder).Name, ActionDto.Update, action);
+            }
 			catch (FileSharingException)
 			{
 				throw;

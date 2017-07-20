@@ -334,12 +334,21 @@
     <value>Esta acción no se puede deshacer</value>
   </data>
   <data name="MEMBER" xml:space="preserve">
-    <value>Miebro</value>
+    <value>Miembro</value>
   </data>
   <data name="SELECT_MEMBER_TO_EXPEL" xml:space="preserve">
     <value>Seleccione el miembro que desea expulsar</value>
   </data>
   <data name="SELECT_MEMBER_TO_TRANSFER" xml:space="preserve">
     <value>Seleccione el miembro al que desea transferir el grupo</value>
+  </data>
+  <data name="YOU_ARE_THE_ONLY_MEMBER" xml:space="preserve">
+    <value>Eres el único miembro de este grupo</value>
+  </data>
+  <data name="FILE_SIZE_EXCEEDED" xml:space="preserve">
+    <value>Ha superado el tamaño máximo de fichero permitido (50 MB)</value>
+  </data>
+  <data name="DATE_REQUEST" xml:space="preserve">
+    <value>Fecha de solicitud</value>
   </data>
 </root>

@@ -13,7 +13,7 @@ namespace FileSharing.Persistence.Daos
 		public AbstractDao()
         {
             var configurationBuilder = new ConfigurationBuilder()
-                .AddJsonFile("db_settings.json");
+                .AddJsonFile("persistence.json");
             var configuration = configurationBuilder.Build();
 
             DbContextOptionsBuilder<FileSharingContext> optionsBuilder = new DbContextOptionsBuilder<FileSharingContext>();

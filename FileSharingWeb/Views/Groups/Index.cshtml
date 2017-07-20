@@ -1,45 +1,34 @@
-﻿@model List<GroupDetailsDto>
-@using FileSharing.Services.Dtos
+﻿@model GroupsAndRequests
+@using FileSharingWeb.ViewModels
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IHtmlLocalizer<Resources> Localizer
 @{
     ViewData["Title"] = Localizer["GROUPS"];
     ViewData["Options"] = new[]
     {
+        "Search_box",
         "CreateGroup(),CREATE_GROUP",
         "SendGroupRequest(),REQUEST_UNION"
     };
 }
-
-<div class="text-center">
-    <select class="groups-search-select form-group">
-        <option value="0" selected="selected">@Localizer["SEARCH"]</option>
-    </select>
-    <div class="group-information">
-        <div class="text-center">
-            <div id="group-name"><h3></h3></div>
-            <div id="num-files"></div>
-            <div id="num-members"></div>
-        </div>
+<div class="groups">
+    <div class="text-center">
+        <h2>@Localizer["GROUPS"]</h2>
     </div>
-</div>
-
-@if (Model != null && Model.Count > 0)
-{
-    <br/><br/>
-    <div class="groups">
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>@Localizer["NAME"].Value.ToUpper()</th>
-                        <th>@Localizer["NUM_FILES"].Value.ToUpper()</th>
-                        <th>@Localizer["NUM_MEMBERS"].Value.ToUpper()</th>
-                        <th>@Localizer["ADMINISTRABLE"].Value.ToUpper()</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var group in Model)
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>@Localizer["NAME"].Value.ToUpper()</th>
+                    <th>@Localizer["NUM_FILES"].Value.ToUpper()</th>
+                    <th>@Localizer["NUM_MEMBERS"].Value.ToUpper()</th>
+                    <th>@Localizer["ADMINISTRABLE"].Value.ToUpper()</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model?.Groups != null && Model.Groups.Count > 0)
+                {
+                    @foreach (var group in Model.Groups)
                     {
                         <tr onclick="OpenGroupDetails('@group.Id')">
                             <td>@group.Name</td>
@@ -55,13 +44,104 @@
                             }
                         </tr>
                     }
-                </tbody>
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
     </div>
-}
+</div>
+
+<div class="group-requests">
+    <div class="text-center">
+        <h2>@Localizer["REQUESTS"]</h2>
+    </div>    
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>@Localizer["NAME"].Value.ToUpper()</th>
+                    <th>@Localizer["DATE_REQUEST"].Value.ToUpper()</th>
+                    <th>@Localizer["OPTIONS"].Value.ToUpper()</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model?.Requests != null && Model.Requests.Count > 0)
+                {
+                    @foreach (var request in Model.Requests)
+                    {
+                        <tr>
+                            <td>@request.GroupName</td>
+                            <td>@request.DateInclusionRequest</td>
+                            <td><a onclick="CancelRequest('@request.IdUser', '@request.IdGroup')" style="cursor: pointer">@Localizer["CANCEL"]</a></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <script>
+    $(document).ready(function () {
+        $("#Search_box").html(
+            '<div class="text-center">' +
+            '<select class="groups-search-select form-group">' +
+            '<option value="0">@Localizer["SEARCH"]</option>' +
+            '</select >' +
+            '</div>'
+        );
+
+        $(".groups-search-select").select2({
+            ajax: {
+                url: "/Groups/Query",
+                dataType: 'json',
+                data: function (params) {
+                    return {
+                        name: params.term, // search term
+                        rowQty: params.rowQty,
+                        page: params.page
+                    };
+                },
+                processResults: function (data, params) {
+                    // parse the results into the format expected by Select2
+                    // since we are using custom formatting functions we do not need to
+                    // alter the remote JSON data, except to indicate that infinite
+                    // scrolling can be used
+                    params.rowQty = 5;
+                    params.page = params.page;
+
+                    return {
+                        results: data,
+                        pagination: {
+                            more: (params.page + 1 * 5) < data.total_count
+                        }
+                    };
+                },
+                cache: false
+            },
+            escapeMarkup: function (markup) { return markup; },
+            minimumInputLength: 3,
+            templateResult: formatGroup,
+            templateSelection: formatGroupSelection
+        });
+
+        function formatGroup(group) {
+            if (group.loading) return group.text;
+
+            var markup = "<div class='clearfix'>" +
+                "<div>" +
+                "<div style='text-align:left;'>" + group.name + "</div>" +
+                "<div style='text-align:right;'>" + group.numOfMembers + " @Localizer["MEMBERS"] | " + group.numOfFiles + " @Localizer["FILES"]</div></div>" +
+                "</div>";
+
+            return markup;
+        }
+
+        function formatGroupSelection(group) {
+            selectedGroup = group || null;
+            return group.name || group.text;
+        }
+    });
+
     var selectedGroup = null;
     function CreateGroup() {
         swal({
@@ -91,57 +171,6 @@
 
     function OpenGroupDetails(id) {
         window.location.href = '@Url.Action("Details", "Groups")/' + id;
-    }
-
-    $(".groups-search-select").select2({
-        ajax: {
-            url: "/Groups/Query",
-            dataType: 'json',
-            data: function (params) {
-                return {
-                    name: params.term, // search term
-                    rowQty: params.rowQty,
-                    page: params.page
-                };
-            },
-            processResults: function (data, params) {
-                // parse the results into the format expected by Select2
-                // since we are using custom formatting functions we do not need to
-                // alter the remote JSON data, except to indicate that infinite
-                // scrolling can be used
-                params.rowQty = 5;
-                params.page = params.page;
-
-                return {
-                    results: data,
-                    pagination: {
-                        more: (params.page + 1 * 5) < data.total_count
-                    }
-                };
-            },
-            cache: false
-        },
-        escapeMarkup: function (markup) { return markup; },
-        minimumInputLength: 3,
-        templateResult: formatGroup,
-        templateSelection: formatGroupSelection
-    });
-
-    function formatGroup(group) {
-        if (group.loading) return group.text;
-
-        var markup = "<div class='clearfix'>" +
-            "<div style='display: flex;justify-content: space-between;'>" +
-            "<div style='text-align:left;'>" + group.name + "</div>" +
-            "<div style='text-align:right;'>" + group.numOfMembers + " @Localizer["MEMBERS"] | " + group.numOfFiles + " @Localizer["FILES"]</div></div>" +
-            "</div><hr/>";
-
-        return markup;
-    }
-
-    function formatGroupSelection(group) {
-        selectedGroup = group || null;
-        return group.name || group.text;
     }
 
     function SendGroupRequest() {
@@ -175,5 +204,20 @@
         } else {
             ShowErrorMessage('@Localizer["NO_GROUP_SELECTED"]', '@Localizer["MUST_SEARCH_GROUP_BEFORE"]');
         }
+    }
+
+    function CancelRequest(idUser, idGroup) {
+        $.ajax({
+            url: '/Groups/DeleteMember/',
+            type: 'POST',
+            data: { idUser: idUser, idGroup: idGroup },
+            cache: false,
+            success: function () {
+                location.reload();
+            },
+            error: function (message) {
+                ShowErrorMessage('', message.responseText);
+            }
+        });
     }
 </script>

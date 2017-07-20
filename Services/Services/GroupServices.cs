@@ -193,6 +193,10 @@ namespace FileSharing.Services
             {
                 var session = CheckSession(securityToken);
                 var group = _dao.ReadFullGroup(idGroup);
+
+                if (group.Users.Where(x => x.IdUser == session.IdUser).FirstOrDefault() == null)
+                    throw new FileSharingException(FileSharingException.UNAUTHORIZED,
+                                                        "You do not have permissions to read this group.");
                 var result = Mapper.Map<GroupDetailsExtendedDto>(group);
 
                 result.IsAdministrable = group.IdAdmin == session.IdUser;

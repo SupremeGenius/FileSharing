@@ -13,7 +13,7 @@ namespace FileSharing.Services.Dtos
 		public long? IdFolder { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime ModificationDate { get; set; }
-        public long ContentSize { get; set; }
+        public string ContentSize { get; set; }
         public bool IsOwn { get; set; }
 	}
 }

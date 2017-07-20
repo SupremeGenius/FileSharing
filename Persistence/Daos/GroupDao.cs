@@ -37,9 +37,9 @@ namespace FileSharing.Persistence.Daos
         public List<Group> GetByUser(long idUser)
         {
             return (from g in _dbSet
-                    join ug in _context.UserGroup on g.Id equals ug.IdGroup
-                    where ug.IdUser == idUser && ug.DateInclusionApproval.HasValue
-                    select g)
+                         join ug in _context.UserGroup on g.Id equals ug.IdGroup
+                         where ug.IdUser == idUser && ug.DateInclusionApproval.HasValue
+                         select g)
                     .Include(g => g.Files)
                     .Include(g => g.Users)
                     .Include(g => g.Admin).ToList();

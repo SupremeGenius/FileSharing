@@ -10,7 +10,12 @@ namespace FileSharing.Services
 {
     public class FileServices : AbstractServices<FileDao>
 	{
-		public FileServices() : base(new FileDao()) { }
+        readonly string[] measurements;
+
+        public FileServices() : base(new FileDao())
+        {
+            measurements = $"{configuration["Measurements"]}".Split(',');
+        }
 
 		public long Create(string securityToken, FileDto file, byte[] content)
 		{
@@ -57,7 +62,15 @@ namespace FileSharing.Services
                 CheckAuthorizationToFile(session, fileDom);
 
 				var file = Mapper.Map<FileDto>(fileDom);
-                file.ContentSize = GetFileContent(fileDom).Length/1024;
+
+                double bytes = GetFileContent(fileDom).Length;
+                var cont = 0;
+                while(bytes > 500)
+                {
+                    bytes = Math.Round(bytes/1024, 2);
+                    cont++;
+                }
+                file.ContentSize = bytes.ToString() + " " + measurements[cont];
                 file.IsOwn = file.IdUser == session.IdUser;
 
 				return file;
@@ -156,24 +169,6 @@ namespace FileSharing.Services
 			}
 		}
 
-        public List<FileDto> GetFilesByGroup(string securityToken, long idGroup)
-        {
-            try
-            {
-                var session = CheckSession(securityToken);
-                var result = _dao.GetFilesByIdGroup(idGroup);
-                return Mapper.Map<List<FileDto>>(result);
-            }
-            catch (FileSharingException)
-            {
-                throw;
-            }
-            catch (Exception e)
-            {
-                throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
-            }
-        }
-
         public byte[] GetFileContent(string securityToken, long idFile)
         {
             var session = CheckSession(securityToken);
@@ -223,7 +218,7 @@ namespace FileSharing.Services
                         userGroup = userGroupServices.Read(session.SecurityToken, session.IdUser, file.IdGroup.Value);
                     }
                 }
-                if (userGroup == null)
+                if (userGroup?.DateInclusionApproval == null)
                     throw new FileSharingException(FileSharingException.UNAUTHORIZED,
                                                        "You do not have permissions to read this file");
             }

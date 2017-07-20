@@ -7,13 +7,13 @@
     "jquery-validation": "1.16.0",
     "jquery-validation-unobtrusive": "3.2.6",
     "font-awesome": "Font-Awesome#v4.7.0",
-    "sweetalert2": "v6.6.5",
+    "sweetalert2": "v6.6.6",
     "core.js": "v2.4.1",
     "select2": "4.0.3"
   },
   "resolutions": {
     "jquery-validation": "1.16.0",
     "jquery": "3.2.1",
-    "sweetalert2": "v6.6.5"
+    "sweetalert2": "v6.6.6"
   }
 }

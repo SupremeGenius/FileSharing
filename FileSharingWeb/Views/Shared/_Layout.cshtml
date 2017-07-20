@@ -56,7 +56,13 @@
                 @foreach (var option in (string[])@ViewData["Options"])
                 {
                     var parts = option.Split(',');
-                    if (parts.Length == 2)
+                    if (parts.Length == 1)
+                    {
+                        <li>
+                            <div id="@parts[0]"></div>
+                        </li>
+                    }
+                    else if (parts.Length == 2)
                     {
                         <li>
                             <a onclick="@parts[0]">@Localizer[parts[1]]</a>
@@ -136,7 +142,7 @@
                     }
                 });
             }
-            html += '<div class="swal2-div-info"><span class="swal2-label-info">@Localizer["SIZE"]:</span> <span class="swal2-text-info">' + file.contentSize + 'KB</span><br/>' +
+            html += '<div class="swal2-div-info"><span class="swal2-label-info">@Localizer["SIZE"]:</span> <span class="swal2-text-info">' + file.contentSize + '</span><br/>' +
                 '<span class="swal2-label-info">@Localizer["CREATION_DATE"]:</span> <span class="swal2-text-info">' + formatDate(new Date(file.creationDate)) + '</span><br/>' +
                 '<span class="swal2-label-info">@Localizer["MODIFICATION_DATE"]:</span> <span class="swal2-text-info">' + formatDate(new Date(file.modificationDate)) + '</span></div><br/>';
             if (file.isOwn) {
@@ -248,7 +254,7 @@
 
             var markup = "<div class='clearfix'>" +
                 "<div class='text-center'>" + file.filename + "</div>" +
-                "</div><hr/>";
+                "</div>";
 
             return markup;
         }

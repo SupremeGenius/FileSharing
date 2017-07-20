@@ -1,30 +1,35 @@
-﻿using System.Linq;
-using FileSharing.Persistence.Models;
+﻿using FileSharing.Persistence.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using FileSharing.Persistence.Models.Filters;
+using System.Linq;
 
 namespace FileSharing.Persistence.Daos
 {
-	public class UserGroupDao : AbstractDao<UserGroup, long[]>
+    public class UserGroupDao : AbstractDao<UserGroup, long[]>
 	{
-		public List<UserGroup> Query(UserGroupFilter filter)
+		public UserGroup Read(long idUser, long idGroup)
 		{
-            var query = _dbSet.AsQueryable();
+            return _dbSet
+                .Where(ug => ug.IdUser == idUser && ug.IdGroup == idGroup)
+                .FirstOrDefault();
+        }
+        
+        public UserGroup ReadFull(long idUser, long idGroup)
+        {
+            return _dbSet
+                .Include(ug => ug.Group)
+                .Include(ug => ug.User)
+                .Where(ug => ug.IdUser == idUser && ug.IdGroup == idGroup)
+                .FirstOrDefault();
+        }
 
-            if (filter.IdUser.HasValue)
-                query = query.Where(ug => ug.IdUser == filter.IdUser);
-            if (filter.IdGroup.HasValue)
-                query = query.Where(ug => ug.IdGroup == filter.IdGroup);
-            if (filter.DateInclusionRequestFrom.HasValue)
-                query = query.Where(ug => ug.DateInclusionRequest >= filter.DateInclusionRequestFrom);
-            if (filter.DateInclusionRequestTo.HasValue)
-                query = query.Where(ug => ug.DateInclusionRequest < filter.DateInclusionRequestTo);
-            if (filter.DateInclusionApprovalFrom.HasValue)
-                query = query.Where(ug => ug.DateInclusionApproval >= filter.DateInclusionApprovalFrom);
-            if (filter.DateInclusionApprovalTo.HasValue)
-                query = query.Where(ug => ug.DateInclusionApproval < filter.DateInclusionApprovalTo);
-
-            return query.ToList();
+        public List<UserGroup> GetRequestsByUser(long idUser)
+        {
+            return _dbSet
+                .Include(ug => ug.Group)
+                .Include(ug => ug.User)
+                .Where(ug => ug.IdUser == idUser && !ug.DateInclusionApproval.HasValue)
+                .ToList();
         }
     }
 }

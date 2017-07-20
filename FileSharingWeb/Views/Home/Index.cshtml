@@ -87,6 +87,16 @@
     }
 
     function UploadFile() {
+        var groups = {};
+        $.ajax({
+            url: '/Groups/GetGroups',
+            type: 'GET',
+            cache: false,
+            async: false,
+            success: function (result) {
+                groups = result;
+            }
+        });
         var html = '<input type="checkbox" id="is-public"><span> @Localizer["PUBLIC"]</span><br/>';
         if (groups != null && groups.length > 0) {
             html += '<div class="form-group">' +
@@ -118,9 +128,13 @@
                 inputValidator: function (result) {
                     return new Promise(function (resolve, reject) {
                         if (result) {
-                            resolve()
+                            if (result.size > 52428800) { //50 MB
+                                reject('@Localizer["FILE_SIZE_EXCEEDED"]');
+                            } else {
+                                resolve();
+                            }
                         } else {
-                            reject('@Localizer["FILE_MUST_BE_SELETED"]')
+                            reject('@Localizer["FILE_MUST_BE_SELETED"]');
                         }
                     })
                 }
@@ -132,7 +146,7 @@
                         resolve([
                             $("#is-public").is(':checked'),
                             $('#id-group').val()
-                        ])
+                        ]);
                     })
                 }
             }
@@ -158,7 +172,7 @@
                 }
             });
         }, function () {
-            swal.resetDefaults()
+            swal.resetDefaults();
         });
     }
 

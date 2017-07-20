@@ -59,7 +59,7 @@
                     <th></th>
                 </tr>
                 <tr>
-                    <th>@Localizer["LOGIN"].Value.ToUpper()</th>
+                    <th>@Localizer["USERNAME"].Value.ToUpper()</th>
                     <th>@Localizer["NAME"].Value.ToUpper()</th>
                     <th>@Localizer["OPTIONS"].Value.ToUpper()</th>
                 </tr>
@@ -184,7 +184,7 @@
             });
         }
         else {
-            ShowErrorMessage('', "You are the only member");
+            ShowErrorMessage('', '@Localizer["YOU_ARE_THE_ONLY_MEMBER"].Value');
         }
     }
 
@@ -229,7 +229,7 @@
             });
         }
         else {
-            ShowErrorMessage('', "You are the only member");
+            ShowErrorMessage('', '@Localizer["YOU_ARE_THE_ONLY_MEMBER"].Value');
         }
     }
 </script>

@@ -2,22 +2,28 @@
 using FileSharing.Services.Dtos;
 using FileSharing.Services.Exceptions;
 using FileSharing.Services.Mapping;
+using Microsoft.Extensions.Configuration;
 
 namespace FileSharing.Services
 {
 	public abstract class AbstractServices<T> : IDisposable
 	{
 		protected T _dao;
+        protected IConfigurationRoot configuration;
 
 		public AbstractServices(T dao)
 		{
 			AutoMapperConfig.RegisterMappings();
 			_dao = dao;
-		}
 
-		#region IDisposable
+            var configurationBuilder = new ConfigurationBuilder()
+                 .AddJsonFile("services.json");
+            configuration = configurationBuilder.Build();
+        }
 
-		public void Dispose()
+        #region IDisposable
+
+        public void Dispose()
 		{
 		}
 
@@ -26,7 +32,12 @@ namespace FileSharing.Services
 		public SessionDto CheckSession(string securityToken)
 		{
             using (var _sessionServices = new SessionServices())
-			    return _sessionServices.Read(securityToken);
+            {
+                var minutes = Convert.ToInt32($"{configuration["MinutesToExpireSession"]}") * -1;
+                _sessionServices.DeleteExpiredSessions(DateTime.Now.AddMinutes(minutes));
+                return _sessionServices.Read(securityToken);
+            }
+
 		}
 
 		public void Audit(long idUser, string idObj, string obj, ActionDto action, string description)

@@ -1,5 +1,6 @@
 ﻿using FileSharing.Services.Dtos;
 using FileSharing.Services.Exceptions;
+using FileSharingWeb.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -23,10 +24,11 @@ namespace FileSharingWeb.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            List<GroupDetailsDto> result = new List<GroupDetailsDto>();
+            GroupsAndRequests result = new GroupsAndRequests();
             try
             {
-                result = Services.Group.GetGroupsOfUser(SecurityToken);
+                result.Groups = Services.Group.GetGroupsOfUser(SecurityToken);
+                result.Requests = Services.UserGroup.GetRequestsOfUser(SecurityToken);
             }
             catch (FileSharingException e)
             {
@@ -139,9 +141,7 @@ namespace FileSharingWeb.Controllers
         {
             try
             {
-                var userGroup = Services.UserGroup.Read(SecurityToken, idUser, idGroup);
-                userGroup.DateInclusionApproval = DateTime.Now;
-                Services.UserGroup.Update(SecurityToken, userGroup);
+                Services.UserGroup.Accept(SecurityToken, idUser, idGroup);
             }
             catch (FileSharingException e)
             {
@@ -156,7 +156,7 @@ namespace FileSharingWeb.Controllers
         {
             try
             {
-                Services.UserGroup.Delete(SecurityToken, idUser, idGroup);
+                Services.UserGroup.Reject(SecurityToken, idUser, idGroup);
 
             }
             catch (FileSharingException e)
@@ -173,7 +173,7 @@ namespace FileSharingWeb.Controllers
             try
             {
                 var user = Services.User.Read(SecurityToken);
-                Services.UserGroup.Delete(SecurityToken, user.Id, id);
+                Services.UserGroup.Reject(SecurityToken, user.Id, id);
 
             }
             catch (FileSharingException e)
