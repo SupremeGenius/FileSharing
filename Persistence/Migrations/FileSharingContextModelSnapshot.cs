@@ -25,25 +25,20 @@ namespace FileSharing.Persistence.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("Action")
-                        .HasColumnType("varchar(50)");
+                    b.Property<int>("Action");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime>("Date");
 
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired();
 
                     b.Property<string>("IdObject")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
+                        .IsRequired();
 
                     b.Property<long>("IdUser");
 
                     b.Property<string>("Object")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -56,15 +51,12 @@ namespace FileSharing.Persistence.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("ContentType")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
+                        .IsRequired();
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime>("CreationDate");
 
                     b.Property<string>("Filename")
-                        .IsRequired()
-                        .HasColumnType("varchar(200)");
+                        .IsRequired();
 
                     b.Property<long?>("IdFolder");
 
@@ -74,8 +66,7 @@ namespace FileSharing.Persistence.Migrations
 
                     b.Property<bool>("IsPublic");
 
-                    b.Property<DateTime>("ModificationDate")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime>("ModificationDate");
 
                     b.HasKey("Id");
 
@@ -98,8 +89,7 @@ namespace FileSharing.Persistence.Migrations
                     b.Property<long>("IdUser");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("varchar(200)");
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -118,16 +108,14 @@ namespace FileSharing.Persistence.Migrations
                     b.Property<long>("IdAdmin");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("varchar(200)");
+                        .IsRequired();
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdAdmin");
 
                     b.HasIndex("Name")
-                        .IsUnique()
-                        .HasName("UK_Group");
+                        .IsUnique();
 
                     b.ToTable("Group");
                 });
@@ -135,16 +123,13 @@ namespace FileSharing.Persistence.Migrations
             modelBuilder.Entity("FileSharing.Persistence.Models.Session", b =>
                 {
                     b.Property<string>("SecurityToken")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("varchar(200)");
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("DateLastAccess")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime>("DateLastAccess");
 
                     b.Property<long>("IdUser");
 
-                    b.HasKey("SecurityToken")
-                        .HasName("PK_Session");
+                    b.HasKey("SecurityToken");
 
                     b.HasIndex("IdUser");
 
@@ -157,26 +142,21 @@ namespace FileSharing.Persistence.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
+                        .IsRequired();
 
                     b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
+                        .IsRequired();
 
                     b.Property<string>("Login")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
+                        .IsRequired();
 
                     b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("varchar(200)");
+                        .IsRequired();
 
                     b.HasKey("Id");
 
                     b.HasIndex("Login")
-                        .IsUnique()
-                        .HasName("UK_User");
+                        .IsUnique();
 
                     b.ToTable("User");
                 });
@@ -187,14 +167,11 @@ namespace FileSharing.Persistence.Migrations
 
                     b.Property<long>("IdGroup");
 
-                    b.Property<DateTime?>("DateInclusionApproval")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime?>("DateInclusionApproval");
 
-                    b.Property<DateTime>("DateInclusionRequest")
-                        .HasColumnType("datetime");
+                    b.Property<DateTime>("DateInclusionRequest");
 
-                    b.HasKey("IdUser", "IdGroup")
-                        .HasName("PK_UserGroup");
+                    b.HasKey("IdUser", "IdGroup");
 
                     b.HasIndex("IdGroup");
 
@@ -206,18 +183,15 @@ namespace FileSharing.Persistence.Migrations
                     b.HasOne("FileSharing.Persistence.Models.Folder", "Folder")
                         .WithMany("Files")
                         .HasForeignKey("IdFolder")
-                        .HasConstraintName("FK_File_Folder")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("FileSharing.Persistence.Models.Group", "Group")
                         .WithMany("Files")
-                        .HasForeignKey("IdGroup")
-                        .HasConstraintName("FK_File_Group");
+                        .HasForeignKey("IdGroup");
 
                     b.HasOne("FileSharing.Persistence.Models.User", "User")
                         .WithMany("Files")
                         .HasForeignKey("IdUser")
-                        .HasConstraintName("FK_File_User")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -225,14 +199,11 @@ namespace FileSharing.Persistence.Migrations
                 {
                     b.HasOne("FileSharing.Persistence.Models.Folder", "FolderRoot")
                         .WithMany("Folders")
-                        .HasForeignKey("IdFolderRoot")
-                        .HasConstraintName("FK_Folder_Folder")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("IdFolderRoot");
 
                     b.HasOne("FileSharing.Persistence.Models.User", "User")
                         .WithMany("Folders")
                         .HasForeignKey("IdUser")
-                        .HasConstraintName("FK_Folder_User")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -241,7 +212,6 @@ namespace FileSharing.Persistence.Migrations
                     b.HasOne("FileSharing.Persistence.Models.User", "Admin")
                         .WithMany("AdministrableGroups")
                         .HasForeignKey("IdAdmin")
-                        .HasConstraintName("FK_Group_User")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
@@ -250,7 +220,6 @@ namespace FileSharing.Persistence.Migrations
                     b.HasOne("FileSharing.Persistence.Models.User", "User")
                         .WithMany("Sessions")
                         .HasForeignKey("IdUser")
-                        .HasConstraintName("FK_Session_User")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -259,13 +228,11 @@ namespace FileSharing.Persistence.Migrations
                     b.HasOne("FileSharing.Persistence.Models.Group", "Group")
                         .WithMany("Users")
                         .HasForeignKey("IdGroup")
-                        .HasConstraintName("FK_UserGroup_Group")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("FileSharing.Persistence.Models.User", "User")
                         .WithMany("Groups")
                         .HasForeignKey("IdUser")
-                        .HasConstraintName("FK_UserGroup_User")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

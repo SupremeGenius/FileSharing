@@ -24,155 +24,127 @@ namespace FileSharing.Persistence.Models
             modelBuilder.Entity<Audit>(entity =>
             {
                 entity.Property(e => e.Action)
-                    .IsRequired()
-                    .HasColumnType("varchar(50)");
+                    .IsRequired();
 
-                entity.Property(e => e.Date).HasColumnType("datetime");
+                entity.Property(e => e.Date);
 
                 entity.Property(e => e.Description)
-                    .IsRequired()
-                    .HasColumnType("nvarchar(max)");
+                    .IsRequired();
 
                 entity.Property(e => e.IdObject)
-                    .IsRequired()
-                    .HasColumnType("varchar(50)");
+                    .IsRequired();
 
                 entity.Property(e => e.Object)
-                    .IsRequired()
-                    .HasColumnType("varchar(50)");
+                    .IsRequired();
             });
 
             modelBuilder.Entity<File>(entity =>
             {
                 entity.Property(e => e.Filename)
-                    .IsRequired()
-                    .HasColumnType("varchar(200)");
+                    .IsRequired();
 
                 entity.Property(e => e.ContentType)
-                    .IsRequired()
-                    .HasColumnType("varchar(50)");
+                    .IsRequired();
 
                 entity.Property(e => e.CreationDate)
-                    .IsRequired()
-                    .HasColumnType("datetime");
+                    .IsRequired();
 
                 entity.Property(e => e.ModificationDate)
-                    .IsRequired()
-                    .HasColumnType("datetime");
+                    .IsRequired();
 
                 entity.HasOne(d => d.Folder)
                     .WithMany(p => p.Files)
                     .HasForeignKey(d => d.IdFolder)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_File_Folder");
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(d => d.Group)
                     .WithMany(p => p.Files)
-                    .HasForeignKey(d => d.IdGroup)
-                    .HasConstraintName("FK_File_Group");
+                    .HasForeignKey(d => d.IdGroup);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Files)
                     .HasForeignKey(d => d.IdUser)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_File_User");
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<Folder>(entity =>
             {
                 entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasColumnType("varchar(200)");
+                    .IsRequired();
 
                 entity.HasOne(d => d.FolderRoot)
                     .WithMany(p => p.Folders)
-                    .HasForeignKey(d => d.IdFolderRoot)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_Folder_Folder");
+                    .HasForeignKey(d => d.IdFolderRoot);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Folders)
                     .HasForeignKey(d => d.IdUser)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_Folder_User");
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<Group>(entity =>
             {
                 entity.HasIndex(e => e.Name)
-                    .HasName("UK_Group")
                     .IsUnique();
 
                 entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasColumnType("varchar(200)");
+                    .IsRequired();
 
                 entity.HasOne(d => d.Admin)
                     .WithMany(p => p.AdministrableGroups)
                     .HasForeignKey(d => d.IdAdmin)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_Group_User");
+                    .OnDelete(DeleteBehavior.Restrict);
             });
 
             modelBuilder.Entity<Session>(entity =>
             {
-                entity.HasKey(e => e.SecurityToken)
-                    .HasName("PK_Session");
+                entity.HasKey(e => e.SecurityToken);
 
-                entity.Property(e => e.SecurityToken).HasColumnType("varchar(200)");
+                entity.Property(e => e.SecurityToken);
 
-                entity.Property(e => e.DateLastAccess).HasColumnType("datetime");
+                entity.Property(e => e.DateLastAccess);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Sessions)
                     .HasForeignKey(d => d.IdUser)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_Session_User");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<User>(entity =>
             {
                 entity.HasIndex(e => e.Login)
-                    .HasName("UK_User")
                     .IsUnique();
 
                 entity.Property(e => e.FirstName)
-                    .IsRequired()
-                    .HasColumnType("varchar(50)");
+                    .IsRequired();
 
                 entity.Property(e => e.LastName)
-                    .IsRequired()
-                    .HasColumnType("varchar(50)");
+                    .IsRequired();
 
                 entity.Property(e => e.Login)
-                    .IsRequired()
-                    .HasColumnType("varchar(50)");
+                    .IsRequired();
 
                 entity.Property(e => e.Password)
-                    .IsRequired()
-                    .HasColumnType("varchar(200)");
+                    .IsRequired();
             });
 
             modelBuilder.Entity<UserGroup>(entity =>
             {
-                entity.HasKey(e => new { e.IdUser, e.IdGroup })
-                    .HasName("PK_UserGroup");
+                entity.HasKey(e => new { e.IdUser, e.IdGroup });
 
-                entity.Property(e => e.DateInclusionApproval).HasColumnType("datetime");
+                entity.Property(e => e.DateInclusionApproval);
 
-                entity.Property(e => e.DateInclusionRequest).HasColumnType("datetime");
+                entity.Property(e => e.DateInclusionRequest);
 
                 entity.HasOne(d => d.Group)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.IdGroup)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_UserGroup_Group");
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Groups)
                     .HasForeignKey(d => d.IdUser)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("FK_UserGroup_User");
+                    .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }

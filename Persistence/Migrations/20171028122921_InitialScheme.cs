@@ -15,12 +15,12 @@ namespace FileSharing.Persistence.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Action = table.Column<int>(type: "varchar(50)", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime", nullable: false),
+                    Action = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IdObject = table.Column<string>(type: "varchar(50)", nullable: false),
+                    IdObject = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IdUser = table.Column<long>(type: "bigint", nullable: false),
-                    Object = table.Column<string>(type: "varchar(50)", nullable: false)
+                    Object = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -33,10 +33,10 @@ namespace FileSharing.Persistence.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    FirstName = table.Column<string>(type: "varchar(50)", nullable: false),
-                    LastName = table.Column<string>(type: "varchar(50)", nullable: false),
-                    Login = table.Column<string>(type: "varchar(50)", nullable: false),
-                    Password = table.Column<string>(type: "varchar(200)", nullable: false)
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Login = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,19 +51,19 @@ namespace FileSharing.Persistence.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     IdFolderRoot = table.Column<long>(type: "bigint", nullable: true),
                     IdUser = table.Column<long>(type: "bigint", nullable: false),
-                    Name = table.Column<string>(type: "varchar(200)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Folder", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Folder_Folder",
+                        name: "FK_Folder_Folder_IdFolderRoot",
                         column: x => x.IdFolderRoot,
                         principalTable: "Folder",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Folder_User",
+                        name: "FK_Folder_User_IdUser",
                         column: x => x.IdUser,
                         principalTable: "User",
                         principalColumn: "Id",
@@ -77,13 +77,13 @@ namespace FileSharing.Persistence.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     IdAdmin = table.Column<long>(type: "bigint", nullable: false),
-                    Name = table.Column<string>(type: "varchar(200)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Group", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Group_User",
+                        name: "FK_Group_User_IdAdmin",
                         column: x => x.IdAdmin,
                         principalTable: "User",
                         principalColumn: "Id",
@@ -94,15 +94,15 @@ namespace FileSharing.Persistence.Migrations
                 name: "Session",
                 columns: table => new
                 {
-                    SecurityToken = table.Column<string>(type: "varchar(200)", nullable: false),
-                    DateLastAccess = table.Column<DateTime>(type: "datetime", nullable: false),
+                    SecurityToken = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    DateLastAccess = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IdUser = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Session", x => x.SecurityToken);
                     table.ForeignKey(
-                        name: "FK_Session_User",
+                        name: "FK_Session_User_IdUser",
                         column: x => x.IdUser,
                         principalTable: "User",
                         principalColumn: "Id",
@@ -115,32 +115,32 @@ namespace FileSharing.Persistence.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ContentType = table.Column<string>(type: "varchar(50)", nullable: false),
-                    CreationDate = table.Column<DateTime>(type: "datetime", nullable: false),
-                    Filename = table.Column<string>(type: "varchar(200)", nullable: false),
+                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Filename = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IdFolder = table.Column<long>(type: "bigint", nullable: true),
                     IdGroup = table.Column<long>(type: "bigint", nullable: true),
                     IdUser = table.Column<long>(type: "bigint", nullable: false),
                     IsPublic = table.Column<bool>(type: "bit", nullable: false),
-                    ModificationDate = table.Column<DateTime>(type: "datetime", nullable: false)
+                    ModificationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_File", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_File_Folder",
+                        name: "FK_File_Folder_IdFolder",
                         column: x => x.IdFolder,
                         principalTable: "Folder",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_File_Group",
+                        name: "FK_File_Group_IdGroup",
                         column: x => x.IdGroup,
                         principalTable: "Group",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_File_User",
+                        name: "FK_File_User_IdUser",
                         column: x => x.IdUser,
                         principalTable: "User",
                         principalColumn: "Id",
@@ -153,20 +153,20 @@ namespace FileSharing.Persistence.Migrations
                 {
                     IdUser = table.Column<long>(type: "bigint", nullable: false),
                     IdGroup = table.Column<long>(type: "bigint", nullable: false),
-                    DateInclusionApproval = table.Column<DateTime>(type: "datetime", nullable: true),
-                    DateInclusionRequest = table.Column<DateTime>(type: "datetime", nullable: false)
+                    DateInclusionApproval = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DateInclusionRequest = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserGroup", x => new { x.IdUser, x.IdGroup });
                     table.ForeignKey(
-                        name: "FK_UserGroup_Group",
+                        name: "FK_UserGroup_Group_IdGroup",
                         column: x => x.IdGroup,
                         principalTable: "Group",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserGroup_User",
+                        name: "FK_UserGroup_User_IdUser",
                         column: x => x.IdUser,
                         principalTable: "User",
                         principalColumn: "Id",
@@ -204,7 +204,7 @@ namespace FileSharing.Persistence.Migrations
                 column: "IdAdmin");
 
             migrationBuilder.CreateIndex(
-                name: "UK_Group",
+                name: "IX_Group_Name",
                 table: "Group",
                 column: "Name",
                 unique: true);
@@ -215,7 +215,7 @@ namespace FileSharing.Persistence.Migrations
                 column: "IdUser");
 
             migrationBuilder.CreateIndex(
-                name: "UK_User",
+                name: "IX_User_Login",
                 table: "User",
                 column: "Login",
                 unique: true);
