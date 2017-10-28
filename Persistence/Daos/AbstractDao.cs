@@ -1,7 +1,6 @@
 ﻿using System;
 using FileSharing.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace FileSharing.Persistence.Daos
 {
@@ -12,14 +11,10 @@ namespace FileSharing.Persistence.Daos
 
 		public AbstractDao()
         {
-            var configurationBuilder = new ConfigurationBuilder()
-                .AddJsonFile("persistence.json");
-            var configuration = configurationBuilder.Build();
-
-            DbContextOptionsBuilder<FileSharingContext> optionsBuilder = new DbContextOptionsBuilder<FileSharingContext>();
-            optionsBuilder.UseSqlServer($"{configuration["ConnectionString"]}");
-
-            _context = new FileSharingContext(optionsBuilder.Options);
+            using (var factory = new ContextFactory())
+            {
+                _context = factory.CreateDbContext(new string[0]);
+            }
 			_dbSet = _context.Set<T>();
 		}
 

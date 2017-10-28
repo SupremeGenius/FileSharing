@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 
 namespace FileSharing.Persistence.Models
 {
@@ -172,6 +174,27 @@ namespace FileSharing.Persistence.Models
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_UserGroup_User");
             });
+        }
+    }
+
+    public class ContextFactory
+        : IDesignTimeDbContextFactory<FileSharingContext>, IDisposable
+    {
+        public FileSharingContext CreateDbContext(string[] args)
+        {
+            var configurationBuilder = new ConfigurationBuilder()
+                .AddJsonFile("persistence.json");
+            var configuration = configurationBuilder.Build();
+
+            var builder = new DbContextOptionsBuilder<FileSharingContext>();
+
+            builder.UseSqlServer($"{configuration["ConnectionString"]}");
+
+            return new FileSharingContext(builder.Options);
+        }
+
+        public void Dispose()
+        {
         }
     }
 }
