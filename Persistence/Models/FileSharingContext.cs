@@ -187,8 +187,15 @@ namespace FileSharing.Persistence.Models
             var configuration = configurationBuilder.Build();
 
             var builder = new DbContextOptionsBuilder<FileSharingContext>();
-
-            builder.UseSqlServer($"{configuration["ConnectionString"]}");
+            var databaseEngine = $"{configuration["DatabaseEngine"]}";
+            switch (databaseEngine){
+                case "SqlServer":
+                    builder.UseSqlServer(configuration.GetConnectionString(databaseEngine));
+                    break;
+                case "PostgreSQL":
+                    builder.UseNpgsql(configuration.GetConnectionString(databaseEngine));
+                    break;
+            }
 
             return new FileSharingContext(builder.Options);
         }
