@@ -26,7 +26,8 @@ namespace FileSharingWeb.Controllers
             GroupsAndRequestsDto result = new GroupsAndRequestsDto();
             try
             {
-                result = Services.Group.GetGroupsAndRequestsOfUser(SecurityToken);
+                using (var srv = ServicesFactory.Group)
+                    result = srv.GetGroupsAndRequestsOfUser(SecurityToken);
             }
             catch (FileSharingException e)
             {
@@ -40,7 +41,8 @@ namespace FileSharingWeb.Controllers
         {
             try
             {
-                Services.Group.Create(SecurityToken, groupName);
+                using (var srv = ServicesFactory.Group)
+                    srv.Create(SecurityToken, groupName);
             }
             catch (FileSharingException e)
             {
@@ -57,7 +59,8 @@ namespace FileSharingWeb.Controllers
             if (!id.HasValue) return View();
             try
             {
-                result = Services.Group.GetGroupDetails(SecurityToken, id.Value);
+                using (var srv = ServicesFactory.Group)
+                    result = srv.GetGroupDetails(SecurityToken, id.Value);
             }
             catch (FileSharingException e)
             {
@@ -72,7 +75,8 @@ namespace FileSharingWeb.Controllers
         {
             try
             {
-                Services.Group.Delete(SecurityToken, id);
+                using (var srv = ServicesFactory.Group)
+                    srv.Delete(SecurityToken, id);
             }
             catch (FileSharingException e)
             {
@@ -88,7 +92,8 @@ namespace FileSharingWeb.Controllers
             List<GroupDetailsDto> result = new List<GroupDetailsDto>();
             try
             {
-                result = Services.Group.GetGroupsOfUser(SecurityToken);
+                using (var srv = ServicesFactory.Group)
+                    result = srv.GetGroupsOfUser(SecurityToken);
             }
             catch (FileSharingException e)
             {
@@ -103,7 +108,8 @@ namespace FileSharingWeb.Controllers
             List<GroupDetailsDto> result = new List<GroupDetailsDto>();
             try
             {
-                result = Services.Group.QueryByName(SecurityToken, name, rowQty, page);
+                using (var srv = ServicesFactory.Group)
+                    result = srv.QueryByName(SecurityToken, name, rowQty, page);
             }
             catch (FileSharingException e)
             {
@@ -117,14 +123,19 @@ namespace FileSharingWeb.Controllers
         {
             try
             {
-                var user = Services.User.Read(SecurityToken);
+                UserDto user;
+                using (var srv = ServicesFactory.User)
+                    user = srv.Read(SecurityToken);
+
                 var result = new UserGroupDto
                 {
                     IdGroup = id,
                     IdUser = user.Id,
                     DateInclusionRequest = DateTime.Now
                 };
-                Services.UserGroup.Create(SecurityToken, result);
+
+                using (var srv = ServicesFactory.UserGroup)
+                    srv.Create(SecurityToken, result);
             }
             catch (FileSharingException e)
             {
@@ -139,7 +150,8 @@ namespace FileSharingWeb.Controllers
         {
             try
             {
-                Services.UserGroup.Accept(SecurityToken, idUser, idGroup);
+                using (var srv = ServicesFactory.UserGroup)
+                    srv.Accept(SecurityToken, idUser, idGroup);
             }
             catch (FileSharingException e)
             {
@@ -154,8 +166,8 @@ namespace FileSharingWeb.Controllers
         {
             try
             {
-                Services.UserGroup.Reject(SecurityToken, idUser, idGroup);
-
+                using (var srv = ServicesFactory.UserGroup)
+                    srv.Reject(SecurityToken, idUser, idGroup);
             }
             catch (FileSharingException e)
             {
@@ -170,8 +182,12 @@ namespace FileSharingWeb.Controllers
         {
             try
             {
-                var user = Services.User.Read(SecurityToken);
-                Services.UserGroup.Reject(SecurityToken, user.Id, id);
+                UserDto user;
+                using (var srv = ServicesFactory.User)
+                    user = srv.Read(SecurityToken);
+
+                using (var srv = ServicesFactory.UserGroup)
+                    srv.Reject(SecurityToken, user.Id, id);
 
             }
             catch (FileSharingException e)
@@ -187,12 +203,16 @@ namespace FileSharingWeb.Controllers
         {
             try
             {
-                var group = Services.Group.Read(SecurityToken, idGroup);
+                GroupDto group;
+                using (var srv = ServicesFactory.Group)
+                    group = srv.Read(SecurityToken, idGroup);
                 if (idUser > 0)
                     group.IdAdmin = idUser;
                 if (!string.IsNullOrWhiteSpace(name))
                     group.Name = name;
-                Services.Group.Update(SecurityToken, group);
+
+                using (var srv = ServicesFactory.Group)
+                   srv.Update(SecurityToken, group);
             }
             catch (FileSharingException e)
             {

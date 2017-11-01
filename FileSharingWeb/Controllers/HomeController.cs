@@ -29,17 +29,21 @@ namespace FileSharingWeb.Controllers
             try
             {
                 ViewBag.FolderId = id;
-                result = Services.Folder.GetFolderDetails(SecurityToken, id);
+                using (var srv = ServicesFactory.Folder)
+                    result = srv.GetFolderDetails(SecurityToken, id);
                 if (id.HasValue)
                 {
-                    var folder = Services.Folder.Read(SecurityToken, id.Value);
+                    FolderDto folder;
+                    using (var srv = ServicesFactory.Folder)
+                        folder = srv.Read(SecurityToken, id.Value);
                     var idRoot = folder.IdFolderRoot;
                     string path = "";
                     while (folder != null)
                     {
                         path = folder.Name + "/" + path;
-                        folder = folder.IdFolderRoot.HasValue
-                            ? Services.Folder.Read(SecurityToken, folder.IdFolderRoot.Value)
+                        using (var srv = ServicesFactory.Folder)
+                            folder = folder.IdFolderRoot.HasValue
+                            ? srv.Read(SecurityToken, folder.IdFolderRoot.Value)
                             : null;
                     }
                     ViewBag.LinkFolder = idRoot.HasValue ? idRoot + "," + path : path;
@@ -59,7 +63,8 @@ namespace FileSharingWeb.Controllers
             {
                 if (!string.IsNullOrWhiteSpace(SecurityToken))
                 {
-                    Services.User.Logout(SecurityToken);
+                    using (var srv = ServicesFactory.User)
+                       srv.Logout(SecurityToken);
                     Response.Cookies.Delete("SecurityToken");
                 }
             }
@@ -85,7 +90,8 @@ namespace FileSharingWeb.Controllers
                 {
                     folder.IdFolderRoot = idFolder = idFolderRoot;
                 }
-                Services.Folder.Create(SecurityToken, folder);
+                using (var srv = ServicesFactory.Folder)
+                    srv.Create(SecurityToken, folder);
             }
             catch (FileSharingException e)
             {
@@ -98,14 +104,16 @@ namespace FileSharingWeb.Controllers
         [HttpDelete]
         public IActionResult DeleteFolder(string folder)
         {
-            long? idFolder = null;
             try
             {
                 long idFolderToDelete;
                 if (long.TryParse(folder, out idFolderToDelete))
                 {
-                    idFolder = Services.Folder.Read(SecurityToken, idFolderToDelete)?.IdFolderRoot;
-                    Services.Folder.Delete(SecurityToken, idFolderToDelete);
+                    using (var srv = ServicesFactory.Folder)
+                    {
+                        var idFolder = srv.Read(SecurityToken, idFolderToDelete)?.IdFolderRoot;
+                        srv.Delete(SecurityToken, idFolderToDelete);
+                    }
                 }
             }
             catch (FileSharingException e)
@@ -147,7 +155,8 @@ namespace FileSharingWeb.Controllers
                         fileStream.CopyTo(ms);
                         content = ms.ToArray();
                     }
-                    Services.File.Create(SecurityToken, file, content);
+                    using (var srv = ServicesFactory.File)
+                        srv.Create(SecurityToken, file, content);
                 }
             }
             catch (FileSharingException e)
@@ -166,13 +175,15 @@ namespace FileSharingWeb.Controllers
             {
                 if (id.HasValue)
                 {
-                    file = Services.File.Read(SecurityToken, id.Value);
+                    using (var srv = ServicesFactory.File)
+                        file = srv.Read(SecurityToken, id.Value);
 
                     file.Filename = filename;
                     file.IsPublic = isPublic;
                     file.IdGroup = idGroup == 0? null : idGroup;
 
-                    Services.File.Update(SecurityToken, file);
+                    using (var srv = ServicesFactory.File)
+                        srv.Update(SecurityToken, file);
                 }
             }
             catch (FileSharingException e)
@@ -186,10 +197,10 @@ namespace FileSharingWeb.Controllers
         [HttpDelete]
         public IActionResult DeleteFile(long id)
         {
-            long? idFolder = null;
             try
             {
-                idFolder = Services.File.Delete(SecurityToken, id);
+                using (var srv = ServicesFactory.File)
+                    srv.Delete(SecurityToken, id);
             }
             catch (FileSharingException e)
             {
@@ -205,7 +216,8 @@ namespace FileSharingWeb.Controllers
             FileDto result = null;
             try
             {
-                result = Services.File.Read(SecurityToken, id);
+                using (var srv = ServicesFactory.File)
+                    result = srv.Read(SecurityToken, id);
             }
             catch (Exception e)
             {
@@ -220,7 +232,8 @@ namespace FileSharingWeb.Controllers
             byte[] content = null;
             try
             {
-                content = Services.File.GetFileContent(SecurityToken, id);
+                using (var srv = ServicesFactory.File)
+                    content = srv.GetFileContent(SecurityToken, id);
             }
             catch (Exception e)
             {
@@ -236,8 +249,11 @@ namespace FileSharingWeb.Controllers
             byte[] content = null;
             try
             {
-                result = Services.File.Read(SecurityToken, id);
-                content = Services.File.GetFileContent(SecurityToken, id);
+                using (var srv = ServicesFactory.File)
+                {
+                    result = srv.Read(SecurityToken, id);
+                    content = srv.GetFileContent(SecurityToken, id);
+                }
             }
             catch (Exception e)
             {
@@ -252,7 +268,8 @@ namespace FileSharingWeb.Controllers
             List<FileDto> result = new List<FileDto>();
             try
             {
-                result = Services.File.QueryByName(SecurityToken, name, rowQty, page);
+                using (var srv = ServicesFactory.File)
+                    result = srv.QueryByName(SecurityToken, name, rowQty, page);
             }
             catch (FileSharingException e)
             {

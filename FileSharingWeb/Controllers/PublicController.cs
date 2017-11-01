@@ -41,13 +41,16 @@ namespace FileSharingWeb.Controllers
             if (ModelState.IsValid)
 			{
 				try
-				{
-                    var securityToken = Services.User.Login(model);
-					if (!string.IsNullOrWhiteSpace(securityToken))
-					{
-                        var user = Services.User.Read(securityToken);
-						Response.Cookies.Append("SecurityToken", securityToken);
-                        Response.Cookies.Append("FirstName", user.FirstName);
+                {
+                    using (var srv = ServicesFactory.User)
+                    {
+                        var securityToken = srv.Login(model);
+                        if (!string.IsNullOrWhiteSpace(securityToken))
+                        {
+                            var user = srv.Read(securityToken);
+                            Response.Cookies.Append("SecurityToken", securityToken);
+                            Response.Cookies.Append("FirstName", user.FirstName);
+                        }
                     }
                     return RedirectToAction("Index", "Home");
 				}
@@ -76,7 +79,9 @@ namespace FileSharingWeb.Controllers
             {
                 try
                 {
-                    var securityToken = Services.User.Register(model);
+                    string securityToken;
+                    using (var srv = ServicesFactory.User)
+                        securityToken = srv.Register(model);
                     if (!string.IsNullOrWhiteSpace(securityToken))
                     {
                         Response.Cookies.Append("SecurityToken", securityToken);

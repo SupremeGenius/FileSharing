@@ -8,7 +8,6 @@ namespace FileSharingWeb.Controllers
     public class BaseController : Controller
 	{
 		public string SecurityToken { get; private set; }
-		public readonly ServicesFactory Services = new ServicesFactory();
 
 		public override void OnActionExecuting(ActionExecutingContext context)
 		{
@@ -21,7 +20,7 @@ namespace FileSharingWeb.Controllers
             {
                 try
                 {
-                    Services.Session.Read(SecurityToken);
+                    ServicesFactory.Session.Read(SecurityToken);
                     tokenValid = true;
                     ViewBag.FirstName = Request.Cookies["FirstName"];
                 }

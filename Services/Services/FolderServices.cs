@@ -6,6 +6,7 @@ using FileSharing.Services.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace FileSharing.Services
 {
@@ -133,7 +134,10 @@ namespace FileSharing.Services
 				if (folderDom.IdUser != session.IdUser)
 					throw new FileSharingException(FileSharingException.UNAUTHORIZED,
 													   "You do not have permissions to update this folder");
-                
+
+                var childIds = folderDom.Folders.Select(x => x.Id).ToArray();
+                foreach (var id in childIds)
+                    Delete(securityToken, id);
                 _dao.Delete(folderDom);
                 Audit(session.IdUser, folderDom.Id.ToString(), typeof(Folder).Name, ActionDto.Delete, "Folder deletes: " + folderDom);
             }

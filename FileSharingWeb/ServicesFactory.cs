@@ -2,23 +2,49 @@
 
 namespace FileSharingWeb
 {
-	public class ServicesFactory
+	public static class ServicesFactory
 	{
-		public ServicesFactory()
-		{
-			User = new UserServices();
-			Session = new SessionServices();
-			Group = new GroupServices();
-			UserGroup = new UserGroupServices();
-			Folder = new FolderServices();
-            File = new FileServices();
-		}
-
-		public UserServices User { get; set; }
-		public SessionServices Session { get; set; }
-		public GroupServices Group { get; set; }
-		public UserGroupServices UserGroup { get; set; }
-		public FolderServices Folder { get; set; }
-		public FileServices File { get; set; }
-	}
+		public static UserServices User
+        {
+            get
+            {
+                return new UserServices();
+            }
+        }
+		public static SessionServices Session
+        {
+            get
+            {
+                return new SessionServices();
+            }
+        }
+        public static GroupServices Group
+        {
+            get
+            {
+                return new GroupServices();
+            }
+        }
+        public static UserGroupServices UserGroup
+        {
+            get
+            {
+                return new UserGroupServices();
+            }
+        }
+        public static FolderServices Folder
+        {
+            get
+            {
+                return new FolderServices();
+            }
+        }
+        public static FileServices File
+        {
+            get
+            {
+                return new FileServices();
+            }
+        }
+    }
 }
