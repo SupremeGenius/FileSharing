@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="Mapping\" />
-    <Folder Include="Exceptions\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.1.1" />

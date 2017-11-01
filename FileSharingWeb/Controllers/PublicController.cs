@@ -1,7 +1,6 @@
 ﻿using FileSharing.Services.Dtos;
 using FileSharing.Services.Exceptions;
 using FileSharingWeb.Attributes;
-using FileSharingWeb.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -37,13 +36,13 @@ namespace FileSharingWeb.Controllers
 		[HttpPost]
         [ViewLayout("_LayoutPublic")]
         [ValidateAntiForgeryToken]
-        public IActionResult Login(Login model)
+        public IActionResult Login(UserLoginDto model)
 		{
             if (ModelState.IsValid)
 			{
 				try
 				{
-                    var securityToken = Services.User.Login(model.Username, model.Password);
+                    var securityToken = Services.User.Login(model);
 					if (!string.IsNullOrWhiteSpace(securityToken))
 					{
                         var user = Services.User.Read(securityToken);
@@ -71,25 +70,17 @@ namespace FileSharingWeb.Controllers
         [HttpPost]
         [ViewLayout("_LayoutPublic")]
         [ValidateAntiForgeryToken]
-		public IActionResult Register(Register model)
+		public IActionResult Register(UserRegistrationDto model)
 		{
 			if (ModelState.IsValid)
             {
-                var user = new UserDto
-				{
-					Login = model.Username,
-					FirstName = model.FirstName,
-					LastName = model.LastName,
-					Password = model.Password
-                };
-
                 try
                 {
-                    var securityToken = Services.User.Register(user);
+                    var securityToken = Services.User.Register(model);
                     if (!string.IsNullOrWhiteSpace(securityToken))
                     {
                         Response.Cookies.Append("SecurityToken", securityToken);
-                        Response.Cookies.Append("FirstName", user.FirstName);
+                        Response.Cookies.Append("FirstName", model.FirstName);
                         return RedirectToAction("Index", "Home");
                     }
                 }

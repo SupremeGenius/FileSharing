@@ -187,6 +187,36 @@ namespace FileSharing.Services
             }
         }
 
+        public GroupsAndRequestsDto GetGroupsAndRequestsOfUser(string securityToken)
+        {
+            try
+            {
+                var session = CheckSession(securityToken);
+                var result = new GroupsAndRequestsDto();
+                var groups = _dao.GetByUser(session.IdUser);
+                var groupsResult = Mapper.Map<List<GroupDetailsDto>>(groups);
+
+                for (var i = 0; i < groups.Count; i++)
+                {
+                    groupsResult[i].IsAdministrable = groups[i].IdAdmin == session.IdUser;
+                }
+                result.Groups = groupsResult;
+                using (var userGroupServices = new UserGroupServices())
+                {
+                    result.Requests = userGroupServices.GetRequestsOfUser(securityToken);
+                }
+                return result;
+            }
+            catch (FileSharingException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw new FileSharingException(FileSharingException.ERROR_FILESHARING_SERVER, e.Message, e);
+            }
+        }
+
         public GroupDetailsExtendedDto GetGroupDetails(string securityToken, long idGroup)
         {
             try

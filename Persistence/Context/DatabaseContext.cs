@@ -1,13 +1,11 @@
-﻿using System;
+﻿using FileSharing.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 
-namespace FileSharing.Persistence.Models
+namespace FileSharing.Persistence.Context
 {
-	public class FileSharingContext : DbContext
+    public class DatabaseContext : DbContext
 	{
-        public FileSharingContext(DbContextOptions<FileSharingContext> options)
+        public DatabaseContext(DbContextOptions<DatabaseContext> options)
             : base(options) { }
 
         public virtual DbSet<Audit> Audit { get; set; }
@@ -146,34 +144,6 @@ namespace FileSharing.Persistence.Models
                     .HasForeignKey(d => d.IdUser)
                     .OnDelete(DeleteBehavior.Cascade);
             });
-        }
-    }
-
-    public class ContextFactory
-        : IDesignTimeDbContextFactory<FileSharingContext>, IDisposable
-    {
-        public FileSharingContext CreateDbContext(string[] args)
-        {
-            var configurationBuilder = new ConfigurationBuilder()
-                .AddJsonFile("persistence.json");
-            var configuration = configurationBuilder.Build();
-
-            var builder = new DbContextOptionsBuilder<FileSharingContext>();
-            var databaseEngine = $"{configuration["DatabaseEngine"]}";
-            switch (databaseEngine){
-                case "SqlServer":
-                    builder.UseSqlServer(configuration.GetConnectionString(databaseEngine));
-                    break;
-                case "PostgreSQL":
-                    builder.UseNpgsql(configuration.GetConnectionString(databaseEngine));
-                    break;
-            }
-
-            return new FileSharingContext(builder.Options);
-        }
-
-        public void Dispose()
-        {
         }
     }
 }

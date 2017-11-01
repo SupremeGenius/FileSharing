@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FileSharingWeb.ViewModels
+namespace FileSharing.Services.Dtos
 {
-    public class Login
+    public class UserLoginDto
     {
         [Required]
         public string Username { get; set; }

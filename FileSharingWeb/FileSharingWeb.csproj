@@ -33,9 +33,6 @@
     <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Models\User.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Remove="wwwroot/css\public.css" />
     <Content Remove="wwwroot/css\public.min.css" />
   </ItemGroup>

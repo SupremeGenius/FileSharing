@@ -12,15 +12,15 @@ namespace FileSharing.Services
 	{
 		public UserServices() : base(new UserDao()) { }
 
-		public string Register(UserDto user)
+		public string Register(UserRegistrationDto user)
 		{
 			try
-			{
-				ValidateUser(user);
-				if (_dao.ReadByLogin(user.Login) != null)
+            {
+                var userDom = Mapper.Map<User>(user);
+                ValidateUser(userDom);
+				if (_dao.ReadByLogin(userDom.Login) != null)
 					throw new FileSharingException(FileSharingException.LOGIN_ALREADY_IN_USE, "Login already in use");
 
-				var userDom = Mapper.Map<User>(user);
 				userDom.Password = EncryptPassword(user.Password);
 				userDom = _dao.Create(userDom);
 
@@ -72,7 +72,7 @@ namespace FileSharing.Services
 			try
 			{
 				var session = CheckSession(securityToken);
-				ValidateUser(user);
+				ValidateUser(Mapper.Map<User>(user));
 				User userDom = _dao.Read(user.Id);
 				if (userDom == null)
 					throw new FileSharingException(FileSharingException.USER_NOT_FOUND,
@@ -152,12 +152,12 @@ namespace FileSharing.Services
 			}
 		}
 
-		public string Login(string login, string password)
+		public string Login(UserLoginDto login)
 		{
 			try
 			{
-				var userDom = _dao.ReadByLogin(login);
-				if (userDom == null || userDom.Password != EncryptPassword(password))
+				var userDom = _dao.ReadByLogin(login.Username);
+				if (userDom == null || userDom.Password != EncryptPassword(login.Password))
 					throw new FileSharingException(FileSharingException.INVALID_CREDENTIALS,
 					                                   "The username or the password is not valid");
                 using (var _sessionServices = new SessionServices())
@@ -222,7 +222,7 @@ namespace FileSharing.Services
 			return System.Text.Encoding.ASCII.GetString(data);
 		}
 
-		void ValidateUser(UserDto user)
+		void ValidateUser(User user)
 		{
 			if (user == null)
 				throw new FileSharingException(FileSharingException.NULL_VALUE, "User cannot be null");

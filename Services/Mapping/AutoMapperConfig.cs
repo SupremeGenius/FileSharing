@@ -19,6 +19,8 @@ namespace FileSharing.Services.Mapping
 			Mapper.Initialize(cfg =>
 			{
 				cfg.CreateMap<User, UserDto>().ReverseMap();
+                cfg.CreateMap<UserRegistrationDto, User>()
+                    .ForMember(dest => dest.Login, opt => opt.MapFrom(src => src.Username));
 
 				cfg.CreateMap<Session, SessionDto>().ReverseMap();
 

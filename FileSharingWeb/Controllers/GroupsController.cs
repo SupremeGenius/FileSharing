@@ -1,6 +1,5 @@
 ﻿using FileSharing.Services.Dtos;
 using FileSharing.Services.Exceptions;
-using FileSharingWeb.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -24,11 +23,10 @@ namespace FileSharingWeb.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            GroupsAndRequests result = new GroupsAndRequests();
+            GroupsAndRequestsDto result = new GroupsAndRequestsDto();
             try
             {
-                result.Groups = Services.Group.GetGroupsOfUser(SecurityToken);
-                result.Requests = Services.UserGroup.GetRequestsOfUser(SecurityToken);
+                result = Services.Group.GetGroupsAndRequestsOfUser(SecurityToken);
             }
             catch (FileSharingException e)
             {

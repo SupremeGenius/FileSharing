@@ -1,12 +1,13 @@
 ﻿using System;
 using FileSharing.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
+using FileSharing.Persistence.Context;
 
 namespace FileSharing.Persistence.Daos
 {
 	public abstract class AbstractDao<T, PK> : IDisposable where T : AbstractModel
 	{
-		protected FileSharingContext _context;
+		protected DatabaseContext _context;
 		protected DbSet<T> _dbSet;
 
 		public AbstractDao()
