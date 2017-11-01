@@ -351,4 +351,13 @@
   <data name="DATE_REQUEST" xml:space="preserve">
     <value>Fecha de solicitud</value>
   </data>
+  <data name="PASSWORD_FIELD_LENGTH" xml:space="preserve">
+    <value>La contraseña debe tener como mínimo 6 caracteres.</value>
+  </data>
+  <data name="PASSWORD_NOT_MATCHING" xml:space="preserve">
+    <value>Las contraseñas introducidas no coinciden.</value>
+  </data>
+  <data name="USERNAME_FIELD_LENGTH" xml:space="preserve">
+    <value>El nombre de usuario debe tener como mínimo 6 caracteres.</value>
+  </data>
 </root>

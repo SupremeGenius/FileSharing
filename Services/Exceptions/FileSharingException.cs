@@ -46,6 +46,9 @@ namespace FileSharing.Services.Exceptions
 		public const string USER_NOT_FOUND = "USER_NOT_FOUND";
 		public const string INVALID_CREDENTIALS = "INVALID_CREDENTIALS";
 		public const string USER_CANNOT_BE_REMOVED = "USER_CANNOT_BE_REMOVED";
+        public const string USERNAME_FIELD_LENGTH = "USERNAME_FIELD_LENGTH";
+        public const string PASSWORD_FIELD_LENGTH = "PASSWORD_FIELD_LENGTH";
+        public const string PASSWORD_NOT_MATCHING = "PASSWORD_NOT_MATCHING";
 
         #endregion
 

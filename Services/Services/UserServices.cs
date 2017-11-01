@@ -5,7 +5,6 @@ using FileSharing.Persistence.Daos;
 using FileSharing.Persistence.Models;
 using FileSharing.Services.Dtos;
 using FileSharing.Services.Exceptions;
-
 namespace FileSharing.Services
 {
 	public class UserServices : AbstractServices<UserDao>
@@ -16,6 +15,12 @@ namespace FileSharing.Services
 		{
 			try
             {
+                if (user.Username.Length < 6)
+                    throw new FileSharingException(FileSharingException.USERNAME_FIELD_LENGTH, "Username must have 6 characters at least");
+                if (user.Password.Length < 6)
+                    throw new FileSharingException(FileSharingException.PASSWORD_FIELD_LENGTH, "Password must have 6 characters at least");
+                if (user.Password != user.ConfirmPassword)
+                    throw new FileSharingException(FileSharingException.PASSWORD_NOT_MATCHING, "The password and confirmation password do not match");
                 var userDom = Mapper.Map<User>(user);
                 ValidateUser(userDom);
 				if (_dao.ReadByLogin(userDom.Login) != null)
@@ -29,9 +34,9 @@ namespace FileSharing.Services
                 using (var _sessionServices = new SessionServices())
                     return _sessionServices.Create(userDom.Id);
             }
-			catch (FileSharingException)
+			catch (FileSharingException e)
 			{
-				throw;
+				throw e;
 			}
 			catch (Exception e)
 			{
