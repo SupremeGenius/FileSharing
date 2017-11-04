@@ -7,7 +7,6 @@ Vagrant.configure("2") do |config|
   config.vm.provider :virtualbox do |vb|
     vb.name = "filesharing-jessie64"
     vb.customize ["modifyvm", :id, "--natpf1", "nginx,TCP,,8080,,80"]
-    vb.customize ["modifyvm", :id, "--natpf1", "dotnet,TCP,,5000,,5000"]
   end
 
   config.vm.provision :shell, :path => "provision/bootstrap.sh"

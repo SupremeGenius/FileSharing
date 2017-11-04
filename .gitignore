@@ -41,3 +41,4 @@ Thumbs.db
 # dotCover
 *.dotCover
 vagrant-deploy/provision/FileSharing
+vagrant-deploy/.vagrant

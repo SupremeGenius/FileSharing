@@ -2,8 +2,8 @@
 Description=FileSharingWeb .Net Application
 
 [Service]
-WorkingDirectory=/var/aspnetcore/FileSharing
-ExecStart=/usr/bin/dotnet /var/aspnetcore/FileSharing/FileSharingWeb.dll
+WorkingDirectory=/var/aspnetcore/filesharing/app
+ExecStart=/usr/bin/dotnet /var/aspnetcore/filesharing/app/FileSharingWeb.dll
 Restart=always
 RestartSec=10  # Restart service after 10 seconds if dotnet service crashes
 SyslogIdentifier=FileSharingWeb

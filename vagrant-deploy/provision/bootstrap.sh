@@ -27,7 +27,12 @@ sudo apt-get -y install dotnet-sdk-2.0.2
 
 #configure systemd
 sudo mkdir -p /var/aspnetcore/
-sudo cp -R /vagrant/provision/FileSharing /var/aspnetcore/
+sudo mkdir -p /var/aspnetcore/filesharing
+sudo mkdir -p /var/aspnetcore/filesharing/app
+sudo mkdir -p /var/aspnetcore/filesharing/logs
+sudo mkdir -p /var/aspnetcore/filesharing/folders
+sudo cp /vagrant/provision/FileSharing/* /var/aspnetcore/filesharing/app/
+sudo chown -R www-data:www-data /var/aspnetcore/filesharing
 sudo cp /vagrant/provision/systemd/filesharing.service /etc/systemd/system/filesharing.service
 sudo systemctl enable filesharing.service
 sudo systemctl start filesharing.service
