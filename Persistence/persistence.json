@@ -1,7 +1,7 @@
 ﻿{
-  "DatabaseEngine": "PostgreSQL",
+  "DatabaseEngine": "SqlServer",
   "ConnectionStrings": {
-    "SqlServer": "Server=localhost\\SQLEXPRESS;Database=FileSharing;Trusted_Connection=True;",
+    "SqlServer": "Server=192.168.50.4;Database=FileSharing;User Id=sa;Password=#SAPassword!;",
     "PostgreSQL": "Host=localhost;Port=15432;Database=myapp;Username=myapp;Password=dbpass"
   }
 }

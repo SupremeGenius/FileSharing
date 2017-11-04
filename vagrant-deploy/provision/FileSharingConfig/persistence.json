@@ -1,6 +1,0 @@
-﻿{
-  "DatabaseEngine": "PostgreSQL",
-  "ConnectionStrings": {
-    "PostgreSQL": "Host=10.0.2.2;Port=15432;Database=myapp;Username=myapp;Password=dbpass"
-  }
-}
