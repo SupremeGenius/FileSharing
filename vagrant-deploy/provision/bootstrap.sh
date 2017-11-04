@@ -25,14 +25,11 @@ sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsof
 sudo apt-get update
 sudo apt-get -y install dotnet-sdk-2.0.2
 
-#configure systemd
-sudo mkdir -p /var/aspnetcore/
-sudo mkdir -p /var/aspnetcore/filesharing
-sudo mkdir -p /var/aspnetcore/filesharing/app
-sudo mkdir -p /var/aspnetcore/filesharing/logs
-sudo mkdir -p /var/aspnetcore/filesharing/folders
-sudo cp /vagrant/provision/FileSharing/* /var/aspnetcore/filesharing/app/
-sudo chown -R www-data:www-data /var/aspnetcore/filesharing
+#deploy FileSharingWeb
+sudo mkdir -p /var/www/filesharing/{app,logs,folders}
+sudo cp -R /vagrant/provision/FileSharing/ /var/www/filesharing/app/
+sudo cp /vagrant/provision/FileSharingConfig/* /var/www/filesharing/app/
+sudo chown -R www-data:www-data /var/www/filesharing
 sudo cp /vagrant/provision/systemd/filesharing.service /etc/systemd/system/filesharing.service
 sudo systemctl enable filesharing.service
 sudo systemctl start filesharing.service
