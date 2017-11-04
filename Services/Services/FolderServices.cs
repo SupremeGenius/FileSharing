@@ -138,6 +138,8 @@ namespace FileSharing.Services
                 var childIds = folderDom.Folders.Select(x => x.Id).ToArray();
                 foreach (var id in childIds)
                     Delete(securityToken, id);
+                string path = GetFullPath(folderDom);
+                Directory.Delete(path);
                 _dao.Delete(folderDom);
                 Audit(session.IdUser, folderDom.Id.ToString(), typeof(Folder).Name, ActionDto.Delete, "Folder deletes: " + folderDom);
             }
