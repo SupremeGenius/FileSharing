@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using FileSharing.Persistence.Models;
+﻿using FileSharing.Persistence.Models;
+using System.Linq;
 
 namespace FileSharing.Persistence.Daos
 {
-	public class UserDao : AbstractDao<User, long>
+    public class UserDao : AbstractDao<User, long>
 	{
 		public User ReadByLogin(string login)
 		{

@@ -1,0 +1,6 @@
+﻿{
+  "DatabaseEngine": "UnitTesting",
+  "ConnectionStrings": {
+    "UnitTesting":  "UnitTestingDatabaseMemory"
+  }
+}

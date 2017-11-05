@@ -24,6 +24,9 @@ namespace FileSharing.Persistence.Context
                 case "PostgreSQL":
                     builder.UseNpgsql(configuration.GetConnectionString(databaseEngine));
                     break;
+                default:
+                    builder.UseInMemoryDatabase(databaseName: databaseEngine);
+                    break;
             }
 
             return new DatabaseContext(builder.Options);
