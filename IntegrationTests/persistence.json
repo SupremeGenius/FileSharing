@@ -1,0 +1,6 @@
+﻿{
+  "DatabaseEngine": "SqlServer",
+  "ConnectionStrings": {
+    "SqlServer": "Server=localhost\\SQLEXPRESS;Database=FileSharing_IntegrationTests;Trusted_Connection=True;MultipleActiveResultSets=true;"
+  }
+}

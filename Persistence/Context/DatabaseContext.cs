@@ -6,7 +6,9 @@ namespace FileSharing.Persistence.Context
     public class DatabaseContext : DbContext
 	{
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
-            : base(options) { }
+            : base(options)
+        {
+        }
 
         public virtual DbSet<Audit> Audit { get; set; }
 		public virtual DbSet<File> File { get; set; }

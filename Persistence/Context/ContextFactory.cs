@@ -16,20 +16,25 @@ namespace FileSharing.Persistence.Context
 
             var builder = new DbContextOptionsBuilder<DatabaseContext>();
             var databaseEngine = $"{configuration["DatabaseEngine"]}";
+            DatabaseContext context;
             switch (databaseEngine)
             {
                 case "SqlServer":
                     builder.UseSqlServer(configuration.GetConnectionString(databaseEngine));
+                    context = new DatabaseContext(builder.Options);
+                    context.Database.Migrate();
                     break;
                 case "PostgreSQL":
                     builder.UseNpgsql(configuration.GetConnectionString(databaseEngine));
+                    context = new DatabaseContext(builder.Options);
+                    context.Database.Migrate();
                     break;
                 default:
                     builder.UseInMemoryDatabase(databaseName: databaseEngine);
+                    context = new DatabaseContext(builder.Options);
                     break;
             }
-
-            return new DatabaseContext(builder.Options);
+            return context;
         }
 
         public void Dispose()
