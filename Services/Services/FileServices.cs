@@ -138,8 +138,6 @@ namespace FileSharing.Services
 													   "You do not have permissions to update this file");
 
                 string filePath = GetFilePath(fileDom);
-                if (System.IO.File.Exists(filePath))
-                    System.IO.File.Delete(filePath);
 				_dao.Delete(fileDom);
                 Audit(session.IdUser, fileDom.Id.ToString(), typeof(File).Name, ActionDto.Delete, "File deleted: " + fileDom);
                 return fileDom.IdFolder;
