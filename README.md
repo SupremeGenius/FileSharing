@@ -1,5 +1,5 @@
 # FileSharing
-File hosting service built with [.NET Core](https://dotnet.github.io) and EntityFramework Code
+File hosting service built with [.NET Core](https://dotnet.github.io) and EntityFramework Core
 
 ## Features
 
