@@ -27,7 +27,7 @@ File hosting service built with [.NET Core](https://dotnet.github.io) and Entity
 ### Configure the database connection
 
 * Set the right properties in the `persistence.json` file.
-  * `DatabaseEngine` could be `SqlServer` to use a SQL Server database engine, `PostgreSQL` for a PostgreSQL or empty for a memory database (specially used in unit tests).
+  * `DatabaseEngine` could be `SqlServer` to use a SQL Server database engine, `PostgreSQL` for a PostgreSQL or empty for a memory database (specially used in unit tests).
   * Create a connection string with the name of the database engine choosen (`SqlServer` or `PostgreSQL`).
 * If you need to modify any model, it is necessary to add a new migrations. Use `dotnet ef migrations add` follows of the migration name.
 * If you want to create/update the database manually (the application is able to run the migrations automatically), run `dotnet ef migrations add` follows of the migration name.
@@ -35,9 +35,9 @@ File hosting service built with [.NET Core](https://dotnet.github.io) and Entity
 ### Configure the services
 
 * Set the right properties in the `services.json` file.
-  * The `RepositoryPath` indicates the path where the files uploaded will be stored.
-  * The `MinutesToExpireSession` is used to expire sessions which have an inactivity of the amount of time indicate.
-  * The `Measurements` is an array of strings to choose the unit measeres to be displayed.
+  * The `RepositoryPath` indicates the path where the files uploaded will be stored.
+  * The `MinutesToExpireSession` is used to expire sessions which have an inactivity of the amount of time indicate.
+  * The `Measurements` is an array of strings to choose the unit measeres to be displayed.
   
 ### Provisioning the Web
 
@@ -60,7 +60,7 @@ bower install
 ### Deploying the vagrant machine
 
 * To deploy and test the application locally:
-  * Publish the project to `./vagrant-filesharing/provision/FileSharing/`.
-  * `cd vagrant-filesharing`.
-  * `vagrant up`.
+  * Publish the project to `./vagrant-filesharing/provision/FileSharing/`.
+  * `cd vagrant-filesharing`.
+  * `vagrant up`.
   * Open [http://localhost:8080](http://localhost:8080) in your browser.
