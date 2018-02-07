@@ -12,7 +12,7 @@ File hosting service built with [.NET Core](https://dotnet.github.io) and Entity
 
 * [.NET SDK](https://www.microsoft.com/net/learn/get-started/).
 * [Bower](https://bower.io).
-* A PostgreSQL or SQL Server Database (Check out [vagrant-sqlserver](https://github.com/VidelaRosa/vagrant-sqlserver).
+* A PostgreSQL or SQL Server Database (Check out [vagrant-sqlserver](https://github.com/VidelaRosa/vagrant-sqlserver)).
 * [Vagrant](https://www.vagrantup.com/downloads.html)
 * [JMeter](http://jmeter.apache.org)
 
